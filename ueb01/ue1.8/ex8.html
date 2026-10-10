@@ -1,0 +1,174 @@
+<html lang="de">
+
+<head>
+	<title>CSS in Action</title>
+	<style>
+
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    header,
+    nav,
+    .content,
+    footer {
+      width: 80%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: rgb(187, 204, 232);
+    }
+
+    header h1 {
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 2em;
+      margin: 10px;
+    }
+
+    #logoImage {
+      height: 4em;
+      margin: 10px;
+    }
+
+    nav {
+      background-color: rgb(20, 90, 204);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 8px 10px;
+    }
+
+    nav li:nth-child(2) {
+      color: red;
+    }
+
+    .content {
+      flex: 1;
+      padding: 18px 22px;
+    }
+
+    .content > section {
+      overflow: auto;
+      margin-bottom: 16px;
+    }
+
+    .content > section > h1 {
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 1.5em;
+    }
+
+    .content > section:nth-child(2) > h1 {
+      color: red;
+    }
+
+    .content > section img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    .content > section:nth-child(odd) img {
+      float: left;
+      margin-right: 10px;
+    }
+
+    .content > section:nth-child(even) img {
+      float: right;
+      margin-left: 10px;
+    }
+
+    .content a[href^="http"]::after {
+      content: " (external)";
+    }
+
+    footer {
+      margin-top: auto;
+      background-color: rgb(20, 90, 204);
+    }
+
+    footer ul {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      list-style: none;
+      margin: 0;
+      padding: 10px;
+    }
+
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>CSS in Action</h1>
+		<img id="logoImage" src="https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" alt="CSS Logo">
+	</header>
+	<nav>
+		<ul>
+			<li>Topic 1</li>
+			<li>Topic 2</li>
+			<li>Topic 3</li>
+			<li>Topic 4</li>
+		</ul>
+	</nav>
+	<div class="content">
+		<section>
+			<h1>Topic 1</h1>
+			<img src="pic1.jpg" alt="Image of a lecture room">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+			invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			<p>
+				<strong>Lorem ipsum</strong> dolor sit <a href="http://www.aau.at" target="_blank">amet</a>, consetetur
+				sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam <a
+					href="erat.html" target="_blank">erat</a>.
+			</p>
+		</section>
+
+		<section>
+			<h1>Topic 2</h1>
+			<img src="pic2.jpg" alt="Image of a lecture room"> Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+			invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			<p>
+				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam <strong>nonumy</strong> eirmod tempor
+				invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet clita kasd gubergren, no sea
+				takimata sanctus est Lorem ipsum dolor sit <a href="http://www.aau.at" target="_blank">amet</a>.
+			</p>
+		</section>
+
+		<section>
+			<h1>Topic 3</h1>
+			<img src="pic3.jpg" alt="Image of a lecture room"> Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+			invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+			<p>
+				Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+				labore et dolore magna aliquyam erat, sed diam voluptua.
+			</p>
+		</section>
+	</div>
+	<footer>
+		<ul>
+			<li>Impressum</li>
+			<li>Legal</li>
+			<li>Contact</li>
+		</ul>
+	</footer>
+
+</body>
+
+</html>

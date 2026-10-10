@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Rental</title>
+  <style>
+    input:user-invalid {
+      color: red;
+    }
+
+    textarea:invalid {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Rental</h1>
+
+  <form action="mailto:yourmail@edu.aau.at?subject=Rental%20Request" method="post" enctype="text/plain">
+    <fieldset>
+      <legend>Contact data</legend>
+
+      <label for="title">Title</label>
+      <select id="title" name="title" required>
+        <option value="">Please choose</option>
+        <option value="mr">Mr</option>
+        <option value="ms">Ms</option>
+        <option value="mx">Mx</option>
+        <option value="dr">Dr</option>
+      </select>
+
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" placeholder="Alex Example" required>
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="alex@example.com" required>
+
+      <label for="phone">Phone number</label>
+      <input id="phone" name="phone" type="tel" placeholder="+43 664 1234567" pattern="[+0-9 ()-]{7,}" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rental details</legend>
+
+      <label for="pickup-date">Pickup date</label>
+      <input id="pickup-date" name="pickup-date" type="date" required>
+
+      <label for="return-date">Return date</label>
+      <input id="return-date" name="return-date" type="date" required>
+
+      <label for="pickup-location">Pickup location</label>
+      <input id="pickup-location" name="pickup-location" type="text" placeholder="Klagenfurt Airport" required>
+
+      <label for="passengers">Number of passengers</label>
+      <input id="passengers" name="passengers" type="number" min="1" max="9" placeholder="4" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>Vehicle preferences</legend>
+
+      <label for="vehicle-color">Vehicle color</label>
+      <input id="vehicle-color" name="vehicle-color" type="color" value="#004f9f" required>
+
+      <p>Preferred vehicle type</p>
+      <input id="sports-car" name="vehicle-type" type="radio" value="sports-car" required>
+      <label for="sports-car">Sports car</label>
+
+      <input id="combi" name="vehicle-type" type="radio" value="combi">
+      <label for="combi">Combi</label>
+
+      <input id="truck" name="vehicle-type" type="radio" value="truck">
+      <label for="truck">Truck</label>
+
+      <input id="van" name="vehicle-type" type="radio" value="van">
+      <label for="van">Van</label>
+
+      <input id="suv" name="vehicle-type" type="radio" value="suv">
+      <label for="suv">SUV</label>
+
+      <input id="luxury" name="vehicle-type" type="radio" value="luxury">
+      <label for="luxury">Luxury</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Final comments</legend>
+      <label for="comments">Comments</label>
+      <textarea id="comments" name="comments" maxlength="512" placeholder="Optional comments, maximum 512 characters"></textarea>
+    </fieldset>
+
+    <button type="submit">Submit Rental Request</button>
+    <button type="reset">Reset</button>
+  </form>
+</body>
+</html>
