@@ -37,8 +37,6 @@
 
 - Erlaubt zur Unterstützung (Theorie erklären, Übungsbeispiele)
 - **Pro Aufgabe ein eigenes PDF**: welches Tool, wofür genutzt
-- Keine KI-Komplettlösungen — Verständnis wird in Gesprächen geprüft.
-- Heißt -> Wenn man eine KI Komplettlösung abgibt, muss man es auch selbst verstanden haben.
 
 ---
 
