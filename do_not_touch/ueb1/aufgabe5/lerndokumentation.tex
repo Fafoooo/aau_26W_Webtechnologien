@@ -1,0 +1,43 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\begin{document}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 1}}
+\end{center}
+\section*{Aufgabe 5: HTML-Tabelle}
+\textbf{Aufgabe:} Ausgangsdatei untersuchen und die Tabelle nach Vorlage
+ergänzen. Uni-Links und Quellenlink hinzufügen. CSS unverändert lassen.
+
+\medskip
+\textbf{Skizze der Ausgangsseite:} Überschrift
+\glqq Top 5 universities in the world\grqq{} und eine Tabellenzeile:
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{University of Oxford} & United Kingdom & 98.5 \\ \hline
+\end{tabular}
+\end{center}
+\textbf{CSS-Wirkung:} Rahmen und Innenabstände, farbige Spaltenköpfe,
+abwechselnd helle Zeilen und Beschriftung unter der Tabelle.
+Zeilenköpfe sind linksbündig; Zahlen und Länder stehen zentriert.
+
+\medskip
+\textbf{Ergebnis:} \texttt{ex5.html} enthält fünf Universitäten mit
+Land, Ranking und Webseiten-Link. Spaltenköpfe verwenden
+\texttt{scope="col"}, Zeilenköpfe \texttt{scope="row"}.
+\texttt{thead} und \texttt{tbody} gliedern die Tabelle.
+Die Beschriftung \glqq University rankings 2025\grqq{} verlinkt die
+vorgegebene Quelle. Die CSS-Regeln sind unverändert.
+
+\medskip
+\textbf{Test:} Über Apache unter
+\url{http://localhost/webtech-aufgabe5/ex5.html} erreichbar,
+Status \texttt{200 OK}.
+\medskip
+{\small \textbf{Hilfsmittel:} Codex für Erstellung, Prüfung und Dokumentation.}
+\end{document}

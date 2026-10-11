@@ -1,0 +1,53 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 1}}
+\end{center}
+\section*{Aufgabe 7: CSS-Selektoren}
+\textbf{Aufgabe:} Die 14 CSS-Regeln in \texttt{ex7.html} einzeln
+anwenden und die jeweilige Wirkung erklären.
+
+\medskip
+\textbf{Ergebnisse:} Jede Regel gilt einzeln mit \texttt{color: red}.
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{6.2cm}|>{\raggedright\arraybackslash}p{9.5cm}|}
+\hline
+\textbf{Selektor} & \textbf{Was wird rot und warum?} \\ \hline
+\nolinkurl{#content, p} & Der Bereich \texttt{content} und alle 15 Absätze. Das Komma verbindet zwei Selektoren. \\ \hline
+\nolinkurl{#content p} & Alle acht Absätze innerhalb von \texttt{content}, auch verschachtelte Nachfahren. \\ \hline
+\nolinkurl{#content h2 p} & Die vier Absätze im \texttt{h2} innerhalb von \texttt{content}. \\ \hline
+\nolinkurl{#content > p} & Nur die zwei direkten Absatz-Kinder von \texttt{content}. \\ \hline
+\nolinkurl{#content h1 p} & Die zwei Absätze im \texttt{h1} innerhalb von \texttt{content}. \\ \hline
+\nolinkurl{div p:nth-child(2)} & Vier Absätze: jeweils der zweite Absatz in \texttt{content}, dessen \texttt{h2} und \texttt{h1}, sowie \glqq Text within p1\grqq{} in \texttt{othercontent}. Gezählt werden alle Element-Geschwister. \\ \hline
+\nolinkurl{div p:nth-child(2n)} & Sechs Absätze: dieselben vier, zusätzlich der vierte Absatz im \texttt{h2} von \texttt{content} und \glqq Text within p3\grqq{} in \texttt{othercontent}. Gerade Kindpositionen zählen. \\ \hline
+\nolinkurl{h2} & Alle drei \texttt{h2}-Elemente. Ihre insgesamt fünf Absätze erben die rote Farbe. \\ \hline
+\nolinkurl{div.othercontent > p:first-child} & Kein Element: Das erste Kind von \texttt{othercontent} ist ein \texttt{h1}, kein Absatz. \\ \hline
+\nolinkurl{div.othercontent h1 + p} & Nur \glqq Text within p1\grqq. \texttt{+} wählt den Absatz direkt nach dem \texttt{h1} auf derselben Ebene. \\ \hline
+\nolinkurl{div.othercontent h1 ~ p} & Die vier direkten Absätze p1 bis p4. \texttt{\textasciitilde} wählt spätere Geschwister des \texttt{h1}. \\ \hline
+\nolinkurl{a[title^=other]:link} & \glqq Some other Link\grqq, sofern unbesucht. Der Titel beginnt mit \texttt{other}. \\ \hline
+\nolinkurl{body a[title^=other]:link} & Dasselbe Ergebnis wie zuvor; der Link liegt im \texttt{body}. \\ \hline
+\nolinkurl{.othercontent * p} & Die zwei verschachtelten Absätze im \texttt{h2} und zweiten \texttt{h1} von \texttt{othercontent}. Zwischen Bereich und Absatz muss ein weiteres Element liegen. \\ \hline
+\end{tabular}
+\end{center}
+\textbf{Datei:} Die erste Regel ist aktiviert, die übrigen sind auskommentiert.
+Zum Vergleichen jeweils nur eine Regel aktivieren.
+Alle 14 Regeln wurden einzeln im Browser geprüft.
+
+\medskip
+\textbf{Hinweis:} Die vorgegebene HTML-Struktur wurde beibehalten.
+Absätze innerhalb von Überschriften sind kein gültiges HTML.
+
+\medskip
+\textbf{Quelle:} \href{https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Selectors/Selectors_and_combinators}{MDN: CSS selectors and combinators}.
+\medskip
+{\small \textbf{Hilfsmittel:} Codex für Erstellung, Prüfung und Dokumentation.}
+\end{document}

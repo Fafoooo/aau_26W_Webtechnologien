@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Selectors</title>
+    <style>
+        /*uncomment one rule at at time and explain the result.*/
+        #content, p { color: red; }                       /* Bereich und Absätze */
+        /*#content p { color: red; }*/                    /* Absätze im Bereich */
+        /*#content h2 p { color: red; }*/                 /* Absätze in h2 */
+        /*#content > p { color: red; }*/                  /* Direkte Absatzkinder */
+        /*#content h1 p { color: red; }*/                 /* Absätze in h1 */
+        /*div p:nth-child(2) { color: red; }*/            /* Absatz als Zweitkind */
+        /*div p:nth-child(2n) { color: red; }*/           /* Gerade Absatzpositionen */
+        /*h2 {color: red;}*/                             /* Alle h2-Überschriften */
+        /*div.othercontent > p:first-child { color:red; }*/ /* Kein passender Absatz */
+        /*div.othercontent h1 + p  { color:red; }*/       /* Direkt folgender Absatz */
+        /*div.othercontent h1 ~ p { color:red; }*/        /* Alle folgenden Absatzgeschwister */
+        /*a[title^=other]:link { color:red; }*/            /* Unbesuchter other-Link */
+        /*body a[title^=other]:link { color:red; }*/       /* other-Link im body */
+        /*.othercontent * p { color: red; }*/            /* Tiefer verschachtelte Absätze */
+    </style>
+
+</head>
+
+<body>
+<h2> This is some text </h2>
+<div id="content">
+    <p> Text within paragraph 1 </p>
+    <p> text within paragraph 2 </p>
+    <h2>
+        <p> Text within paragraph 1 in h2. </p>
+        <p> Text within paragraph 2 in h2. </p>
+        <p> Text within paragraph 3 in h2. </p>
+        <p> Text within paragraph 4 in h2. </p>
+    </h2>
+    <h1>
+        <p> Text within h1 and p </p>
+        <p> Text within h1 and p 2</p>
+    </h1>
+</div>
+<div class="othercontent">
+    <h1> A heading</h1>
+    <p> Text within p1</p>
+    <p> Text within p2</p>
+    <p> Text within p3</p>
+    <p> Text within p4</p>
+
+    <h2>
+        <p> Text within h2 within a paragraph</p>
+    </h2>
+    <h1>
+        <p> Text within h1 within a paragraph. </p>
+    </h1>
+</div>
+
+<p> Text in paragraph as a child of body</p> <a title="somelink" href="#">Some Link</a> <a title="otherlink"
+                                                                                           href="#other">Some other
+    Link</a>
+</body>
+
+</html>

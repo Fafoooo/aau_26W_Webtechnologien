@@ -1,0 +1,40 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 1}}
+\end{center}
+\section*{Aufgabe 6: Mietwagenformular}
+\textbf{Aufgabe:} Das Formular in \texttt{ex6.html} um Kontakt- und
+Mietdaten sowie Fahrzeugwünsche ergänzen. HTML-Prüfungen verwenden,
+ohne CSS oder JavaScript.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item Anrede, Name, E-Mail und Telefonnummer.
+  \item Abhol- und Rückgabedatum, Abholort und Passagierzahl.
+  \item Farbauswahl und sechs Fahrzeugtypen als Radiobuttons.
+  \item Optionaler Kommentar mit maximal 512 Zeichen.
+  \item Labels, Feldgruppen und Beispieltexte für Textfelder.
+  \item Pflichtfelder, E-Mail-Prüfung, Telefonmuster und positive ganze Passagierzahl.
+  \item Farbfeld mit Vorgabewert; damit wird immer ein Farbwert übermittelt.
+  \item Absenden über \texttt{mailto} mit benannten Feldern und Reset-Button.
+\end{itemize}
+\textbf{Test:} Über Apache unter
+\url{http://localhost/webtech-aufgabe6/ex6.html} erreichbar,
+Status \texttt{200 OK}. Eingabeprüfungen und Zurücksetzen im Browser geprüft.
+
+\medskip
+Der E-Mail-Versand benötigt einen eingerichteten Mailclient und wurde
+nicht ausgeführt. Die Reihenfolge von Abhol- und Rückgabedatum wird
+ohne JavaScript nicht dynamisch geprüft.
+\medskip
+{\small \textbf{Hilfsmittel:} Codex für Erstellung, Prüfung und Dokumentation.}
+\end{document}

@@ -1,0 +1,54 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 1}}
+\end{center}
+\section*{Aufgabe 2: Apache}
+\textbf{Aufgabe:} Apache einrichten, Konfiguration und localhost
+erklären, die Startseite ändern und den Ordner \texttt{mytest} testen.
+
+\medskip
+\textbf{Ergebnis:} Apache 2.4.58 ist über XAMPP installiert und läuft.
+Die Startseite unter \url{http://localhost/} zeigte zuerst
+\glqq It works\grqq. Nach Änderung der \texttt{index.html}
+steht dort \glqq Apache läuft!\grqq.
+Bei XAMPP wurde \texttt{index.html} über \texttt{DirectoryIndex}
+vor \texttt{index.php} gesetzt.
+
+\begin{description}
+  \item[httpd.conf:] Hauptkonfiguration für Ports, Verzeichnisse, Module
+    und Zugriffsregeln; hier unter \path{C:/xampp/apache/conf/httpd.conf}.
+  \item[ServerRoot:] Basisordner der Apache-Installation:
+    \path{C:/xampp/apache}.
+  \item[DocumentRoot:] Ordner der ausgelieferten Webseiten:
+    \path{C:/xampp/htdocs}.
+  \item[Virtual Host:] Ermöglicht mehrere Webseiten mit eigener
+    Konfiguration auf einem Apache-Server.
+  \item[127.0.0.1 und localhost:] Loopback-Adresse und lokaler Hostname.
+    Damit wird der eigene Rechner angesprochen.
+  \item[index.html:] Standard-Startseite eines Verzeichnisses,
+    sofern als \texttt{DirectoryIndex} konfiguriert.
+\end{description}
+
+\textbf{mytest:} Der Ordner \path{C:/xampp/htdocs/mytest} enthält
+zwei Textdateien und einen Unterordner mit einer weiteren Datei.
+Beim Aufruf von
+\url{http://localhost/mytest/} erscheint \glqq Index of /mytest\grqq{}
+mit den Dateien und dem Unterordner. Es gibt keine Indexdatei;
+\texttt{Options Indexes} erlaubt die Verzeichnisliste.
+
+\medskip
+\textbf{Test:} Startseite und Verzeichnisliste liefern \texttt{200 OK}.
+
+\medskip
+\textbf{Quelle:} \href{https://httpd.apache.org/docs/2.4/mod/core.html}{Apache-Dokumentation}.
+\medskip
+{\small \textbf{Hilfsmittel:} Codex für Erstellung, Prüfung und Dokumentation.}
+\end{document}

@@ -1,0 +1,41 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 1}}
+\end{center}
+\section*{Aufgabe 4: Bildergalerie}
+\textbf{Aufgabe:} Eine Startseite und drei Bildseiten mit den
+vorgegebenen Bildern und Texten erstellen. Die Bildseiten sollen nach
+sieben Sekunden automatisch zum nächsten Bild wechseln.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item \texttt{index.html}: Überschrift \glqq Image Gallery\grqq{} und drei Vorschaubilder.
+    Der Bereich hat die ID \texttt{gallery-section}; die Bilder verlinken die Detailseiten.
+  \item \texttt{img1.html}, \texttt{img2.html}, \texttt{img3.html}:
+    Bildtitel, Bild und vorgegebene Beschreibung.
+  \item Bildtitel beim Überfahren der Vorschaubilder;
+    \glqq Open image [Titel] in full\grqq{} auf den Bildseiten.
+  \item Klick auf das große Bild öffnet die JPEG-Datei in einem neuen Tab.
+  \item Links zu vorherigem Bild, nächstem Bild und Startseite.
+  \item Automatischer Wechsel per Meta-Refresh nach sieben Sekunden:
+    Bild 1 $\rightarrow$ Bild 2 $\rightarrow$ Bild 3 $\rightarrow$ Bild 1.
+\end{itemize}
+\textbf{alt-Attribute:} Beschreiben den Bildinhalt für Screenreader
+und bei nicht geladenen Bildern.
+
+\medskip
+\textbf{Test:} Alle vier HTML-Seiten und sechs Bilddateien sind über
+Apache mit Status \texttt{200 OK} erreichbar.
+Startseite: \url{http://localhost/webtech-aufgabe4/}.
+\medskip
+{\small \textbf{Hilfsmittel:} Codex für Erstellung, Prüfung und Dokumentation.}
+\end{document}

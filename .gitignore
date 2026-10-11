@@ -1,0 +1,5 @@
+*.zip
+*.rar
+
+# Local repository analysis
+graphify-out/

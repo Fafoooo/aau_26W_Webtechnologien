@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Rental</title>
+</head>
+<body>
+  <h1>Your Rental</h1>
+  <form action="mailto:faschmickl@edu.aau.at?subject=Rental%20Request" method="post" enctype="text/plain">
+    <fieldset>
+      <legend>Contact details</legend>
+      <p>
+        <label for="title">Title:</label>
+        <select id="title" name="title" required>
+          <option value="">Please select</option>
+          <option>Mr</option>
+          <option>Mrs</option>
+          <option>Mx</option>
+          <option>Dr</option>
+        </select>
+      </p>
+      <p>
+        <label for="name">Name:</label>
+        <input id="name" name="name" type="text" placeholder="Alex Example" pattern=".*\S.*" required>
+      </p>
+      <p>
+        <label for="email">Email:</label>
+        <input id="email" name="email" type="email" placeholder="alex@example.com" required>
+      </p>
+      <p>
+        <label for="phone">Phone:</label>
+        <input id="phone" name="phone" type="tel" placeholder="+43 463 123456" pattern="\+?[0-9][0-9 \(\)\-]{5,24}" title="6 to 25 characters: digits, spaces, parentheses, hyphens; optional leading +" required>
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rental details</legend>
+      <p>
+        <label for="pickup-date">Pickup date:</label>
+        <input id="pickup-date" name="pickup_date" type="date" required>
+      </p>
+      <p>
+        <label for="return-date">Return date:</label>
+        <input id="return-date" name="return_date" type="date" required>
+      </p>
+      <p>
+        <label for="pickup-location">Pickup location:</label>
+        <input id="pickup-location" name="pickup_location" type="text" placeholder="Klagenfurt Airport" pattern=".*\S.*" required>
+      </p>
+      <p>
+        <label for="passengers">Number of passengers:</label>
+        <input id="passengers" name="passengers" type="number" min="1" step="1" required>
+      </p>
+      <p>
+        <label for="color">Vehicle color:</label>
+        <input id="color" name="vehicle_color" type="color" value="#000000">
+      </p>
+      <fieldset>
+        <legend>Vehicle type</legend>
+        <label><input type="radio" name="vehicle_type" value="Sports car" required> Sports car</label>
+        <label><input type="radio" name="vehicle_type" value="Combi" required> Combi</label>
+        <label><input type="radio" name="vehicle_type" value="Truck" required> Truck</label>
+        <label><input type="radio" name="vehicle_type" value="Van" required> Van</label>
+        <label><input type="radio" name="vehicle_type" value="SUV" required> SUV</label>
+        <label><input type="radio" name="vehicle_type" value="Luxury" required> Luxury</label>
+      </fieldset>
+    </fieldset>
+
+    <fieldset>
+      <legend>Final comments</legend>
+      <label for="comments">Comments (optional, max. 512 characters):</label><br>
+      <textarea id="comments" name="comments" maxlength="512" rows="4" cols="50" placeholder="Please provide a child seat."></textarea>
+    </fieldset>
+    <p>
+      <button type="submit">Submit Rental Request</button>
+      <button type="reset">Reset</button>
+    </p>
+  </form>
+</body>
+</html>

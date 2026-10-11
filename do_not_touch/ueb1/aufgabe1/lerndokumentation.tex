@@ -1,0 +1,84 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.15}
+\begin{document}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 1}}\\[4pt]
+  Aufgabe 1: HTTP-Requests \quad -- \quad 11.10.2026
+\end{center}
+
+\subsection*{1a und 1b: AAU und ORF}
+\textbf{Aufgabe:} HTTP-Requests von AAU und ORF untersuchen:
+Anzahl, Datenmenge, Ladezeit, Statuscode, Webserver, Ressourcentypen,
+langsamster Request und Cookies.
+
+\textbf{Ergebnisse:}
+
+\begin{center}
+\begin{tabular}{|p{4.1cm}|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{Messwert} & \textbf{aau.at} & \textbf{orf.at} \\ \hline
+Requests & 206 & 85 \\ \hline
+Übertragene Daten & 9,7 MB & 4700 kB \\ \hline
+Ressourcengröße & 9,8 MB & 6284 kB \\ \hline
+DOMContentLoaded & 1,76 s & 731 ms \\ \hline
+Load & 2,22 s & 1,06 s \\ \hline
+Finish & 9,56 s & 7,84 s \\ \hline
+Erster Dokument-Request & GET, 200 OK & GET, 200 OK \\ \hline
+Webserver & nginx & Apache \\ \hline
+Ressourcentypen & HTML, CSS, JavaScript, Schriftarten, PNG, JPEG; eingebettete SVGs & HTML, CSS, JavaScript, Schriftarten, JPEG, Fetch/XHR \\ \hline
+Langsamster Request & \nolinkurl{wpml-mod.min.js?ver=7.1.6}: 648 ms & \nolinkurl{semantic.js?tenantId=1655}: 185 ms (blockiert); erfolgreiches JPEG: 152 ms \\ \hline
+Cookies & Vier, siehe unten & Keine beobachtet \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{AAU-Cookies:}\\
+\texttt{aviaCookieConsent},
+\texttt{aviaPrivacyEssentialCookiesEnabled},\\
+\texttt{aviaPrivacyMustOptInSetting},
+\texttt{aviaPrivacyRefuseCookiesHideBar}.
+
+{\small Die Request-Zahlen sind die angezeigten Gesamtwerte.
+Im Mitschnitt waren auch Einträge von Browsererweiterungen sichtbar.}
+
+\subsection*{1c: Google-Suche}
+\textbf{Aufgabe:} Netzwerkaktivität beim Eintippen von
+\glqq Klagenfurt\grqq{} in das Google-Suchfeld beobachten.
+
+\textbf{Ergebnis:} Zehn XHR-Requests mit Status 200.
+Der Parameter \texttt{q} enthielt
+den jeweils eingegebenen Text. Die Antwort enthielt Suchvorschläge wie
+\glqq klagenfurt wetter\grqq{} und \glqq klagenfurt einwohner\grqq.
+Diese werden beim Tippen nachgeladen, ohne die ganze Seite neu zu laden.
+
+\subsection*{1d: Cache}
+\textbf{Aufgabe:} Cache, Löschen und Gründe für das Deaktivieren erklären.
+
+\textbf{Ergebnis:} Der Browsercache speichert Dateien lokal zur
+Wiederverwendung. Löschen ist über \glqq Cache leeren und vollständig
+neu laden\grqq{} möglich; \textbf{Disable cache} deaktiviert ihn bei
+geöffneten Entwicklertools. Beides hilft, nach Änderungen aktuelle Dateien
+zu laden. Vergleichsmessung auf ORF:
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Aufruf} & \textbf{Übertragen} & \textbf{Load} & \textbf{Finish} \\ \hline
+Mit Cache & 3,3 MB & 1,22 s & 8,01 s \\ \hline
+Cache deaktiviert & 5,5 MB (119 Requests) & -- & -- \\ \hline
+Cache geleert und neu geladen & 5,4 MB & 10,51 s & 24,35 s \\ \hline
+\end{tabular}
+\end{center}
+
+Mit Cache waren Einträge mit \texttt{memory cache} und
+\texttt{disk cache} sichtbar.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Codex für Erklärungen, Auswertung der eigenen Messwerte und Dokumentation.}
+\end{document}
