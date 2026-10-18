@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- AI-assisted implementation (Hermes/OpenAI); see the assignment AI report. -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Number-Guessing Game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="game.js" defer></script>
+</head>
+<body>
+    <h1>Number-Guessing Game</h1>
+    <p id="welcome">Welcome! Guess a number from 1 to 10 in at most three attempts.</p>
+    <fieldset id="game-field" hidden>
+        <legend>Enter a number between 1 and 10</legend>
+        <label for="guess">Your guess:</label>
+        <input id="guess" type="number" min="1" max="10" step="1" required>
+    </fieldset>
+    <div id="buttons">
+        <button id="check" type="button" disabled hidden>Check</button>
+        <button id="start" type="button">Start Game</button>
+    </div>
+</body>
+</html>

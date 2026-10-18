@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage[ngerman]{babel}
+\usepackage[margin=24mm]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{4em}
+\setlist{nosep,leftmargin=*}
+\hypersetup{hidelinks}
+\begin{document}
+\begin{center}
+{\Large KI-Bericht zu Assignment 3}\\[4pt]
+Web-Technologien UE (621.901), WS 2026/27
+\end{center}
+
+\section*{1. Transparenz und Bedingungen}
+Die Lösungen der vier Programmieraufgaben und die begleitenden Lernhilfen wurden durch KI erzeugt und technisch geprüft. Dieser Bericht behauptet weder, dass Fabio die Lösungen bereits vollständig versteht, noch dass er sie selbst geschrieben oder persönlich geprüft hat. Der Abschnitt zur eigenen Bearbeitung bleibt zum selbstständigen Ausfüllen frei.
+
+Die bereitgestellte dokumentierte Kursfreigabe erlaubt vollständige KI-Lösungen unter der Bedingung, dass der Studierende sie vollständig versteht und erklären kann. Ein KI-Bericht pro Abgabe ist vorgeschrieben. Die technische Prüfung ersetzt diese persönliche Voraussetzung nicht. Es wurde nichts in Moodle abgegeben und keine E-Mail versendet.
+
+\section*{2. Anbieter, Modell und Werkzeuge}
+\begin{itemize}
+\item \textbf{Anbieter des Modells:} OpenAI. \texttt{hermes status} meldete als Zugangsprovider \emph{ChatGPT or Codex Subscription}.
+\item \textbf{Modell und Versionskennung:} \texttt{gpt-6.1-sol}; diese Modellkennung wurde tatsächlich mit \texttt{hermes status} abgelesen. Eine zusätzliche Modellversionsnummer wurde dort nicht ausgewiesen und wird hier nicht erfunden. Auch die verwendeten Teilinstanzen meldeten \texttt{gpt-6.1-sol}.
+\item \textbf{Reasoning-Effort:} \texttt{high} laut Vorgabe dieses Bearbeitungsauftrags. \texttt{hermes status} zeigte keinen gesonderten Nachweis dieses Parameters; eine unabhängige Laufzeitbestätigung wird daher nicht behauptet.
+\item \textbf{Agent und Skills:} Hermes Agent (Nous Research), Skills \texttt{solve-and-explain}, \texttt{moodle}, \texttt{web-exercise-verification} sowie der Hermes-Agent-Leitfaden zum korrekten Umgang mit dem verwendeten Agenten. Der Mathe-PDF-Zweig des ersten Skills war wegen der Programmieraufgaben nicht einschlägig.
+\item \textbf{Tatsächlich verwendete Hilfsmittel:} Moodle-App-API über das vorhandene Hilfsskript; Git und GitHub-CLI für das Kursrepository; Dateilesen/-schreiben und gezielte Patches; PDF-Textauszug und gerenderte PDF-Seiten zur Sichtprüfung; Python zum Entpacken und Zusammenführen von Dokumentation; Node.js, Playwright und echtes headless Chromium für Browserprüfungen; pdfLaTeX für diesen Bericht; delegierte Teilinstanzen für Implementierung und unabhängige Prüfung.
+\item \textbf{Keine Produktframeworks:} Die abzugebenden Webseiten verwenden ausschließlich HTML, CSS und JavaScript. Playwright gehört nur zur externen Testumgebung und wird nicht in die Webseiten eingebunden. Keine zusätzlichen Recherche-Webseiten waren zur Lösung erforderlich.
+\end{itemize}
+
+\section*{3. Tatsächlich bereitgestellter Kontext}
+\begin{itemize}
+\item Die vollständige Originaldatei \texttt{Assignment03.pdf} hat vier Seiten. Ihre Kopie heißt \texttt{angabe\_blatt03.pdf}. Text wurde extrahiert; alle vier Seiten wurden zusätzlich als Bilder betrachtet.
+\item Moodle-Kursinhalte wurden abgerufen und das Archiv \texttt{Files\_Blatt3/files.zip} nachgeladen. Die Originale für \texttt{editable} und \texttt{puzzle} liegen unverändert unter \texttt{Angabe/files/}.
+\item Die Moodle-Beschreibung im übergebenen Kontext war leer. Es wurde keine ergänzende Aufgabenbeschreibung erfunden.
+\item Die bereits vorhandene Galerie aus Assignment 2, Aufgabe 6, wurde als ausdrücklich verlangte Grundlage gelesen und kopiert.
+\item Die dokumentierte KI-Erlaubnis und die Vorgabe eines wahrheitsgemäßen KI-Berichts wurden vor Beginn der Lösung gelesen.
+\end{itemize}
+
+\section*{4. Tatsächlicher Ablauf}
+\begin{enumerate}
+\item \textbf{Angabe erfassen:} Repository aktualisiert; Original-PDF kopiert; alle Aufgaben 1 bis 4 erfasst; zusätzliche Moodle-Dateien geladen und mit Python entpackt. Das Programm \texttt{unzip} war nicht installiert; die tatsächlich ausgeführte Alternative war das Standardmodul \texttt{zipfile}.
+\item \textbf{Lösen:} Zwei Teilinstanzen implementierten parallel die Aufgaben 1/2 beziehungsweise 3/4. Jede Aufgabe erhielt einen eigenen Produktordner, eine Antwortdatei und ausführliche deutsche Erläuterungen. Die Vorlagenrestriktionen wurden beachtet und die Verwendung von KI offen bezeichnet.
+\item \textbf{Testen:} Beide Teilinstanzen erstellten reproduzierbare Chromium-Tests. Die vorhandene externe Playwright-Installation wurde nach anfänglich fehlender Standard-Modulauflösung über eine Umgebungsvariable eingebunden. Ungültige Testselektoren beziehungsweise Fixture-/Browserursprungsprobleme wurden im Testaufbau korrigiert, nicht durch erfundene Ergebnisse übergangen. Nach vollständigem Erfolg führte der übergeordnete Bearbeitungslauf beide Testdateien selbst erneut aus: jeweils 18 bestandene Tests bzw. Prüfgruppen, keine JavaScript-Seitenfehler.
+\item \textbf{Unabhängige Prüfung:} Eine dritte Teilinstanz erhielt Originalangabe, Originale, fertige Quellen und Erklärungen zur unabhängigen Prüfung. Sie las die Produktdateien zeilenweise und schrieb ein eigenes Browserskript statt die vorhandenen Tests als unabhängig auszugeben. Ergebnis: 18 eigene bestandene Prüfgruppen in Chromium 148.0.7778.96, kein Funktionsbefund. Eine ungenaue Erklärung über später hinzugefügte Puzzle-Quellbilder wurde beanstandet.
+\item \textbf{Befund einarbeiten:} Die Lernhilfe wurde präzisiert: Ziele werden anfangs erfasst; Quellbilder werden delegiert bei Klick erkannt und können später ergänzt werden. Private Installationspfade wurden aus der Dokumentation entfernt. Produktcode wurde durch diese redaktionellen Änderungen nicht verändert.
+\item \textbf{Erklärung und Artefakte:} Die zwei detaillierten Teil-Erklärungen wurden als gemeinsame \texttt{erklaerung\_blatt03.md} zusammengeführt. Dieser Bericht dokumentiert den tatsächlichen mehrstufigen Ablauf. Der Bericht wird mit pdfLaTeX gebaut und auf lesbaren Text sowie Seitenzahl geprüft. Die abschließende Git-Veröffentlichung erfolgt erst nach den technischen Prüfungen; der Bericht allein ist kein Nachweis einer erfolgten Abgabe.
+\end{enumerate}
+
+\section*{5. Prompt-Verlauf, sinngemäß}
+Die folgenden Punkte geben die tatsächlich gestellten Arbeitsaufträge wieder, nicht hypothetische oder nachträglich erfundene Nutzerprompts. Wiederholte Testläufe innerhalb der Teilaufträge waren Ausführungen dieser Aufträge, keine behaupteten neuen Prompts von Fabio.
+
+\textbf{Gesamtauftrag des automatisierten Solver-Laufs:} Löse das zugewiesene Übungsblatt 3 von Web-Technologien vollständig ohne Rückfragen. Verwende je Aufgabe einen Ordner mit lauffähigem, getestetem Plain-JavaScript-/CSS-Code und \texttt{antwort.md}. Erstelle eine deutsche Schritt-für-Schritt-Lernhilfe zu jeder Datei, beachte die KI-Erlaubnis und erstelle einen ehrlichen KI-Bericht mit freiem Abschnitt für eigene Bearbeitung. Originale beilegen, unabhängig prüfen, Hilfsdateien nicht committen, das Ergebnis nach erfolgreicher Prüfung im Kursrepository veröffentlichen und den Auftrag abschließen. Nichts in Moodle abgeben.
+
+\textbf{Teilauftrag A, Aufgaben 1 und 2:} Implementiere und browser-teste das Zahlenratespiel und den HTML-Editor vollständig. Erhalte beim Editor die Originalbytes bis auf die Scriptreferenz. Prüfe Spielzustände, gültige Zahlen, genau drei Versuche, Reset sowie den Vorrang der Überschrift aus dem Texteingabefeld auch bei entfernter HTML-Überschrift. Dokumentiere die Auslegung widersprüchlicher Formulierungen. Schreibe ausführliche deutsche Dateierklärungen und reproduzierbare Tests; nicht selbst committen oder pushen.
+
+\textbf{Teilauftrag B, Aufgaben 3 und 4:} Erweitere die vorige Galerie um Play/Pause, Sekundenfeld, Endlosschleife und vollständige Timerbereinigung; erhalte die bisherige Galerie als unveränderte Grundlage. Prüfe null/ein/mehrere Vorschaubilder und gleiche Bild-URLs. Implementiere das Puzzle als mausgeführtes Anklicken/Bewegen/Platzieren über tatsächliche Mauskoordinaten, mit Rückgabe belegter Bilder und allgemeiner Prüfung aller \texttt{div[data-result]}. Schreibe Antworten, deutsche Dateierklärungen und echte Browsertests; nicht selbst veröffentlichen.
+
+\textbf{Unabhängiger Prüfauftrag:} Vergleiche alle fertigen Produktquellen, Originalrestriktionen und Erklärungen zeilenweise mit der Originalangabe. Prüfe die kritischen Fälle mit einem eigenen Browserskript, melde Befunde mit Datei/Zeile und Schweregrad und schreibe einen sachlichen Prüfbericht. Bestehende Lösungen nicht ändern, keine Veröffentlichung. Der anschließende Elternlauf korrigierte den tatsächlich gemeldeten geringen Dokumentationsbefund.
+
+\section*{6. Prüfergebnisse und Grenzen}
+\begin{itemize}
+\item Richtiges Ratespielverhalten einschließlich beider Zufallsgrenzen, ungültiger Eingaben, drittem Treffer bzw. drittem Fehler und Wiederstart wurde im Browser geprüft.
+\item Originaltreue, vollständiges Laden des Section-HTML, Überschriftenvorrang, wiederholte Bearbeitung und Aktualisierung der Select-Optionen wurden geprüft. Der Editor akzeptiert absichtlich vertrauenswürdiges HTML und ist kein Sanitizer.
+\item Galerie-Wechsel, Endlosschleife, Pause, Exit, ursprüngliche Schließwege, Live-Dauerwechsel und wiederholtes Öffnen wurden geprüft. Timerprüfungen nutzten die deterministische Browseruhr; Hintergrundtab-Drosselung und Echtzeitpräzision wurden nicht behauptet.
+\item Puzzle-Mausposition statt versetzter Vorschau, Rücktausch derselben Originalelemente, beliebig angeordnete Ziele, doppelte URLs, kompletter Sieg und komplette Fehlbelegung wurden geprüft.
+\item Alle genannten Browserergebnisse stammen aus Chromium 148.0.7778.96. Andere Browserfamilien, Touchgeräte und Screenreader wurden nicht geprüft. Externe HTTP(S)-Ressourcen waren in Offline-Tests blockiert; lokale Bilddateien wurden tatsächlich geladen. Ursprüngliche externe Logos und fehlende alte Linkziele werden nicht als verfügbar behauptet.
+\item Kein persönliches Verständnis, keine eigenen Änderungen und kein KI-freier Eigenleistungsanteil von Fabio wurden vom Agenten bestätigt.
+\end{itemize}
+
+\clearpage
+\section*{7. Eigene Bearbeitung -- von Fabio selbst auszufüllen}
+\textbf{Dieser Abschnitt wurde bewusst nicht durch KI ausgefüllt.} Nur tatsächlich selbst durchgeführte Schritte eintragen. Vor der Abgabe jede Lösung vollständig verstehen und erklären können.
+
+\textbf{Welche Dateien und Funktionen habe ich selbst nachvollzogen?}
+\vspace{26mm}\hrule\vspace{14mm}\hrule
+\vspace{7mm}
+\textbf{Welche Tests habe ich selbst durchgeführt und was habe ich dabei beobachtet?}
+\vspace{26mm}\hrule\vspace{14mm}\hrule
+\vspace{7mm}
+\textbf{Welche Änderungen oder Korrekturen habe ich selbst vorgenommen und warum?}
+\vspace{26mm}\hrule\vspace{14mm}\hrule
+\vspace{7mm}
+\textbf{Welche Rückfragen oder unklaren Stellen habe ich noch geklärt?}
+\vspace{23mm}\hrule\vspace{14mm}\hrule
+\vspace{8mm}
+Datum: \rule{42mm}{0.4pt}\hfill Name/Unterschrift: \rule{58mm}{0.4pt}
+\end{document}
