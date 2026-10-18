@@ -1,0 +1,18 @@
+document.querySelector('#button').addEventListener('click',function (event){
+    console.log("inner:");
+    console.log("target: "+event.target);
+    console.log("currentTarget: "+event.currentTarget);
+    console.log("this: "+this);
+});
+
+document.querySelector('#outerArea').addEventListener('click',function (event){
+        console.log("outer:");
+        console.log("target: " + event.target);
+        console.log("currentTarget: " + event.currentTarget);
+        console.log("this: " + this);
+});
+
+// Keep the existing button listener, but prevent bubbling to outerArea.
+document.querySelector('#button').addEventListener('click', function (event) {
+    event.stopPropagation();
+});

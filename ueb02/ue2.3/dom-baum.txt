@@ -1,0 +1,27 @@
+#document
+  <!DOCTYPE html>
+  html lang="en"
+    head
+      #text "\n    "
+      meta charset="UTF-8"
+      #text "\n    "
+      title
+        #text "DOM Operations"
+    #text "\n"
+    body
+      #text "\n"
+      a href="https://en.wikipedia.org" target="_new"
+        img src="https://cdn4.iconfinder.com/data/icons/world-flags-rounded/900/uk_united_kingdom_britain_british_flag-512.png" alt="British Flag"
+      #text "\nBeforeParent\n"
+      a href="https://de.wikipedia.org" target="_new"
+        p
+          #text "Text"
+        #text "\n    Before "
+        img src="https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png" alt="Austrian Flag"
+        #text "\n    After\n"
+      #text "\nAfterParent\n"
+      a href="https://ja.wikipedia.org" target="_new"
+        #text "\n    "
+        img src="https://cdn1.iconfinder.com/data/icons/flags-free/64/Flags_Flag_Country_National_Symbol_Japan-512.png" alt="Japanese Flag"
+        #text "\n"
+      #text "\n\n"

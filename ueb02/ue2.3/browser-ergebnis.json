@@ -1,0 +1,40 @@
+{
+  "browser": "148.0.7778.96",
+  "externalImages": "blocked in test; actual HTML unchanged",
+  "console": [
+    "https://de.wikipedia.org",
+    "https://de.wikipedia.org",
+    "https://de.wikipedia.org/",
+    "JSHandle@node",
+    "2",
+    "1",
+    "BODY",
+    "A",
+    "2",
+    "<p>Text</p>\n    Before <img src=\"https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png\" alt=\"Austrian Flag\">\n    After\n",
+    "<a href=\"https://de.wikipedia.org\" target=\"_new\"><p>Text</p>\n    Before <img src=\"https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png\" alt=\"Austrian Flag\">\n    After\n</a>",
+    "Text\n\nBefore  After ",
+    "Text\n\nBefore  After ",
+    "Text\n    Before \n    After\n",
+    "JSHandle@node",
+    "null"
+  ],
+  "values": [
+    "https://de.wikipedia.org",
+    "https://de.wikipedia.org",
+    "https://de.wikipedia.org/",
+    "<p>Text</p>",
+    2,
+    1,
+    "BODY",
+    "A",
+    2,
+    "<p>Text</p>\n    Before <img src=\"https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png\" alt=\"Austrian Flag\">\n    After\n",
+    "<a href=\"https://de.wikipedia.org\" target=\"_new\"><p>Text</p>\n    Before <img src=\"https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png\" alt=\"Austrian Flag\">\n    After\n</a>",
+    "Text\n\nBefore  After ",
+    "Text\n\nBefore  After ",
+    "Text\n    Before \n    After\n",
+    "<a href=\"https://de.wikipedia.org\" target=\"_new\"><p>Text</p>\n    Before <img src=\"https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png\" alt=\"Austrian Flag\">\n    After\n</a>",
+    null
+  ]
+}

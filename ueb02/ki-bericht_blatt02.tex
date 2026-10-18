@@ -1,0 +1,60 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=24mm]{geometry}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\setlist{nosep}
+\setlength{\emergencystretch}{3em}
+\title{KI-Bericht zu Übungsblatt 2\\\large Web-Technologien (621.901), WS 2026/27}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+\section*{Anbieter, Modell und Einstellungen}
+\begin{itemize}
+\item Anbieter: OpenAI. Zugangsart laut tatsächlich ausgeführtem \texttt{hermes status}: \emph{ChatGPT or Codex Subscription}.
+\item Modell/Versionskennung laut Status: \texttt{gpt-6.1-sol}. Eine feinere Modellrevision oder ein separates Versionsdatum wurde nicht angezeigt und wird nicht ergänzt. Die delegierten Instanzen meldeten dieselbe Modellkennung.
+\item Reasoning-Effort: \texttt{high} als Vorgabe dieses Auftrags. Der ausgeführte Status weist diesen Wert nicht separat aus; eine zusätzliche technische Bestätigung wird deshalb nicht behauptet.
+\item Werkzeuge: Hermes Agent; Skills \emph{moodle}, \emph{solve-and-explain} und \emph{hermes-agent}; Lesen und Schreiben von Dateien, gezielte Patches, Terminal, PDF-Textauszug und PDF-Seitenbilder; Node.js, Playwright und Chromium für Tests; Git für Versionsverwaltung; LaTeX für diesen Bericht. Playwright ist ausschließlich Testwerkzeug, keine Bibliothek der gelösten Webseiten.
+\end{itemize}
+
+\section*{Verwendeter Kontext}
+Die vierseitige Originalangabe \texttt{Assignment02.pdf}, die aktuellen Moodle-Kursinhalte und die zu Blatt 2 gehörenden Originaldateien aus \texttt{Files\_Blatt2}: \texttt{ex3.html}, \texttt{glassOrder.html}, der Ordner \texttt{ex5} und die vollständige \texttt{gallery}-Vorlage. Die zusätzlich übergebene Moodle-Beschreibung war leer. Die dokumentierte kursbezogene KI-Erlaubnis wurde vor dem Lösen gelesen: KI-Unterstützung ist an das vollständige eigene Verständnis geknüpft; der KI-Bericht ist erforderlich.
+
+\section*{Tatsächlicher Ablauf}
+\begin{enumerate}
+\item Angabe als Text auslesen und alle vier Seiten als Bilder prüfen. Sechs Aufgaben und die empfohlenen Projektvorbereitungen erfassen. Die Zusatzdateien aus Moodle laden und Originale getrennt von den Lösungen aufbewahren.
+\item Aufgaben 2/5 und 4/6 an zwei parallele Instanzen zur Implementierung und Prüfung geben. Aufgabe 3 in der Hauptinstanz bearbeiten. Keine zusätzlichen Bibliotheken in den Webseiten einsetzen. Vorgeschriebene HTML-Dateien unverändert lassen; bei Aufgabe 5/6 den vollständigen ursprünglichen JavaScriptcode als unverändertes Byte-Präfix erhalten.
+\item Zahlenratespiel und Ereignisbehandlung mit 36 Tests prüfen. Glasberechnung und Galerie mit 28 Testgruppen prüfen, einschließlich aller 256 Grauwerte und Galerievarianten mit 0/1/2/5 Bildern. Für Aufgabe 3 die 16 Konsolenausgaben im echten Browser beobachten, Knoten und Attribute prüfen und die vollständige DOM-Skizze aus dem Original erzeugen. Alle drei Suiten tatsächlich erfolgreich ausführen. Browser: Chromium 148.0.7778.96; andere Browser wurden nicht geprüft.
+\item Eine weitere, unabhängige Instanz nur mit Angabe, Originalmaterial und fertigen Lösungsdateien beauftragen. Sie bestätigte die Funktionen der Aufgaben 2--6, prüfte die DOM-Werte nochmals eigenständig und reproduzierte die Spiel-/Ereignis- sowie Glas-/Galerietests. Befunde: persönlicher Quiznachweis fehlt; KI-Bericht war zu diesem Prüfzeitpunkt noch nicht erstellt; einige Testerklärungen waren nach Portabilitätsänderungen veraltet.
+\item Die veralteten Modul-/Browserpfadbeschreibungen und Test-Zeilenbereiche korrigieren; diesen Bericht erstellen. Deutsche Erklärungen Datei für Datei beziehungsweise nach Zeilenblöcken zusammenführen. Der Bericht dokumentiert die tatsächliche Prüfung, keine persönliche Eigenleistung. Ein leerer Abschnitt für die eigene Bearbeitung folgt.
+\end{enumerate}
+Testgerüstkorrekturen betrafen Leerraum im leeren HTML-Body, asynchrones Bildladen und den lokalen Datei-Ursprung. Private Installationspfade wurden aus den Testdateien entfernt; reguläre Modulauflösung und optionale Umgebungsvariablen werden verwendet. Die vollständigen Suiten wurden danach erneut erfolgreich ausgeführt.
+
+\section*{Prompt-Verlauf (sinngemäß)}
+\begin{enumerate}
+\item Hauptauftrag: Genau Übungsblatt 2 aus dem Moodle-Kontext autonom bearbeiten; Originale und Zusatzmaterial sichern; lauffähigen getesteten Code je Teilaufgabe, Antworttexte, deutsche Schritt-für-Schritt-Erklärung und einen wahrheitsgemäßen KI-Bericht erstellen; unabhängig prüfen; im Kursrepository versionieren. Nichts in Moodle abgeben, keine E-Mails versenden.
+\item Teilauftrag 1: Aufgaben 4 und 6 implementieren und mit echtem Browser testen. Glaspreis einschließlich Gültigkeit und Einheiten umsetzen; Galerie nur durch angehängten JavaScriptcode erweitern; Originaldateien bytegenau schützen. Antworttexte, ausführliche deutsche Erklärung und reproduzierbare Tests liefern; keine Commits oder Veröffentlichungen durch die Teilinstanz.
+\item Teilauftrag 2: Aufgaben 2 und 5 implementieren und testen. Spiel mit drei Versuchen, Eingabeprüfung, Verlauf und Wiederholung; widersprüchliche Konstantenvorgabe offen erklären. Bei Ereignissen Originalausgabe mit Erweiterung vergleichen und nur Code anhängen. Deutsche Erklärung und Tests liefern; nichts in Moodle abgeben.
+\item Prüfauftrag: Ausschließlich Angabe und fertige Lösung kritisch vergleichen; jede Anforderung und die Codezeilen, DOM-Ausgaben, Glasformel, Ereignisse, Galerie und Originaltreue prüfen. Fehlenden Quiznachweis klar benennen. Nur lesen/testen; nichts ändern oder veröffentlichen.
+\end{enumerate}
+Die Hauptinstanz erhielt keine weiteren erfundenen Benutzerprompts. Dateiänderungen und Testaufrufe wurden im Rahmen dieser tatsächlichen Aufträge durchgeführt.
+
+\section*{Offene persönliche Schritte und Grenzen}
+\textbf{Aufgabe 1 ist offen.} Es wurde kein Moodle-Quiz begonnen oder abgegeben. Der echte Quizversuch und Punkte-Screenshot müssen persönlich ergänzt werden. Es wurde keine Punktzahl und kein Screenshot erfunden. Die Lösung ist dadurch noch keine vollständige Abgabe.
+
+Die Wiederholungsentscheidung im Spiel ist wegen ihrer Änderbarkeit \texttt{let}; das Limit ist \texttt{const}. Die Glaspreisprüfung umfasst alle Pflichtdaten des Formulars. Die Galerie unterstützt beliebig viele beim Laden vorhandene Bilder im Vorlagenformat; nachträglich eingefügte Thumbnails sind nicht abgedeckt. Die ursprüngliche \texttt{innerHTML}-Verwendung bleibt im vorgeschriebenen Originalcode enthalten. Externe Flaggenbilder wurden im DOM-Test blockiert; die Original-URLs sind unverändert. Weder ein Formularversand noch eine Moodle-Abgabe wurde durchgeführt.
+
+\section*{Eigene Bearbeitung -- von Fabio auszufüllen}
+Dieser Abschnitt bleibt absichtlich leer. Erst nach eigener Durchsicht eintragen: Welche Dateien und Konzepte wurden nachvollzogen? Welche Tests selbst ausgeführt? Welche Änderungen selbst vorgenommen? Welche Fragen sind noch offen?
+
+\vspace{7mm}
+\noindent\rule{\linewidth}{0.3pt}\\[12mm]
+\rule{\linewidth}{0.3pt}\\[12mm]
+\rule{\linewidth}{0.3pt}\\[12mm]
+\rule{\linewidth}{0.3pt}\\[12mm]
+\rule{\linewidth}{0.3pt}
+\end{document}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1650" height="720">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="monospace" font-size="14" fill="#182b49">
+<text x="20" y="24">DOM of original ex3.html — indentation represents parent/child relationships</text>
+<text x="20" y="60">#document</text>
+<text x="44" y="84">&lt;!DOCTYPE html&gt;</text>
+<text x="44" y="108">html lang="en"</text>
+<text x="68" y="132">head</text>
+<text x="92" y="156">#text "\n    "</text>
+<text x="92" y="180">meta charset="UTF-8"</text>
+<text x="92" y="204">#text "\n    "</text>
+<text x="92" y="228">title</text>
+<text x="116" y="252">#text "DOM Operations"</text>
+<text x="68" y="276">#text "\n"</text>
+<text x="68" y="300">body</text>
+<text x="92" y="324">#text "\n"</text>
+<text x="92" y="348">a href="https://en.wikipedia.org" target="_new"</text>
+<text x="116" y="372">img src="https://cdn4.iconfinder.com/data/icons/world-flags-rounded/900/uk_united_kingdom_britain_british_flag-512.png" alt="British Flag"</text>
+<text x="92" y="396">#text "\nBeforeParent\n"</text>
+<text x="92" y="420">a href="https://de.wikipedia.org" target="_new"</text>
+<text x="116" y="444">p</text>
+<text x="140" y="468">#text "Text"</text>
+<text x="116" y="492">#text "\n    Before "</text>
+<text x="116" y="516">img src="https://cdn3.iconfinder.com/data/icons/flags-37/300/austria-national-world-512.png" alt="Austrian Flag"</text>
+<text x="116" y="540">#text "\n    After\n"</text>
+<text x="92" y="564">#text "\nAfterParent\n"</text>
+<text x="92" y="588">a href="https://ja.wikipedia.org" target="_new"</text>
+<text x="116" y="612">#text "\n    "</text>
+<text x="116" y="636">img src="https://cdn1.iconfinder.com/data/icons/flags-free/64/Flags_Flag_Country_National_Symbol_Japan-512.png" alt="Japanese Flag"</text>
+<text x="116" y="660">#text "\n"</text>
+<text x="92" y="684">#text "\n\n"</text>
+</g></svg>
