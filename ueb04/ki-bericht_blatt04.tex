@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=23mm]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{hidelinks,pdftitle={KI-Bericht zu Übungsblatt 4},pdfauthor={KI-gestützter Moodle-Solver}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{3em}
+\setlist{itemsep=4pt,topsep=4pt}
+\newcommand{\datei}[1]{\texttt{\detokenize{#1}}}
+\begin{document}
+\begin{center}
+{\Large\bfseries KI-Bericht zu Übungsblatt 4}\\[5pt]
+Web-Technologien UE (621.901), WS 2026/27\\
+Bearbeitungslauf: 26. Oktober 2026
+\end{center}
+
+\section*{1. Transparenz und Rahmen}
+Die vorliegende Lösung wurde im automatisierten Moodle-Solver wesentlich durch KI erstellt. Programmcode, Antworttexte, Erklärungen und Testskripte wurden KI-gestützt erarbeitet. Es wird keine persönliche Eigenleistung von Fabio behauptet. Der Abschnitt am Ende ist für seine tatsächliche eigene Nachbearbeitung freigelassen.
+
+Die dokumentierte Kurserlaubnis gestattet KI-Lösungen unter der Voraussetzung, dass der Studierende die Lösung vollständig versteht und erklären kann. Der verpflichtende KI-Bericht dokumentiert den tatsächlichen Einsatz; ein erfolgreicher automatisierter Test ersetzt das eigene Verständnis nicht.
+
+\section*{2. Anbieter, Modell und Einstellungen}
+\begin{description}[leftmargin=32mm,style=nextline]
+\item[Anbieter] OpenAI; der ausgeführte Befehl \datei{hermes status} meldete als Zugangsweg ,,ChatGPT or Codex Subscription``.
+\item[Modell/Version] \datei{gpt-6.1-sol}, genau der vom Status ausgegebene Modellbezeichner. Eine weitergehende datierte Modellversion oder interne Buildnummer wurde nicht ausgewiesen und wird nicht erfunden. Die Statusabfrage bestätigt die Laufzeit-Auswahl, nicht die interne Implementierung beim Anbieter.
+\item[Reasoning-Effort] \datei{high} gemäß Auftragsvorgabe. Die Statusausgabe enthielt dazu keinen separaten Nachweis; der tatsächlich intern verwendete Effort wurde daher nicht unabhängig bestätigt.
+\item[Agent] Hermes Agent. Geladene Skills:\\
+\datei{solve-and-explain}, \datei{moodle},\\
+\datei{web-exercise-verification},\\
+\datei{latex-layout-verification}, \datei{hermes-agent}.
+\end{description}
+
+\section*{3. Kontext und Werkzeuge}
+\begin{itemize}
+\item Originalangabe \datei{Assignment04.pdf}, drei Seiten: Textauszug und gerenderte Seitenbilder; der eingebettete Code von 3(e) wurde aus dem Bild gelesen.
+\item Die Moodle-Beschreibung im Auftrag war leer. Zusätzlich wurde \datei{Files_Blatt4} über die Moodle-App-API abgerufen; Originaldateien sind unter \datei{Angabe/files} archiviert.
+\item Kontextdateien: beide gelieferten HTML-Dateien und \datei{shopA.js}/\datei{shopB.js}, dokumentierte KI-Erlaubnis sowie vorhandene Repository-Konventionen und frühere Testwerkzeuge.
+\item Terminal und Dateiwerkzeuge; Git/GitHub-CLI für das Repository, Node.js \datei{v22.23.3}, Playwright mit echtem Chromium \datei{148.0.7778.96}, PDF-Textauszug, Bildbetrachtung und pdfLaTeX.
+\end{itemize}
+
+\newpage
+\section*{4. Tatsächlicher Ablauf}
+\begin{enumerate}
+\item \textbf{Angabe erfassen.} Repository mit \datei{git pull --ff-only} aktualisiert, KI-Regel gelesen, PDF als Text und Seitenbilder geprüft. Alle fünf Exercises samt Unterfragen erfasst. Zusatzdateien aus Moodle heruntergeladen und Originale archiviert. Das zunächst versuchte Entpackwerkzeug war nicht installiert; das Archiv wurde mit Pythons Standardmodul entpackt.
+\item \textbf{Lösen.} Aufgaben 1 und 2 sowie 4 und 5 wurden getrennt an Implementierungsinstanzen vergeben. Aufgabe 3 wurde im Hauptlauf erstellt. Bei Aufgabe 1 blieb die geschützte HTML-Datei byteidentisch. Bei Aufgabe 2 wurden beide voneinander unabhängigen Empfängerfehler behoben. Die Diskrepanz ,,Sony A7V`` im PDF gegenüber ,,Sony Alpha IV`` in der gelieferten Datei ist in der Lösung dokumentiert, nicht still umbenannt.
+\item \textbf{Testen und nachrechnen.} Die Scripts wurden wirklich ausgeführt. Browserprüfungen testeten unter anderem Produktzuordnung, Mengen, Cent-Summen, Sortierung, Leeren, Minusbuttons, Prototypidentität und den Einzel-Override. Node-Prüfungen bestätigten Bildgrößen, Pixelzahlen, Framezahlen, Konsolenausgaben, Methodenidentitäten, Vererbung und Laufzeitänderungen. Die Codebild-Ausgabe von 3(e) wurde als \datei{20, 21, 21, 16} ausgeführt und überprüft.
+\item \textbf{Unabhängig prüfen.} Eine Instanz prüfte Aufgaben 1--3 gegen Originalangabe und fertige Dateien, eine andere Aufgaben 4--5. Zusätzlich zu den abgegebenen Tests wurden eigene Referenzprüfungen ausgeführt. Der erste Prüfer fand einen echten Zeichensatzfehler bei direkt geladenen Unicode-Literalen der C-Version und einen damals noch fehlenden Verweis auf die Gesamt-Erklärung. Die übrige Funktionalität war bestätigt.
+\item \textbf{Korrigieren und erneut testen.} Minus und Trennstrich wurden im Script als ASCII-Unicode-Escapes geschrieben, ohne die HTML-Vorlage zu verändern. Die Browsertests vergleichen jetzt die vollständigen tatsächlichen Zeilentexte und das Minuszeichen. Die Gesamt-Erklärung wurde aus den korrigierten Einzeltexten zusammengesetzt. Der anschließende unabhängige Prüfer bestätigte die tatsächlichen Zeichen auf der echten Datei-Seite ohne Normalisierung sowie die vollständige Dokumentation.
+\item \textbf{Erklären und dokumentieren.} Detaillierte deutsche Durchgänge für Code, Vorlagen und Testwerkzeuge stehen sowohl einzeln als auch in \datei{erklaerung_blatt04.md}. Englische Antworten folgen der Sprache der Angabe. Dieser Bericht beschreibt den tatsächlich mehrstufigen KI-Ablauf; persönlich erbrachte Schritte werden nicht ergänzt.
+\end{enumerate}
+
+\section*{5. Verifizierter Stand und Grenzen}
+Der gemeinsame Runner \datei{pruefen.cjs} wurde im Hauptlauf und bei der Abschlussprüfung ausgeführt. Ergebnis: \textbf{15 JavaScript-Syntaxprüfungen und 75 bestandene Tests in drei Suiten}, keine fehlgeschlagene Suite. \datei{testergebnis.json} enthält die aus den echten Ausgaben gelesenen Zahlen. Die Aufteilung ist 32 Tests für Aufgaben 1--2, 11 für Aufgabe 3 und 32 für Aufgaben 4--5.
+
+Unabhängige Befunde und ihre Behebung sind in drei Prüfberichten dokumentiert. Der ältere Bericht bleibt als Verlauf erhalten; der Abschlussbericht bestätigt die Korrekturen. Die Funktionsprüfung bezieht sich auf die ausgeführte Node-/Chromium-Umgebung, nicht auf eine vollständige Browsermatrix. Preise setzen das Aufgabenformat voraus. Bildgrößen meinen rohe Bilddaten ohne Header oder Kompression. Keine automatische Prüfung bestätigt Fabios persönliches Verständnis. Es wurde nichts in Moodle abgegeben.
+
+\newpage
+\section*{6. Prompt-Verlauf, sinngemäß und tatsächlich verwendet}
+Die folgende Zusammenfassung dokumentiert die tatsächlich gestellten Aufträge. Sie ist kein nachträglich erfundener Dialog mit dem Studierenden; technische Steuer- und Zugangsdaten werden nicht veröffentlicht.
+
+\begin{enumerate}
+\item \textbf{Hauptauftrag des automatischen Laufs:} ,,Löse Übungsblatt 4 für Web-Technologien vollständig im Kursrepository. Lies die KI-Regel, übernimm Originaldateien und fehlende Moodle-Zusätze, liefere lauffähigen getesteten Code pro Aufgabe, Antworten und eine vollständige deutsche Erklärung. Erstelle einen wahrheitsgemäßen KI-Bericht. Prüfe unabhängig, versioniere das Ergebnis und markiere den Auftrag erst nach Erfolg als erledigt. Nicht in Moodle abgeben.``
+\item \textbf{Teilauftrag Implementierung 4--5:} ,,Implementiere alle Unterfragen mit Objektliteral, Konstruktor, Prototypvererbung und anschließend ES2015-Klassen. Demonstriere eigene gegenüber geteilten Methoden und Laufzeitzuweisungen, prüfe sämtliche Beispielzahlen und Ausgaben tatsächlich mit Node. Schreibe englische Antworten und eine deutsche Erklärung jeder Code-Datei.``
+\item \textbf{Teilauftrag Implementierung 1--2:} ,,Lies Original-HTML und beide Scripts. Bewahre die geschützte HTML-Datei bytegenau. Liefere getrennte anonyme und Arrow-Varianten, Leeren und DOM-Sortierung. Behebe beide Empfängerfehler. Erstelle die Prototype-Version mit Minussteuerung, Positionssummen und erstem Render-Override. Dokumentiere die Produktnamensdiskrepanz. Prüfe dies mit echtem Playwright/Chromium und erkläre die Originale und neuen Dateien.``
+\item \textbf{Bearbeitung 3 im Hauptlauf:} Entsprechend dem Hauptauftrag wurden eigene ausführbare Beispiele für höhere Funktionen, Closures und Currying, die Konstruktor-Fabrik \datei{getEventHandler()} sowie die exakte Codebild-Abschrift erstellt und gegen tatsächliche Node- und Browserausgaben getestet. Hierzu gab es keinen erfundenen zusätzlichen Nutzerprompt.
+\item \textbf{Unabhängiger Prüfauftrag 1--3:} ,,Lies nur Originalangabe und fertige Artefakte, leite Ergebnisse selbst her und prüfe jede Unterfrage, beide Empfängerfehler, Originalcode-Ausgabe, HTML-Bytegleichheit und Erklärungszeilen. Führe echte Tests aus und melde konkrete Fehler, ohne Produktdateien zu ändern.``
+\item \textbf{Unabhängiger Prüfauftrag 4--5:} ,,Prüfe jede Codezeile und Unterfrage, Rechnungen, Methodenteilung, Vererbung und Aufzählbarkeit unabhängig gegen Angabe und Erklärung. Führe echte Ausgaben und Tests aus; schreibe Befunde, ändere keine Produktdateien.``
+\item \textbf{Abschließender Nachprüfauftrag:} ,,Verifiziere die Unicodekorrektur auf der tatsächlichen Datei-Seite ohne Normalisierung. Prüfe vollständige Gesamt-Erklärung, Dateiverweise, den neuen Runner und den echten Testnachweis. Erstelle einen Abschlussbericht; keine Produktänderungen.``
+\end{enumerate}
+
+Die konkreten Korrekturen im Hauptlauf waren ASCII-Escapes für zwei Unicode-Zeichen, vollständige Text-Assertions in den bestehenden Tests und die Zusammenführung der endgültigen Erklärungen. Eine erfolgreiche Einzelantwort wurde nicht mit einer vollständigen Abgabe gleichgesetzt.
+
+\newpage
+\section*{7. Eigene Bearbeitung -- von Fabio auszufüllen}
+\textbf{Dieser Abschnitt wurde absichtlich nicht durch die KI ausgefüllt.} Nur tatsächlich selbst nachvollzogene, geprüfte oder geänderte Teile eintragen. Die freie Fläche ist keine Behauptung bereits geleisteter Arbeit.
+
+\textbf{Was habe ich selbst gelesen und vollständig nachvollzogen?}
+\vspace{32mm}
+\hrule
+\vspace{8mm}
+\textbf{Welche Tests habe ich selbst ausgeführt, und was war das echte Ergebnis?}
+\vspace{32mm}
+\hrule
+\vspace{8mm}
+\textbf{Welche Codezeilen habe ich selbst verändert, und warum?}
+\vspace{32mm}
+\hrule
+\vspace{8mm}
+\textbf{Welche Begriffe oder Lösungsstellen kann ich noch nicht sicher erklären?}
+\vspace{24mm}
+\hrule
+\vspace{10mm}
+Datum: \rule{35mm}{0.4pt}\hfill Eigene Notiz: \rule{65mm}{0.4pt}
+\end{document}
