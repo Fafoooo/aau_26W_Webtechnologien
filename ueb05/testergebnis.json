@@ -1,0 +1,18 @@
+{
+  "node": "v22.23.3",
+  "syntax_checked": 15,
+  "suites": [
+    {
+      "command": "node test_1_3.cjs",
+      "passed": 12,
+      "status": "passed"
+    },
+    {
+      "command": "node test_4_5.cjs",
+      "passed": 32,
+      "status": "passed"
+    }
+  ],
+  "total_passed": 44,
+  "failed_suites": 0
+}

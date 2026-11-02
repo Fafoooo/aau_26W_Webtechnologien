@@ -1,0 +1,70 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=21mm]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\setlist[itemize]{nosep,leftmargin=*}
+\begin{document}
+\begin{center}
+{\Large\bfseries KI-Bericht -- Übungsblatt 5}\\[4pt]
+Web-Technologien (621.901), WS 2026/27\\
+Stand: 2. November 2026
+\end{center}
+
+\section*{1. Anbieter, Modell und Werkzeuge}
+\begin{itemize}
+\item Anbieter: OpenAI. Laufzeit: Hermes Agent von Nous Research.
+\item Modellkennung laut tatsächlich ausgeführtem \texttt{hermes status}: \texttt{gpt-6.1-sol}. Angezeigter Zugang: ChatGPT or Codex Subscription. Eine zusätzliche Modellversionsnummer wurde nicht ausgegeben; sie wird nicht erfunden.
+\item Reasoning-Effort laut Auftrag: \texttt{high}. Der Status zeigte keinen separaten Effort-Wert; dies ist eine Vorgabe, keine unabhängig bestätigte Laufzeitmessung.
+\item Eingesetzte Skills: \texttt{solve-and-explain} und \texttt{moodle} (im Auftrag eingebunden),\\
+\texttt{web-exercise-verification}, \texttt{hermes-agent} für den Status und\\
+\texttt{latex-layout-verification}.
+\item Werkzeuge: Terminal, Datei-Lese-/Schreibwerkzeuge, PDF-Textauszug und Seitenbilder, Bildansicht, Moodle-App-API zum Lesen und Herunterladen, delegierte KI-Instanzen zur Teilbearbeitung und unabhängigen Prüfung, Node.js, Playwright/Chromium als externe Entwicklungswerkzeuge, Python für Datei-/Prüfskripte sowie pdfLaTeX und Git/GitHub.
+\end{itemize}
+Die Browserlösungen selbst verwenden ausschließlich Plain JavaScript und native DOM-, Promise-, XMLHttpRequest- bzw. Fetch-APIs. Playwright wird nicht in die Produktseiten eingebunden.
+
+\section*{2. Verwendeter Kontext}
+Grundlage waren die zwei Seiten der bereitgestellten \texttt{Assignment05.pdf} und die über Moodle heruntergeladenen Originaldateien \texttt{files.zip}: HTML-/JS-Vorlagen für Aufgaben 1--3 sowie die Produktdateien für Aufgabe 4. Die Moodle-Beschreibung enthielt keinen zusätzlichen Text. Zur verlangten Produktdarstellung wurde die Original-Produktstruktur aus Blatt 4 im selben Kurs-Repository gelesen.
+
+Die dokumentierte kursbezogene KI-Erlaubnis wurde vor der Bearbeitung gelesen. Sie verlangt vollständiges Verständnis und Erklärbarkeit durch den Studierenden sowie einen KI-Bericht. Daraus wird keine bereits erbrachte persönliche Bearbeitung abgeleitet. Es wurden weder eine Moodle-Abgabe noch eine E-Mail ausgeführt.
+
+\section*{3. Tatsächlicher Arbeitsablauf}
+\begin{enumerate}[leftmargin=*,nosep]
+\item Angabe erfassen: PDF zusätzlich als Text auslesen, beide Seiten rendern und bildlich prüfen; alle Aufgaben und Originalvorlagen erfassen.
+\item Lösen: Aufgaben 1--3 an eine KI-Teilinstanz delegieren; Aufgaben 4--5 in der Hauptinstanz implementieren. Die Änderungsgrenzen der Aufgaben 2 und 3 beibehalten; das Cancel/End-Experiment getrennt ablegen.
+\item Testen: echte Browserseiten öffnen, Callback-/Promise-Zustände und Rechenreihenfolge prüfen. Produktseiten über einen echten lokalen HTTP-Server testen, einschließlich HTTP-/Netzwerk-/Daten-/Timeoutfehlern. Test-Harness-Annahmen anhand realer Browsermeldungen korrigieren und erneut ausführen.
+\item Unabhängig prüfen: separate KI-Prüfaufträge zu Aufgaben 1--3 und 4--5 mit Angabe, Quellcode, Antworten und Erklärung; Befunde im Abschlussbericht ausweisen und bei Bedarf einarbeiten.
+\item Erklären und abschließen: deutsche datei- und schrittbezogene Lernerklärung erstellen, englische Aufgabenantworten ergänzen, beide Erklärungsteile bündeln; KI-Bericht mit pdfLaTeX bauen und visuell prüfen; Gesamttests ausführen. Technische Prüfung ersetzt nicht die eigene Vorbereitung auf eine Erklärung.
+\end{enumerate}
+
+\newpage
+\section*{4. Prompt-Verlauf (sinngemäß, keine erfundenen Nutzerprompts)}
+\textbf{Eingegangener Hauptauftrag:} Das vorgegebene Übungsblatt 5 aus Web-Technologien vollständig und autonom lösen, die Originaldateien aus Moodle verwenden, pro Aufgabe lauffähigen getesteten Plain-JavaScript-Code und Antworten ablegen, jede Datei schrittweise auf Deutsch erklären, die KI-Regeln beachten, einen ehrlichen KI-Bericht erzeugen, unabhängig prüfen, ins Kurs-Repository committen und pushen und den fertigen Ordner verlinken. Nichts in Moodle abgeben.
+
+\textbf{Tatsächlicher delegierter Teilauftrag 1:} Aufgaben 1--3 implementieren und im echten Browser testen. Original-Callbackdatei unverändert lassen; bei Aufgabe 2 nur \texttt{runTaskPromise} ändern und konkurrierende Listener bereinigen; das Cancel/End-Experiment getrennt ausführen. Für Aufgabe 3 getrennte Then-/Catch- und Async-/Await-Varianten mit unverändertem \texttt{delayedCalc} erstellen. Englische Antworten, deutsche zeilenbezogene Erklärung und reproduzierbare externe Browsertests liefern. Keine Git-Veröffentlichung und keinen KI-Bericht durch die Teilinstanz vornehmen.
+
+\textbf{Bildprüfungen der Hauptinstanz:} Beide gerenderten Angabeseiten auf Aufgaben, Zahlen und Einschränkungen prüfen; die tatsächlichen XHR-/Fetch-Produktseiten auf vollständige Titel, Beschreibungen, Preise, Knöpfe und lesbares Layout prüfen. Den erzeugten KI-Bericht auf Ränder, Umbrüche und vollständige Inhalte ansehen.
+
+\textbf{Unabhängiger Prüfauftrag A:} Aufgaben 1--3 anhand der Originalangabe und fertigen Dateien kritisch prüfen: fachliche Aussagen, Rechenfolge, zugelassene Änderungen, tatsächliches Cancel/End-Verhalten, Tests und deutsche Erklärung. Nur Befunde liefern, keine Änderungen, kein Commit.
+
+\textbf{Unabhängiger Prüfauftrag B:} Aufgaben 4--5 anhand der Angabe und fertigen Dateien auf native XHR-/Fetch-Nutzung, Produktdarstellung, Fehlerbehandlung, Tests und Erklärungsgenauigkeit prüfen; zusätzlich Ehrlichkeit und Vollständigkeit des KI-Berichts kontrollieren. Nur Befunde liefern, keine Änderungen, kein Commit.
+
+Die Hauptinstanz schrieb Implementierungs-/Prüfskripte und Dokumente direkt über Werkzeuge; dies waren keine zusätzlichen menschlichen Prompts. Die KI hat den vollständigen Lösungsentwurf einschließlich Tests und Erklärung erstellt. Es wird nicht behauptet, der Studierende habe diese Schritte selbst durchgeführt.
+
+\section*{5. Prüfnachweise und Grenzen}
+Der Gesamtlauf mit Node.js \texttt{v22.23.3} und Chromium \texttt{148.0.7778.96} prüfte 15 JavaScriptdateien auf Syntax und bestand 44 Browser-Testgruppen (12 für Aufgaben 1--3, 32 für Aufgaben 4--5). Der maschinenlesbare Nachweis steht in \texttt{testergebnis.json}; Details, unabhängige Befunde und Grenzen in \texttt{pruefbericht\_abschluss.md}. Die ursprüngliche Aufgabe-3-Seite erzeugt absichtlich unbehandelte Rejections; diese wurden beobachtet und nicht als Fehler der fertigen Lösungen ausgegeben. Andere Browser und eine persönliche Vorführung wurden nicht als durchgeführt behauptet.
+
+\section*{6. Eigene Bearbeitung -- von Fabio auszufüllen}
+Welche Dateien und Schritte habe ich selbst nachvollzogen, getestet oder geändert? Welche Rückfragen kann ich eigenständig beantworten? Noch offene Verständnisfragen:
+
+\vspace{4mm}
+\noindent\rule{\linewidth}{0.3pt}\par\vspace{5mm}
+\noindent\rule{\linewidth}{0.3pt}\par\vspace{5mm}
+\noindent\rule{\linewidth}{0.3pt}\par\vspace{5mm}
+\noindent\rule{\linewidth}{0.3pt}
+\end{document}
