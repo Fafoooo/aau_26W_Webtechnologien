@@ -6,19 +6,19 @@
     <title>CSS Selectors</title>
     <style>
         /*uncomment one rule at at time and explain the result.*/
-        #content, p { color: red; }                       /* Bereich und Absätze */
-        /*#content p { color: red; }*/                    /* Absätze im Bereich */
-        /*#content h2 p { color: red; }*/                 /* Absätze in h2 */
-        /*#content > p { color: red; }*/                  /* Direkte Absatzkinder */
+        /*#content, p { color: red; }                       /* Bereich und Absätze mit id "content" */
+        /*#content p { color: red; }                    /* Wählt allte Absätze innerhalb von "content" auch verschaltete*/
+        /*#content h2 p { color: red; }*/                 /* Absätze in h2 mit id content */
+        /*#content > p { color: red; }*/                  /* Direkte Absatzkinder von content. nicht h1,h2 */
         /*#content h1 p { color: red; }*/                 /* Absätze in h1 */
-        /*div p:nth-child(2) { color: red; }*/            /* Absatz als Zweitkind */
-        /*div p:nth-child(2n) { color: red; }*/           /* Gerade Absatzpositionen */
-        /*h2 {color: red;}*/                             /* Alle h2-Überschriften */
-        /*div.othercontent > p:first-child { color:red; }*/ /* Kein passender Absatz */
-        /*div.othercontent h1 + p  { color:red; }*/       /* Direkt folgender Absatz */
+        /*div p:nth-child(2) { color: red; }*/            /* Wählt p innerhalb eines div aus, das zweite Element davon */
+        /*div p:nth-child(2n) { color: red; }*/           /* Wie zuvor nur gerade Zahlen */
+        /*h2 {color: red;}*/                             /* Alle h2-Überschriften, die Absätze darin erben die Textfarbe */
+        /*div.othercontent > p:first-child { color:red; }*/ /* Wählt einen Absatz, der das erste direkte Kind von div.othercontent ist */
+        /*div.othercontent h1 + p  { color:red; }*/       /* Wählt Absatz direkt nach h1 aus */
         /*div.othercontent h1 ~ p { color:red; }*/        /* Alle folgenden Absatzgeschwister */
-        /*a[title^=other]:link { color:red; }*/            /* Unbesuchter other-Link */
-        /*body a[title^=other]:link { color:red; }*/       /* other-Link im body */
+        /*a[title^=other]:link { color:red; }*/            /* Unbesuchter Link der mit other beginnt */
+        /*body a[title^=other]:link { color:red; }*/       /* gleich, aber link muss in body liegen */
         /*.othercontent * p { color: red; }*/            /* Tiefer verschachtelte Absätze */
     </style>
 

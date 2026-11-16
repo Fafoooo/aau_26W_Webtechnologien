@@ -1,0 +1,94 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 3}}
+\end{center}
+\section*{Aufgabe 1: Number-Guessing Game II}
+\textbf{Aufgabe:} Das Zahlenratespiel aus Blatt 2 als Webseite mit HTML,
+CSS und JavaScript umsetzen: Start-Button, Eingabefeld, Check-Button,
+dynamisch erzeugter Exit-Button, maximal drei Versuche. Nur Event Listener
+und DOM-Operationen, keine \texttt{prompt}/\texttt{alert}.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item \texttt{index.html}: im \texttt{head} Titel, \texttt{style.css} und
+    \texttt{game.js} (mit \texttt{defer}). Im \texttt{body} Überschrift,
+    Willkommenstext \texttt{p\#welcome}, \texttt{fieldset\#gameArea} mit
+    Legende und Zahlenfeld, darunter \texttt{div\#buttons} mit dem
+    deaktivierten \texttt{Check}-Button und dem \texttt{Start Game}-Button.
+  \item \texttt{style.css}: \texttt{h1} in Verdana, \texttt{2em},
+    \texttt{margin: 15px}; \texttt{p} zentriert mit \texttt{margin: 10px};
+    Fieldset mit \texttt{margin: auto} zentriert und zuerst
+    \texttt{display: none}; \texttt{input:focus} hellblau
+    (\texttt{lightblue}); Check-Button grün und zuerst unsichtbar,
+    Start-Button blau, Exit-Button (Klasse \texttt{exitButton}) rot.
+    Am Anfang ist nur der Start-Button in der Mitte zu sehen.
+  \item \texttt{startGame()}: versteckt Willkommenstext und Start-Button,
+    zeigt Fieldset und Check-Button, setzt am Eingabefeld
+    \texttt{min=1}, \texttt{max=10}, \texttt{step=1} und
+    \texttt{required}, zieht die Zahl mit
+    \texttt{Math.floor(Math.random() * 10) + 1}, erzeugt die zwei
+    Meldungs-\texttt{div}s mit \texttt{createElement} und setzt sie mit
+    \texttt{buttons.before(...)} zwischen Fieldset und Buttons. Der rote
+    Exit-Button wird ebenfalls erzeugt und mit \texttt{append} in die
+    Button-Leiste gehängt.
+  \item \texttt{updateCheckButton()} hängt am \texttt{input}-Event des
+    Feldes: \texttt{checkButton.disabled = !guessInput.checkValidity()}.
+    Durch die gesetzten Attribute ist nur eine ganze Zahl von 1 bis 10
+    gültig.
+  \item \texttt{checkGuess()}: richtige Zahl $\rightarrow$
+    \glqq Congratulations!\grqq{} mit Anzahl der Versuche und
+    \texttt{endGame()}. Falsche Zahl $\rightarrow$ \glqq Too high!\grqq{}
+    bzw. \glqq Too low!\grqq, der Tipp kommt mit \texttt{push} in das
+    Array \texttt{guesses} und wird mit \texttt{join(", ")} angezeigt.
+    Nach drei Versuchen: \glqq Game over!\grqq{} mit der richtigen Zahl,
+    \texttt{endGame()} sperrt Check-Button und Eingabefeld.
+  \item \texttt{exitGame()}: Fieldset und Check-Button verschwinden,
+    Willkommenstext und Start-Button erscheinen wieder,
+    \texttt{guesses} wird geleert, die beiden Meldungs-\texttt{div}s und
+    der Exit-Button werden mit \texttt{remove()} entfernt. Beim nächsten
+    Start werden sie neu erzeugt.
+\end{itemize}
+
+\textbf{Hinweis:} Laut Angabe ist der Check-Button nach dem Start aktiv,
+laut Teil 2 wird er erst bei einer gültigen Zahl aktiv. Beides ist
+umgesetzt: nach dem Start ist er aktiv, ein Klick ohne gültige Zahl zeigt
+nur \glqq Please enter a number between 1 and 10.\grqq{} und verbraucht
+keinen Versuch. Ab der ersten Eingabe steuert \texttt{checkValidity()} den
+Button.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{index.html} direkt geöffnet,
+Geheimzahl jeweils 5:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{10.3cm}|}
+\hline
+\textbf{Eingaben} & \textbf{Anzeige} \\ \hline
+\texttt{11} & Check-Button bleibt deaktiviert \\ \hline
+\texttt{3}, \texttt{9}, \texttt{5} & \glqq Too low!\grqq{} / \glqq Previous guesses: 3\grqq,
+  \glqq Too high!\grqq{} / \glqq Previous guesses: 3, 9\grqq,
+  \glqq Congratulations! 5 is correct. You needed 3 attempt(s).\grqq,
+  Check-Button deaktiviert \\ \hline
+Exit Game & Startzustand, Meldungen und Exit-Button entfernt \\ \hline
+\texttt{1}, \texttt{9}, \texttt{2} & \glqq Too low! Game over! The correct number was 5.\grqq,
+  \glqq Previous guesses: 1, 9, 2\grqq, Check-Button deaktiviert \\ \hline
+\end{tabular}
+\end{center}
+Zusätzlich geprüft: Verdana mit 32\,px (= 2em) und 15\,px Rand, Farben
+blau/grün/rot, hellblaues Feld beim Fokus, Attribute \texttt{1,10,1},
+keine Fehler in der Konsole.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

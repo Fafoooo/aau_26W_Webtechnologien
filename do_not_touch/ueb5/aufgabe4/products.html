@@ -1,0 +1,22 @@
+<html lang="en">
+	<head>
+		<title>Our products</title>
+		<script src="products.js" defer="true"></script>
+		<!-- [NEU] Aufgabe 4: gleiches Aussehen wie productsA.html von Blatt 4 (CSS von dort kopiert) -->
+		<style>
+		body {font-family:arial,sans-serif}
+		.product {background-color:silver;}
+		.product > div { display:flex;}
+		.product h2 {font-size: 20px; flex-direction:column; }
+		.product .desc {flex:8}
+		.product .buy {flex:1; text-align:right; margin-left:10px;}
+		.product .price {text-align:right; flex:2}
+		.error {color:red}
+		</style>
+		<!-- [ENDE NEU] -->
+	</head>
+	<body>
+		<h1>Our products</h1>
+		<div id="productContainer"></div>
+	</body>
+</html>

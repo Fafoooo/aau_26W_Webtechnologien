@@ -1,0 +1,90 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 3}}
+\end{center}
+\section*{Aufgabe 3: Image Gallery Part 2}
+\textbf{Aufgabe:} Die Galerie aus Blatt 2 Aufgabe 6 im Vollbildmodus um
+\glqq play/pause\grqq{} (endlose Diashow), ein Eingabefeld für die
+Sekunden pro Bild (Standard 3) und \glqq exit\grqq{} (Diashow stoppen und
+Vollbild schließen) erweitern.
+
+\medskip
+\textbf{Ausgangspunkt:} \texttt{gallery.html}, \texttt{gallery.css} und
+die Bilder sind unverändert aus Blatt 2. \texttt{gallery.js} Zeile 1--47
+ist der Code aus Blatt 2 (Original plus previous/next mit
+\texttt{showImgAt(index)} und \texttt{currentIndex}). Die Erweiterung
+beginnt ab Zeile 49.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item \texttt{slideshowTimer} speichert die Nummer, die
+    \texttt{setInterval} zurückgibt. \texttt{null} heißt: die Diashow
+    läuft gerade nicht.
+  \item Eine Leiste (\texttt{div}) oben links im \texttt{\#displayDIV} mit
+    \texttt{play}-Button, Zahlenfeld (\texttt{type="number"},
+    \texttt{min=1}, \texttt{value=3}), dem Text \glqq seconds\grqq{} und
+    \texttt{exit}-Button. Ein \texttt{click}-Listener an der Leiste ruft
+    \texttt{stopPropagation()} auf, damit ein Klick auf Buttons oder
+    Zahlenfeld nicht zu \texttt{displayDIV} hochwandert und
+    \texttt{hideImg} das Vollbild schließt.
+  \item \texttt{startSlideshow()}: liest die Sekunden, bei ungültigem Wert
+    gilt 3. Dann
+    \begin{center}
+    \texttt{setInterval(function () \{ showImgAt(currentIndex + 1); \}, seconds * 1000)}
+    \end{center}
+    Alle X Sekunden kommt das nächste Bild. Weil \texttt{showImgAt} mit
+    Modulo rechnet, folgt nach dem letzten wieder das erste Bild (endlose
+    Schleife). Der Button heißt danach \glqq pause\grqq.
+  \item \texttt{stopSlideshow()}: \texttt{clearInterval(slideshowTimer)},
+    \texttt{slideshowTimer = null}, der Button heißt wieder \glqq play\grqq.
+  \item play/pause: läuft nichts $\rightarrow$ \texttt{startSlideshow()},
+    sonst \texttt{stopSlideshow()}.
+  \item Ändert man die Sekunden während der Diashow
+    (\texttt{change}-Event), wird sie mit der neuen Dauer neu gestartet.
+  \item exit: \texttt{stopSlideshow()} und
+    \texttt{displayDIV.style.display = "none"}.
+  \item Der Originalcode schließt das Vollbild auch bei Klick auf den
+    Hintergrund. Ein zusätzlicher Listener an \texttt{displayDIV} ruft dann
+    \texttt{stopSlideshow()} auf, damit keine Diashow unsichtbar
+    weiterläuft.
+\end{itemize}
+Die Erweiterung verwendet nur die Liste \texttt{images} aller
+\texttt{.gallery img} und \texttt{\#displayDIV}. Sie funktioniert also mit
+jedem HTML im Format der Vorlesung und beliebig vielen Bildern.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{gallery.html} direkt geöffnet
+(Zeiten mit der Testuhr von Playwright gemessen):
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.4cm}|>{\raggedright\arraybackslash}p{8.3cm}|}
+\hline
+\textbf{Aktion} & \textbf{Ergebnis} \\ \hline
+Zweites Bild öffnen, play & Feld zeigt 3, Button heißt \glqq pause\grqq \\ \hline
+nach 2,9\,s / 3\,s / 6\,s & \texttt{street.JPG} / \texttt{taichung.JPG} /
+  \texttt{hk.JPG} (wieder von vorne) \\ \hline
+pause, 10\,s warten & Bild bleibt, Button heißt \glqq play\grqq \\ \hline
+Sekunden auf 1, play & nach 1\,s nächstes Bild \\ \hline
+Während der Diashow auf 2 ändern & nach 1\,s kein Wechsel, nach 2\,s Wechsel \\ \hline
+Klick ins Zahlenfeld, next & Vollbild bleibt offen, next funktioniert \\ \hline
+exit & Vollbild zu, 10\,s später kein Bildwechsel mehr \\ \hline
+play, Klick auf den Hintergrund & Vollbild zu, Diashow gestoppt \\ \hline
+\end{tabular}
+\end{center}
+Der Code aus Blatt 2 ist byteweise unverändert der Anfang der Datei. Keine
+Fehler in der Konsole.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

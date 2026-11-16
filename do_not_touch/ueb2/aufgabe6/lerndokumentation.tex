@@ -1,0 +1,82 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 2}}
+\end{center}
+\section*{Aufgabe 6: Image Gallery}
+\textbf{Aufgabe:} Die Bildergalerie aus der Vorlesung verstehen und im
+Vollbildmodus um die Buttons \glqq previous\grqq{} und \glqq next\grqq{}
+erweitern. Nur neuer Code in \texttt{gallery.js}, bestehender Code bleibt
+unverändert.
+
+\medskip
+\textbf{HTML-Struktur:}
+\begin{itemize}
+  \item \texttt{div.gallery} mit den Vorschaubildern. Jedes \texttt{img}
+    hat \texttt{src} (kleine Datei), \texttt{data-large} (großes Bild) und
+    \texttt{alt} (Beschreibung).
+  \item \texttt{div\#displayDIV} mit \texttt{img.bigIMG} und
+    \texttt{p.desc}. Laut CSS zuerst unsichtbar (\texttt{display: none}),
+    sonst ein silberner Vollbildbereich mit $100\,\mathrm{vw} \times
+    100\,\mathrm{vh}$ und \texttt{position: absolute}.
+\end{itemize}
+
+\textbf{Originalcode:}
+\begin{itemize}
+  \item \texttt{showImg(e)}: setzt \texttt{bigIMG.src} auf
+    \texttt{e.target.dataset.large}, die Beschreibung auf
+    \texttt{e.target.alt} und zeigt \texttt{displayDIV} an.
+  \item \texttt{hideImg(e)}: setzt \texttt{e.currentTarget.style.display}
+    auf \texttt{none}. Ein Klick irgendwo auf das Vollbild schließt es.
+  \item Eine Schleife hängt \texttt{showImg} an alle
+    \texttt{.gallery img}, \texttt{hideImg} hängt an \texttt{displayDIV}.
+\end{itemize}
+
+\textbf{Ergebnis} (Erweiterung ab Zeile 17):
+\begin{itemize}
+  \item \texttt{currentIndex} speichert das angezeigte Bild. Ein zweiter
+    \texttt{click}-Listener pro Vorschaubild setzt \texttt{currentIndex = i}.
+    Durch \texttt{let} in der \texttt{for}-Schleife hat jede Runde ihr
+    eigenes \texttt{i}.
+  \item \texttt{showImgAt(index)}: berechnet den neuen Index mit
+    \begin{center}
+    \texttt{currentIndex = (index + images.length) \% images.length}
+    \end{center}
+    und setzt Bild und Beschreibung wie das Original.
+    Bei drei Bildern: Index 0, previous: $(0 - 1 + 3) \bmod 3 = 2$
+    (letztes Bild); Index 2, next: $(2 + 1 + 3) \bmod 3 = 0$ (erstes Bild).
+  \item \texttt{addButton(text, step, side)}: erzeugt einen
+    \texttt{button}, absolut positioniert (\texttt{top: 50\%}, 20\,px vom
+    linken bzw. rechten Rand), und hängt ihn in \texttt{\#displayDIV}.
+    Der Klick ruft \texttt{showImgAt(currentIndex + step)} auf.
+  \item \texttt{e.stopPropagation()} im Button-Listener verhindert, dass der
+    Klick zu \texttt{displayDIV} hochwandert und \texttt{hideImg} das Bild
+    sofort schließt.
+  \item Aufrufe: \texttt{addButton("previous", -1, "left")} und
+    \texttt{addButton("next", 1, "right")}.
+\end{itemize}
+Die Erweiterung verwendet die Liste \texttt{images} aus dem Originalcode,
+also alle Bilder in \texttt{.gallery}. Sie funktioniert daher mit
+beliebig vielen Bildern im gleichen HTML-Format.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{gallery.html} direkt geöffnet.
+Erstes Bild, next: \texttt{street.JPG} mit \glqq Hong Kong central district
+life\grqq. Danach zweimal previous: \texttt{taichung.JPG} (Sprung zum
+letzten Bild), dann next: \texttt{hk.JPG} (Sprung zum ersten Bild).
+Drittes Bild öffnen und next: \texttt{hk.JPG}. Ein Klick neben die
+Buttons schließt das Vollbild. Keine Fehler in der Konsole.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

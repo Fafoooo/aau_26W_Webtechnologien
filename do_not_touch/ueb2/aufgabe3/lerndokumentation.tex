@@ -1,0 +1,141 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\usepackage{forest}
+\useforestlibrary{edges}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+% Zeilenumbruch und Leerzeichen in Textknoten
+\newcommand{\RET}{\ensuremath{\hookleftarrow}\allowbreak}
+\newcommand{\VS}{\textvisiblespace}
+\newcommand{\IV}{\VS\VS\VS\VS\allowbreak}
+\forestset{
+  el/.style={draw=blue!60!black, fill=blue!6, rounded corners=1.5pt},
+  tx/.style={draw=black!50, dashed, fill=black!4},
+  ot/.style={draw=black!60, dotted},
+  at/.style={label={[font=\ttfamily\scriptsize, text=black!60, anchor=west, xshift=2pt]east:{#1}}},
+}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 2}}
+\end{center}
+\section*{Aufgabe 3: DOM Operations}
+\textbf{Aufgabe:} Den DOM von \texttt{ex3.html} skizzieren, den
+vorgegebenen JavaScript-Code einbinden und jede Konsolenausgabe erklären.
+Zusätzlich die Wirkung von \texttt{removeAttribute("target")} auf den
+dritten Link beschreiben.
+
+\medskip
+\textbf{3.1 DOM-Skizze:} Originale \texttt{ex3.html} ohne das eingefügte
+\texttt{script}-Element, Textknoten im Browser nachgeprüft.
+
+\begin{center}
+\begin{forest}
+  for tree={folder, grow'=0, font=\ttfamily\small, inner sep=1.5pt,
+    l sep=7pt, s sep=4.5pt, edge={black!55}}
+  [\#document, ot
+    [<!DOCTYPE html>, ot]
+    [html, el, at={lang="en"}
+      [head, el
+        [\#text "\RET\IV", tx]
+        [meta, el, at={charset="UTF-8"}]
+        [\#text "\RET\IV", tx]
+        [title, el
+          [\#text "DOM Operations", tx]]]
+      [\#text "\RET", tx]
+      [body, el
+        [\#text "\RET", tx]
+        [a, el, at={href="https://en.wikipedia.org" target="\_new"}
+          [img, el, at={src="\dots" alt="British Flag"}]]
+        [\#text "\RET BeforeParent\RET", tx]
+        [a, el, at={href="https://de.wikipedia.org" target="\_new"\quad{\rmfamily\itshape\normalsize$\leftarrow$ link in 3.2}}
+          [p, el
+            [\#text "Text", tx]]
+          [\#text "\RET\IV Before\VS", tx]
+          [img, el, at={src="\dots" alt="Austrian Flag"}]
+          [\#text "\RET\IV After\RET", tx]]
+        [\#text "\RET AfterParent\RET", tx]
+        [a, el, at={href="https://ja.wikipedia.org" target="\_new"\quad{\rmfamily\itshape\normalsize$\leftarrow$ link in 3.3}}
+          [\#text "\RET\IV", tx]
+          [img, el, at={src="\dots" alt="Japanese Flag"}]
+          [\#text "\RET", tx]]
+        [\#text "\RET\RET", tx]]]]
+\end{forest}
+\end{center}
+
+{\small Durchgezogener Rahmen: Elementknoten; gestrichelt: Textknoten
+(\RET{} = Zeilenumbruch, \VS{} = Leerzeichen); gepunktet: Dokument- und
+Doctype-Knoten. Grau rechts: Attribute. Sie gehören zum Element, sind aber
+keine Kindknoten. Der Zeilenumbruch zwischen \texttt{</head>} und
+\texttt{<body>} landet als Textknoten im \texttt{html}-Element, die
+Zeilenumbrüche nach \texttt{</body>} im \texttt{body}.}
+
+\medskip
+\textbf{3.2 Konsolenausgaben:} \texttt{dom.js} ist im \texttt{head} mit
+\texttt{<script src="dom.js" defer>} eingebunden. Durch \texttt{defer}
+läuft das Skript erst, wenn der DOM vollständig aufgebaut ist.
+\texttt{link = document.getElementsByTagName("a")[1]} ist der
+\emph{zweite} Link (\texttt{de.wikipedia.org}), da ab 0 gezählt wird.
+Zeichenketten sind hier mit \RET{} und \VS{} dargestellt.
+
+{\small
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{0.45cm}|>{\raggedright\arraybackslash}p{4.45cm}|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{5.25cm}|}
+\hline
+ & \textbf{Ausdruck} & \textbf{Ausgabe} & \textbf{Begründung} \\ \hline
+1 & \nolinkurl{link.attributes["href"].nodeValue} & \nolinkurl{https://de.wikipedia.org} & Wert des Attributknotens \texttt{href}, genau wie im HTML geschrieben. \\ \hline
+2 & \nolinkurl{link.getAttributeNode("href").nodeValue} & \nolinkurl{https://de.wikipedia.org} & Derselbe Attributknoten, nur über eine Methode geholt. \\ \hline
+3 & \nolinkurl{link.href} & \nolinkurl{https://de.wikipedia.org/} & DOM-Property: aufgelöste, normalisierte URL, daher mit \texttt{/} am Ende. \\ \hline
+4 & \nolinkurl{link.firstChild} & Element \texttt{<p>Text</p>} & \texttt{<p>} steht direkt nach \texttt{<a ...>}, davor gibt es keinen Textknoten. \\ \hline
+5 & \nolinkurl{link.attributes[0].nodeType} & \texttt{2} & \texttt{attributes[0]} ist \texttt{href}, ein Attributknoten (\texttt{ATTRIBUTE\_NODE}). \\ \hline
+6 & \nolinkurl{link.firstChild.nodeType} & \texttt{1} & Das \texttt{p} ist ein Elementknoten (\texttt{ELEMENT\_NODE}). \\ \hline
+7 & \nolinkurl{link.parentNode.nodeName} & \texttt{BODY} & Der Link liegt direkt im \texttt{body}; \texttt{nodeName} von HTML-Elementen ist großgeschrieben. \\ \hline
+8 & \nolinkurl{link.lastChild.parentNode.nodeName} & \texttt{A} & \texttt{lastChild} ist der Textknoten \texttt{"\RET\IV After\RET"}, sein Elternknoten wieder der Link. \\ \hline
+9 & \nolinkurl{link.attributes.length} & \texttt{2} & Der Link hat zwei Attribute: \texttt{href} und \texttt{target}. \\ \hline
+10 & \nolinkurl{link.innerHTML} & \texttt{<p>Text</p>\RET\IV Before\VS <img src="\dots" alt="Austrian Flag">\RET\IV After\RET} & HTML-Inhalt innerhalb des \texttt{a} als String; Whitespace bleibt erhalten. \\ \hline
+11 & \nolinkurl{link.outerHTML} & \texttt{<a href="https://\allowbreak de.wikipedia.org" target="\_new">}, dann wie 10, dann \texttt{</a>} & Wie \texttt{innerHTML}, aber inklusive des \texttt{a}-Tags selbst. \\ \hline
+12 & \nolinkurl{link.innerText} & \texttt{Text\RET\RET Before\VS\VS After\VS} & Sichtbarer Text wie gerendert: Whitespace zusammengefasst, nach dem Blockelement \texttt{p} zwei Umbrüche. Links und rechts vom Bild bleibt je ein Leerzeichen. Am Ende ein Leerzeichen, weil danach \glqq AfterParent\grqq{} in derselben Zeile folgt. \\ \hline
+13 & \nolinkurl{link.outerText} & wie 12 & Beim Lesen gleich wie \texttt{innerText}. Beim Setzen ersetzt \texttt{outerText} das ganze Element, \texttt{innerText} nur den Inhalt. \\ \hline
+14 & \nolinkurl{link.textContent} & \texttt{Text\RET\IV Before\VS\RET\IV After\RET} & Alle Textknoten roh hintereinander, ohne Layout. Der \texttt{alt}-Text ist ein Attribut und fehlt daher. \\ \hline
+15 & \nolinkurl{link} & Element \texttt{<a href="\dots" target="\_new">\dots</a>} & Das Elementobjekt selbst, in der Konsole aufklappbar. \\ \hline
+16 & \nolinkurl{link.nodeValue} & \texttt{null} & Elementknoten haben keinen \texttt{nodeValue}, nur Text-, Attribut- und Kommentarknoten. \\ \hline
+\end{tabular}
+\end{center}}
+
+{\small Bei 10, 11 und 15 ist die Bild-URL mit \glqq\dots\grqq{} gekürzt,
+in der Konsole steht die vollständige URL. Knotentypen: 1 Element,
+2 Attribut, 3 Text, 8 Kommentar, 9 Dokument.}
+
+\medskip
+\textbf{3.3 \texttt{removeAttribute}:}
+\texttt{document.getElementsByTagName("a").item(2)} ist der \emph{dritte}
+Link (\texttt{ja.wikipedia.org}); \texttt{item(2)} ist gleichwertig zu
+\texttt{[2]}. \texttt{link.removeAttribute("target")} entfernt nur bei
+diesem Link das Attribut \texttt{target="\_new"}. \texttt{\_new} ist kein
+reserviertes Ziel wie \texttt{\_blank}, sondern ein Fenstername: Der erste
+Klick öffnet einen neuen Tab mit diesem Namen, weitere Links mit
+\texttt{target="\_new"} laden in denselben Tab. Ohne \texttt{target}
+öffnet der japanische Link im aktuellen Tab, da kein \texttt{<base target>}
+gesetzt ist. Linkziel und Bild bleiben gleich, die anderen beiden Links
+behalten \texttt{target="\_new"}. Sichtbar ändert sich auf der Seite nichts.
+
+\medskip
+\textbf{Hinweis:} \texttt{var link} wird in 3.3 ein zweites Mal
+deklariert. Mit \texttt{var} ist das erlaubt, mit \texttt{let} wäre es
+ein \texttt{SyntaxError}.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{ex3.html} direkt geöffnet. Die 16
+Ausgaben in der Konsole entsprechen der Tabelle. Die \texttt{target}-Werte
+der drei Links sind danach \texttt{"\_new"}, \texttt{"\_new"} und
+\texttt{null}.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

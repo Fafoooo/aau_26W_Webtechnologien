@@ -1,0 +1,84 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\sloppy
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 5}}
+\end{center}
+\section*{Aufgabe 5: Retrieving Products via the Fetch API}
+\textbf{Aufgabe:} Wie Aufgabe 4, aber die Produkte mit der Fetch API
+laden und Fehler richtig behandeln.
+
+\medskip
+\textbf{Ergebnis:} Gleicher Aufbau wie in Aufgabe 4: \texttt{products.js}
+ist die Originaldatei mit \texttt{[5 GEÄNDERT]} (URL),
+\texttt{[5 VERSCHOBEN]} (Aufruf) und \texttt{[5 ENTFERNT]} (leere
+Vorlage); alles Neue steht nach fünf Leerzeilen am Dateiende. Neu ist nur
+\texttt{initialize}, \texttt{renderProducts}, \texttt{showError} und der
+\texttt{<style>}-Block in \texttt{products.html} sind gleich wie in 4.
+\begin{itemize}
+  \item \texttt{fetch(jsonURL)} schickt die Anfrage ab und gibt sofort
+    ein Promise zurück.
+  \item Erstes \texttt{.then(response => ...)}: \texttt{response} ist die
+    Antwort des Servers. \textbf{Wichtig:} \texttt{fetch} lehnt bei
+    404 oder 500 \emph{nicht} von selbst ab, das Promise wird trotzdem
+    erfüllt. Deshalb wird \texttt{response.ok} (Status 200--299) geprüft
+    und sonst selbst ein Fehler geworfen
+    (\texttt{throw new Error("HTTP 404 Not Found")}). Ist alles gut,
+    liest \texttt{return response.json()} den Inhalt als JSON; das ist
+    wieder ein Promise.
+  \item Zweites \texttt{.then(products => renderProducts(...))}: Jetzt
+    ist das fertige Array da und wird wie in 4 angezeigt.
+  \item \texttt{.catch(error => showError(...))}: \emph{ein} catch am
+    Ende fängt alles ab, was davor schiefgeht: der selbst geworfene
+    HTTP-Fehler, kaputtes JSON aus \texttt{response.json()} und eine
+    Netzwerkfehler-Ablehnung von \texttt{fetch} (Server aus,
+    \texttt{file://}). Der Benutzer sieht eine rote Meldung, die Seite
+    stürzt nicht ab.
+\end{itemize}
+
+\textbf{Unterschied zu Aufgabe 4:} \texttt{XMLHttpRequest} arbeitet mit
+Events (\texttt{onload}, \texttt{onerror}) und braucht für
+\texttt{JSON.parse} ein eigenes \texttt{try}/\texttt{catch}.
+\texttt{fetch} arbeitet mit Promises wie in Aufgabe 3, alle Fehler landen
+im selben \texttt{.catch}. Bei beiden muss man den HTTP-Status selbst
+prüfen.
+
+\medskip
+\textbf{Hinweis:} In XAMPP liegt der Ordner unter
+\texttt{C:\textbackslash xampp\textbackslash htdocs\textbackslash ex5},
+aufrufen mit \url{http://localhost/ex5/products.html}. Wegen der
+relativen URL \texttt{"products.json"} funktioniert es in jedem Ordner.
+
+\medskip
+\textbf{Test:} In Chrome:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.2cm}|>{\raggedright\arraybackslash}p{8.5cm}|}
+\hline
+\textbf{Fall} & \textbf{Ergebnis} \\ \hline
+\url{http://localhost/ex5/products.html} (XAMPP) & 4 Produkte, gleich
+  wie in Aufgabe 4 \\ \hline
+Datei nicht gefunden (404) & \glqq Products could not be loaded: HTTP 404
+  Not Found\grqq \\ \hline
+kaputtes JSON & Meldung mit dem JSON-Fehler \\ \hline
+Server nicht erreichbar & Meldung \glqq Failed to fetch\grqq \\ \hline
+über \texttt{file://} geöffnet & Meldung \glqq Failed to fetch\grqq{} \\ \hline
+\end{tabular}
+\end{center}
+Kein unbehandelter Fehler: In der Konsole stehen nur die Meldung des
+Browsers (z.\,B. \glqq Failed to load resource\grqq{} bzw. bei
+\texttt{file://} die CORS-Sperre) und die eigene Meldung von
+\texttt{showError}.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

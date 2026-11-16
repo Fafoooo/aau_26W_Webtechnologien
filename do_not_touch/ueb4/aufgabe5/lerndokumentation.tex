@@ -1,0 +1,85 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 4}}
+\end{center}
+\section*{Aufgabe 5: JavaScript Classes}
+\textbf{Aufgabe:} Alles aus Aufgabe 4 mit ECMAScript-2015-Klassen statt
+mit Prototypes umsetzen.
+
+\medskip
+\textbf{Ergebnis:} \texttt{classes.js}, eingebunden in
+\texttt{index.html}; die Ausgabe steht in der Konsole (F12).
+Die Vorlage liegt unverändert als \texttt{classes\_old.js} daneben (Kopie
+von \texttt{image.js} aus Aufgabe 4); sie wird in \texttt{index.html}
+\emph{nicht} geladen und dient nur zum Vergleichen. In
+\texttt{classes.js} ist alles neu: Jeder Block steht zwischen
+\texttt{[NEU]} und \texttt{[ENDE NEU]}, und im Kommentar steht, was er aus
+Aufgabe 4 ersetzt (z.\,B. \texttt{class Video} ersetzt \texttt{function
+Video} mit \texttt{Image.call} und \texttt{Object.create}). Die Testaufrufe
+stehen nach den Klassen, weil eine \texttt{class} (anders als eine
+\texttt{function}) erst nach ihrer Definition benutzt werden darf.
+\begin{itemize}
+  \item \texttt{class Image}: Der \texttt{constructor(width, height,
+    bitdepth)} setzt die drei Werte und ruft \texttt{this.computeSize()}
+    auf. So deckt die Klasse a) (Methode \texttt{computeSize()}, die
+    \texttt{pixels} und \texttt{rawsize} setzt) und b) (Werte sind schon
+    nach dem Konstruktor da) ab.
+  \item \texttt{print()} und \texttt{printMore()} sind Methoden der Klasse
+    und gleich aufgebaut wie in Aufgabe 4. Klassen-Methoden landen
+    automatisch im Prototype und sind nicht aufzählbar, daher listet
+    \texttt{for...in} nur die Daten und braucht keine
+    \texttt{typeof}-Abfrage.
+  \item \texttt{class Video extends Image}: \texttt{super(width, height,
+    bitdepth)} ruft den Konstruktor von \texttt{Image} auf (statt
+    \texttt{Image.call}) und muss vor dem ersten \texttt{this} stehen.
+    \texttt{extends} ersetzt \texttt{Object.create(Image.prototype)}.
+    \texttt{totalFrames()} gibt \texttt{duration * framerate} zurück.
+  \item f) \texttt{printMore()} funktioniert auch auf Videos, weil
+    \texttt{Video} von \texttt{Image} erbt.
+  \item d) Bei Klassen liegen \texttt{print} \emph{und}
+    \texttt{printMore} im Prototype, der Unterschied aus Aufgabe 4
+    (eigene Kopie pro Objekt vs.\ geteilt) fällt also weg. Zuweisen geht
+    trotzdem: \texttt{small.print = function ...} legt eine eigene
+    Funktion nur an \texttt{small} an, die die Klassen-Methode überdeckt;
+    \texttt{Image.prototype.printMore = function ...} ändert die Methode
+    für alle Objekte.
+\end{itemize}
+
+\textbf{Hinweis:} Es werden dieselben Testobjekte wie in Aufgabe 4
+verwendet. Die Konsolenausgabe ist Zeile für Zeile gleich wie in
+Aufgabe 4, nur die Überschriften heißen \texttt{5a} \dots{} statt
+\texttt{4a} \dots
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{index.html} geöffnet, Konsole:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.6cm}|>{\raggedright\arraybackslash}p{9.1cm}|}
+\hline
+\textbf{Aufruf} & \textbf{Ausgabe} \\ \hline
+\texttt{new Image(1920, 1080, 24)} & pixels 2073600, rawsize 6220800 bytes \\ \hline
+\texttt{print()} / \texttt{printMore()} & Daten ohne Funktionen,
+  landscape / portrait / square \\ \hline
+\texttt{new Video(1280, 720, 24, 10, 25)} & mit duration und framerate,
+  \texttt{totalFrames()} = 250, \texttt{printMore()} $\rightarrow$
+  landscape \\ \hline
+\texttt{new Video(1080, 1920, 24, 60, 30)} & \texttt{totalFrames()} = 1800,
+  \texttt{printMore()} $\rightarrow$ portrait \\ \hline
+d) neue Zuweisungen & wie Aufgabe 4 \\ \hline
+\end{tabular}
+\end{center}
+Keine Fehler in der Konsole; mit \texttt{node classes.js} gleiche Ausgabe.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

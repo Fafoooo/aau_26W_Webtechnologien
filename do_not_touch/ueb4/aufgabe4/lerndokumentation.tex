@@ -1,0 +1,99 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 4}}
+\end{center}
+\section*{Aufgabe 4: JavaScript Prototypes}
+\textbf{Aufgabe:} Ein Bild-Objekt in JSON-Schreibweise mit
+\texttt{computeSize()}, danach ein Konstruktor \texttt{Image} mit
+\texttt{print()}, eine Methode \texttt{printMore()} über den Prototype und
+ein Konstruktor \texttt{Video}, der von \texttt{Image} erbt.
+
+\medskip
+\textbf{Ergebnis:} \texttt{image.js}, eingebunden in \texttt{index.html};
+die Ausgabe steht in der Konsole (F12). Für Aufgabe 4 gibt es keine
+Vorlage in der Angabe, die ganze Datei ist also neu; jede Teilaufgabe steht
+zwischen \texttt{[NEU] Aufgabe 4x} und \texttt{[ENDE NEU]}.
+\begin{itemize}
+  \item \textbf{a)} \texttt{img} ist ein Objektliteral mit
+    \texttt{width: 1920}, \texttt{height: 1080}, \texttt{bitdepth: 24} und
+    der Methode \texttt{computeSize()}. Sie setzt
+    \texttt{this.pixels = width * height} und
+    \texttt{this.rawsize = pixels * bitdepth / 8} (Bits durch 8 = Bytes).
+    Ausgabe: 2073600 Pixel, 6220800 Bytes.
+  \item \textbf{b)} \texttt{function Image(width, height, bitdepth)} setzt
+    die drei Werte und rechnet \texttt{pixels} und \texttt{rawsize} sofort
+    aus. \texttt{print()} wird im Konstruktor mit
+    \texttt{this.print = function () \{...\}} angelegt und gibt mit
+    \texttt{for (let key in this)} alle Eigenschaften aus; Funktionen werden
+    mit \texttt{typeof} übersprungen, damit nur Daten erscheinen.
+    Testobjekte: 800x600, 1080x1920, 500x500.
+  \item \textbf{c)} \texttt{Image.prototype.printMore} ruft
+    \texttt{this.print()} auf und gibt danach \glqq landscape\grqq{}
+    (breiter als hoch), \glqq portrait\grqq{} (höher als breit) oder
+    \glqq square\grqq{} aus. Die Objekte aus b) können die Methode nutzen,
+    obwohl sie vorher gebaut wurden.
+  \item \textbf{d)} Unterschied: \texttt{print} steht im Konstruktor, also
+    hat \emph{jedes} Objekt eine eigene Kopie der Funktion.
+    \texttt{printMore} steht im Prototype, ist nur \emph{einmal} im
+    Speicher und wird von allen Objekten geteilt. Beide lassen sich zur
+    Laufzeit durch Zuweisung ändern: \texttt{small.print = function ...}
+    ändert nur \texttt{small}, \texttt{tall.print} bleibt gleich.
+    \texttt{Image.prototype.printMore = function ...} ändert die Methode
+    sofort für alle Bilder und Videos, auch für schon erzeugte.
+  \item \textbf{e)} \texttt{function Video(width, height, bitdepth,
+    duration, framerate)} ruft zuerst \texttt{Image.call(this, width,
+    height, bitdepth)} auf, damit Breite, Pixel, \texttt{print} usw. auch am
+    Video gesetzt werden, und speichert dann \texttt{duration} und
+    \texttt{framerate}. Mit
+    \begin{center}\texttt{Video.prototype = Object.create(Image.prototype)}\end{center}
+    erbt der Prototype von
+    \texttt{Image.prototype}; \texttt{constructor} wird wieder auf
+    \texttt{Video} gesetzt. \texttt{totalFrames()} liegt im Prototype von
+    \texttt{Video} und gibt \texttt{duration * framerate} zurück.
+  \item \textbf{f)} Ja. \texttt{clip.printMore()} wird zuerst am Objekt,
+    dann in \texttt{Video.prototype} und dann in \texttt{Image.prototype}
+    gesucht (Prototype-Kette) und dort gefunden. Ohne
+    \texttt{Object.create} würde das nicht gehen.
+\end{itemize}
+
+\textbf{Hinweis:} Teil d) wird ganz am Ende des Scripts vorgeführt, damit
+die Ausgaben von b), c), e) und f) noch die ursprünglichen Funktionen
+verwenden. Der eigene Konstruktor \texttt{Image} überdeckt im Browser den
+eingebauten \texttt{Image}-Konstruktor für \texttt{<img>}-Elemente; das
+stört hier nicht, weil die Seite ihn nicht verwendet.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{index.html} geöffnet, Konsole:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.6cm}|>{\raggedright\arraybackslash}p{9.1cm}|}
+\hline
+\textbf{Aufruf} & \textbf{Ausgabe} \\ \hline
+\texttt{img.computeSize()} & pixels 2073600, rawsize 6220800 bytes \\ \hline
+\texttt{new Image(800, 600, 8).print()} & width 800, height 600,
+  bitdepth 8, pixels 480000, rawsize 480000 \\ \hline
+\texttt{printMore()} für 800x600, 1080x1920, 500x500 & zusätzlich
+  landscape, portrait, square \\ \hline
+\texttt{new Video(1280, 720, 24, 10, 25)} & \texttt{print()} zeigt auch
+  duration 10 und framerate 25, \texttt{totalFrames()} = 250 \\ \hline
+\texttt{new Video(1080, 1920, 24, 60, 30)} & \texttt{totalFrames()} = 1800,
+  \texttt{printMore()} $\rightarrow$ portrait \\ \hline
+d) neue Zuweisungen & \glqq small: 800x600\grqq, \texttt{tall.print()}
+  unverändert, \glqq printMore replaced: \dots\grqq{} bei Bild und Video \\ \hline
+\end{tabular}
+\end{center}
+Keine Fehler in der Konsole; mit \texttt{node image.js} gleiche Ausgabe.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

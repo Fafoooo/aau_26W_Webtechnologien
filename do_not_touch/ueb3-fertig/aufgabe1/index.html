@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number-Guessing Game</title>
+    <link rel="stylesheet" href="style.css">  <!-- CSS-Datei einbinden -->
+    <script src="game.js" defer></script>     <!-- defer = JS läuft erst, wenn die Seite fertig geladen ist -->
+</head>
+<body>
+    <h1>Number-Guessing Game</h1>
+    <p id="welcome">Welcome! Can you guess the secret number?</p>
+
+    <fieldset id="gameArea">                  <!-- fieldset = Rahmen um zusammengehörige Formularfelder, wie ein Kästchen auf einem Papierformular; am Anfang unsichtbar (CSS) -->
+        <legend>Enter a number between 1 and 10</legend>  <!-- legend = Überschrift im Rahmen -->
+        <input type="number" id="guessInput">
+    </fieldset>
+
+    <div id="buttons">                        <!-- hier kommen die Buttons rein, alle zentriert -->
+        <button id="checkButton" disabled>Check</button>
+        <button id="startButton">Start Game</button>
+    </div>
+</body>
+</html>

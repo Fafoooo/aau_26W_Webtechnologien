@@ -1,0 +1,52 @@
+h1 {
+    font-family: Verdana, sans-serif;  /* Schriftart Verdana */
+    font-size: 2em;                    /* 2em = doppelt so groß wie die normale Schrift */
+    margin: 15px;
+}
+
+p {
+    text-align: center;                /* Text in die Mitte */
+    margin: 10px;
+}
+
+#gameArea {
+    display: none;                     /* am Anfang unsichtbar, JS zeigt es beim Start */
+    width: fit-content;                /* nur so breit wie der Inhalt */
+    margin: 10px auto;                 /* auto links und rechts = zentriert */
+    text-align: center;
+}
+
+input:focus {
+    background-color: lightblue;       /* :focus = wenn man ins Feld klickt, wird es hellblau */
+}
+
+#buttons, .feedback {
+    text-align: center;                /* Buttons und Meldungen in die Mitte */
+    margin: 10px;
+}
+
+button {
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 5px;
+    cursor: pointer;                   /* Hand-Zeiger über dem Button */
+}
+
+#startButton {
+    background-color: blue;
+}
+
+#checkButton {
+    display: none;                     /* am Anfang unsichtbar */
+    background-color: green;
+}
+
+#checkButton:disabled {
+    opacity: 0.5;                      /* deaktiviert = halb durchsichtig */
+    cursor: not-allowed;
+}
+
+.exitButton {
+    background-color: red;             /* Klasse für den Exit-Button, den JS erzeugt */
+}

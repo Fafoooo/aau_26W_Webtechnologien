@@ -1,0 +1,2255 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[breakable]{tcolorbox}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, urlcolor=blue!50!black,
+  pdftitle={Webtechnologien - Erklaerung Uebungsblatt 2}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlength{\emergencystretch}{3em}
+
+% ---------- Boxen ----------
+\newtcolorbox{merkbox}[1][]{colback=blue!5, colframe=blue!40, fonttitle=\bfseries, title={Merke}, breakable, #1}
+\newtcolorbox{analogie}[1][]{colback=green!5, colframe=green!40, fonttitle=\bfseries, title={Analogie}, breakable, #1}
+\newtcolorbox{ergebnis}[1][]{colback=orange!8, colframe=orange!60!black, fonttitle=\bfseries, title={Ergebnis}, breakable, #1}
+\newtcolorbox{tutor}[1][]{colback=gray!6, colframe=gray!50, fonttitle=\bfseries, title={Was könnte der Tutor fragen?}, breakable, #1}
+
+% ---------- Listings ----------
+\lstdefinelanguage{JavaScript}{
+  keywords={const,let,var,function,return,if,else,while,for,of,try,catch,throw,new,typeof,true,false,null,undefined,this},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morecomment=[s]{<!--}{-->},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]`
+}
+\lstset{
+  language=JavaScript,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!45!black}\itshape,
+  stringstyle=\color{red!60!black},
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  upquote=true,
+  breaklines=true,
+  breakatwhitespace=false,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
+  literate={ä}{{\"a}}1 {ö}{{\"o}}1 {ü}{{\"u}}1 {Ä}{{\"A}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1 {ß}{{\ss}}1
+}
+\lstdefinestyle{block}{
+  basicstyle=\ttfamily\small,
+  frame=single, rulecolor=\color{gray!60},
+  backgroundcolor=\color{gray!4},
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=6pt,
+  xleftmargin=1.8em, framexleftmargin=1.5em
+}
+\lstdefinestyle{out}{
+  language={}, basicstyle=\ttfamily\small,
+  frame=single, rulecolor=\color{orange!50},
+  backgroundcolor=\color{orange!4},
+  numbers=none, xleftmargin=0.5em, framexleftmargin=0.3em
+}
+\lstnewenvironment{code}[1][]{\lstset{style=block,#1}}{}
+\lstnewenvironment{htmlcode}[1][]{\lstset{style=block,language=HTML,#1}}{}
+\lstnewenvironment{ausgabe}[1][]{\lstset{style=out,#1}}{}
+
+% ---------- Hilfsbefehle ----------
+\newcommand{\nl}{\ensuremath{\hookleftarrow}}
+\newcommand{\ws}{\textvisiblespace}
+\newcommand{\qq}[1]{\textquotedbl#1\textquotedbl}
+
+\title{\textbf{Webtechnologien -- Übungsblatt 2}\\[0.3em]
+\large JavaScript \& DOM -- ausführliche Lern-Erklärung zu allen Aufgaben}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+\tableofcontents
+\newpage
+
+% =====================================================================
+\section{Einstieg: Worum geht es auf diesem Blatt?}
+% =====================================================================
+
+Auf Blatt~1 ging es um HTML und CSS, also darum, \emph{wie} eine Seite aufgebaut ist und \emph{wie} sie aussieht.
+Auf Blatt~2 kommt jetzt \textbf{JavaScript} (kurz JS) dazu: die Programmiersprache, mit der eine Webseite
+auf den Benutzer \emph{reagieren} kann -- zum Beispiel ein Fenster öffnen, einen Preis ausrechnen oder
+ein Bild austauschen, sobald jemand auf einen Knopf klickt. Dazu kommt das \textbf{DOM}, das ist die Art, wie der
+Browser die HTML-Seite intern als Baum speichert, damit JavaScript sie lesen und verändern kann.
+Beides wird in Teil~\ref{sec:grundlagen} von Grund auf erklärt.
+
+Wichtig aus der Angabe: Es darf \textbf{nur reines JavaScript und CSS} verwendet werden, also keine fertigen
+Bibliotheken oder Frameworks (wie jQuery oder React).
+
+\subsection*{Wie viel muss ich machen?}
+
+Man muss \textbf{60\,\% der Aufgaben} machen. Bei 6 Aufgaben sind das $0{,}6 \cdot 6 = 3{,}6$, aufgerundet also
+\textbf{4 von 6 Aufgaben}. Bei der Kreuzerl-Übung kreuzt du nur an, was du auch wirklich erklären kannst.
+
+\begin{center}
+\begin{tabular}{@{}clll@{}}
+\toprule
+Rang (schwer $\to$ leicht) & Aufgabe & Thema & Punkte\\
+\midrule
+1 & 4 & Glaspreis (Formular + Rechnung) & 0,2\\
+2 & 6 & Bildergalerie (Vor/Zurück-Buttons) & 0,2\\
+3 & 3 & DOM-Operationen (Baum + 16 Ausgaben) & 0,2\\
+4 & 2 & Zahlenratespiel & 0,1\\
+5 & 5 & Event Listener und Target & 0,2\\
+6 & 1 & Moodle-Quiz & 0,1\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{merkbox}[title={Strategie}]
+\textbf{Empfohlener Plan: Aufgaben 1, 2, 3 und 5 ankreuzen.} Das sind die vier leichtesten.
+Die Aufgaben 4 und 6 sind trotzdem fertig gelöst und hier erklärt -- wenn du sie verstehst, kannst du sie
+zusätzlich ankreuzen, musst aber nicht.
+
+\textbf{Aufgabe 1} (Moodle-Quiz "`JavaScript Concepts"') kann niemand für dich lösen: Du machst das Quiz selbst in
+Moodle und gibst einen \textbf{Screenshot deiner Punkte} ab (Hinweise dazu stehen in \texttt{aufgabe1/LIESMICH.txt}).
+Tipp: Lies vorher Teil~\ref{sec:grundlagen}, dann fällt dir das Quiz viel leichter.
+\end{merkbox}
+
+\subsection*{Wie probiere ich den Code selbst aus?}
+
+Jede Aufgabe liegt in einem eigenen Ordner (\texttt{aufgabe2} bis \texttt{aufgabe6}). Du öffnest die
+HTML-Datei per Doppelklick im Browser (z.\,B. Chrome). Mit der Taste \textbf{F12} öffnen sich die
+\textbf{Entwicklerwerkzeuge} (DevTools). Dort gibt es den Reiter \textbf{Console} (Konsole): Das ist ein
+Textfenster, in das JavaScript mit dem Befehl \lstinline|console.log(...)| Dinge hineinschreiben kann.
+Diese Konsole brauchst du vor allem für die Aufgaben~3 und~5.
+
+\subsection*{Aufbau dieser Erklärung}
+\begin{enumerate}[nosep]
+  \item \textbf{Grundlagen} (Abschnitt~\ref{sec:grundlagen}): alles, was du für die Aufgaben wissen musst, von null an.
+  \item \textbf{Die Aufgaben 1--6} (Abschnitte~\ref{sec:a1}--\ref{sec:a6}): jeweils Aufgabe in einfachen Worten,
+        Lösungsidee, Code Schritt für Schritt, Ergebnis und typische Tutor-Fragen.
+  \item \textbf{Zusammenfassung} (Abschnitt~\ref{sec:zusammenfassung}): Ergebnistabelle und goldene Regeln.
+\end{enumerate}
+
+% =====================================================================
+\section{Grundlagen}\label{sec:grundlagen}
+% =====================================================================
+
+\subsection{Was ist JavaScript und wie kommt es in die Webseite?}
+
+Eine Webseite besteht aus drei Schichten:
+\begin{itemize}[nosep]
+  \item \textbf{HTML} legt fest, \emph{was} auf der Seite ist (Überschriften, Bilder, Links, Formulare).
+  \item \textbf{CSS} legt fest, \emph{wie} es aussieht (Farben, Abstände, Größen).
+  \item \textbf{JavaScript} legt fest, \emph{was passiert} (Reaktion auf Klicks, Rechnungen, Änderungen der Seite).
+\end{itemize}
+
+\begin{analogie}
+Stell dir ein Haus vor: HTML sind die Mauern und Räume, CSS ist die Farbe an den Wänden und die Einrichtung,
+JavaScript ist die Elektrik -- du drückst einen Schalter (Klick), und das Licht geht an (etwas passiert).
+\end{analogie}
+
+JavaScript schreibt man in eine eigene Datei mit der Endung \texttt{.js} und bindet sie im HTML so ein:
+\begin{htmlcode}[numbers=none]
+<script src="game.js" defer></script>
+\end{htmlcode}
+
+\textbf{Warum \texttt{defer}?} Der Browser liest eine HTML-Datei von oben nach unten. Ohne \texttt{defer} würde er
+beim \texttt{<script>}-Tag im \texttt{<head>} \emph{sofort} anhalten und das Skript ausführen -- zu diesem Zeitpunkt
+hat er den \texttt{<body>} aber noch gar nicht gelesen. Ein Skript, das z.\,B.\ einen Link im Body sucht, würde ihn
+nicht finden. \texttt{defer} heißt "`aufschieben"': Das Skript wird erst ausgeführt, \textbf{nachdem die ganze Seite
+gelesen wurde}. Dann existieren alle Elemente schon.
+
+\begin{merkbox}
+\lstinline|<script src="datei.js" defer></script>| im \texttt{<head>} = "`Lade das Skript, aber führe es erst aus, wenn
+die ganze HTML-Seite fertig eingelesen ist."' Das verwenden alle Aufgaben dieses Blatts.
+\end{merkbox}
+
+\subsection{Variablen: \texttt{const}, \texttt{let} und \texttt{var}}
+
+Eine \textbf{Variable} ist ein Name, unter dem sich das Programm einen Wert merkt.
+
+\begin{analogie}
+Eine Variable ist wie eine \textbf{beschriftete Schachtel}. Auf der Schachtel steht der Name (z.\,B.\ \texttt{alter}),
+in der Schachtel liegt der Wert (z.\,B.\ \texttt{15}).
+\begin{itemize}[nosep]
+\item \texttt{let}: Schachtel mit Deckel -- du kannst den Inhalt später austauschen.
+\item \texttt{const}: Schachtel, die nach dem ersten Befüllen \textbf{zugeklebt} wird -- du kannst keinen neuen
+      Inhalt hineinlegen.
+\item \texttt{var}: die alte Schachtel aus früheren JavaScript-Versionen -- funktioniert, hat aber ein paar
+      seltsame Eigenschaften (siehe unten).
+\end{itemize}
+\end{analogie}
+
+\begin{code}
+const MAX_ATTEMPTS = 3;   // fixer Wert, wird nie geändert
+let keepPlaying = true;   // kann sich später ändern
+keepPlaying = false;      // erlaubt, weil let
+MAX_ATTEMPTS = 5;         // FEHLER: TypeError, const darf man nicht neu zuweisen
+\end{code}
+
+\textbf{Gültigkeitsbereich (Scope):} Eine mit \texttt{let} oder \texttt{const} angelegte Variable gilt nur innerhalb
+der geschweiften Klammern \texttt{\{ \}}, in denen sie steht (dem sogenannten \emph{Block}). Eine \texttt{var}-Variable
+gilt dagegen in der ganzen Funktion (bzw.\ im ganzen Skript).
+
+\textbf{Zwei Fehlerarten}, die unten vorkommen: Ein \textbf{SyntaxError} heißt "`der Code ist falsch
+geschrieben"' -- JS merkt das schon beim Einlesen, und das \emph{ganze} Skript läuft gar nicht erst los. Ein
+\textbf{TypeError} entsteht erst \emph{während} das Programm läuft, wenn eine Operation mit einem Wert nicht
+erlaubt ist (z.\,B.\ eine \texttt{const} neu zuweisen oder etwas von \texttt{undefined} lesen). Das Skript bricht an
+dieser Stelle ab.
+
+\begin{merkbox}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & neu zuweisen? & nochmal mit gleichem Namen anlegen?\\
+\midrule
+\texttt{const} & nein & nein (SyntaxError)\\
+\texttt{let}   & ja   & nein (SyntaxError)\\
+\texttt{var}   & ja   & \textbf{ja}, wird stillschweigend erlaubt\\
+\bottomrule
+\end{tabular}
+
+\medskip
+\textbf{Falle:} \texttt{const} klebt nur die \emph{Schachtel} zu, nicht den Inhalt. Liegt in der Schachtel ein
+Objekt (ein zusammengesetzter Wert wie eine Liste oder ein HTML-Element, siehe nächste Abschnitte), darf man das
+Objekt selbst verändern:
+\lstinline|const liste = []; liste.push(5);| ist erlaubt, weil \texttt{liste} weiterhin dasselbe Array ist --
+es wurde nur etwas hineingelegt. Genauso ist in Aufgabe~4 \lstinline|priceInput.value = "-";| erlaubt, obwohl
+\texttt{priceInput} eine \texttt{const} ist.
+\end{merkbox}
+
+\subsection{Datentypen und \texttt{typeof}}
+
+Jeder Wert in JavaScript hat einen \textbf{Typ}, also eine Art. Die wichtigsten:
+
+\begin{center}
+\begin{tabular}{@{}llp{6.5cm}@{}}
+\toprule
+Typ & Beispiel & Bedeutung\\
+\midrule
+\texttt{number}    & \lstinline|7|, \lstinline|3.5|, \lstinline|NaN| & Zahl (ganze Zahlen und Kommazahlen sind derselbe Typ)\\
+\texttt{string}    & \lstinline|"Hallo"|, \lstinline|"7"| & Text, in \texttt{\textquotedbl{}...\textquotedbl{}} oder \texttt{'...'} (beides gleichwertig)\\
+\texttt{boolean}   & \lstinline|true|, \lstinline|false| & Wahrheitswert: ja oder nein\\
+\texttt{undefined} & \lstinline|undefined| & "`noch kein Wert"'\\
+\texttt{object}    & \lstinline|[1,2]|, \lstinline|null|, HTML-Elemente & alles Zusammengesetzte\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Achtung: \lstinline|7| (Zahl) und \lstinline|"7"| (Text, der zufällig aus der Ziffer 7 besteht) sind \emph{verschieden}!
+
+\textbf{Objekte, Properties und Methoden.} Ein \textbf{Objekt} ist ein Wert, der aus mehreren benannten Teilen
+besteht. Diese Teile heißen \textbf{Properties} (Eigenschaften) und werden mit einem Punkt angesprochen:
+\lstinline|guesses.length| ist die Property "`Länge"' der Liste \texttt{guesses}. Ist eine Property eine Funktion,
+nennt man sie \textbf{Methode} und ruft sie mit Klammern auf: \lstinline|guesses.push(5)|. Jedes HTML-Element im
+Browser ist so ein Objekt, mit Properties wie \lstinline|id| oder \lstinline|value| und Methoden wie
+\lstinline|remove()|.
+
+\begin{analogie}
+Ein Objekt ist wie ein \textbf{Auto}: Es hat Eigenschaften (Farbe, Kilometerstand = Properties) und Dinge, die
+es tun kann (hupen, bremsen = Methoden). \lstinline|auto.farbe| fragt eine Eigenschaft ab, \lstinline|auto.hupen()|
+löst eine Aktion aus.
+\end{analogie}
+
+Mit \lstinline|typeof| fragt man nach dem Typ. Das Ergebnis ist selbst ein Text:
+\begin{code}[numbers=none]
+typeof 7          // "number"
+typeof "7"        // "string"
+typeof "Invalid input. ..."   // "string"
+\end{code}
+Genau das nutzt Aufgabe~2: Dort liefert eine Funktion entweder eine Zahl (gültiger Tipp) oder einen Fehlertext.
+Mit \lstinline|typeof guess !== "number"| erkennt man, dass es der Fehlertext ist.
+
+\subsection{Zahlen aus Text machen: \texttt{Number()}, \texttt{NaN}, \texttt{isNaN}}
+
+Alles, was ein Benutzer eintippt, kommt als \textbf{Text} (string) im Programm an -- auch wenn er "`7"' tippt.
+Zum Rechnen und Vergleichen braucht man aber eine Zahl. \lstinline|Number(...)| wandelt um:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Ausdruck & Ergebnis & Warum?\\
+\midrule
+\lstinline|Number("7")|   & \lstinline|7|   & Text besteht aus einer Zahl\\
+\lstinline|Number("abc")| & \lstinline|NaN| & keine Zahl erkennbar\\
+\lstinline|Number("")|    & \lstinline|0|   & leerer Text zählt als 0 (Eigenheit von JS)\\
+\lstinline|Number(null)|  & \lstinline|0|   & \texttt{null} (= "`nichts"') wird ebenfalls zu 0\\
+\lstinline|Number("2.5")| & \lstinline|2.5| & Kommazahl mit Punkt\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{NaN} heißt "`Not a Number"' (keine Zahl). Es ist ein spezieller Wert vom Typ \texttt{number}, der
+"`Umwandlung ist schiefgegangen"' bedeutet. Seltsam, aber wichtig: \lstinline|NaN === NaN| ist \lstinline|false|
+-- NaN ist mit nichts gleich, nicht einmal mit sich selbst. Deshalb gibt es die Funktion \lstinline|isNaN(x)|, die
+\lstinline|true| liefert, wenn \texttt{x} NaN ist.
+
+\begin{merkbox}[title={Merke -- automatische Umwandlung}]
+Manche Rechenzeichen wandeln Text automatisch in Zahlen um, \texttt{+} aber nicht:
+\begin{itemize}[nosep]
+\item \lstinline|"4" / 10| ergibt \lstinline|0.4| -- Division geht nur mit Zahlen, also wandelt JS \lstinline|"4"| in 4 um.
+\item \lstinline|"4" * 2| ergibt \lstinline|8| (gleicher Grund).
+\item \lstinline|"4" + 1| ergibt \lstinline|"41"| -- \textbf{Falle!} \texttt{+} mit einem Text heißt "`aneinanderhängen"'.
+\end{itemize}
+Darum wandelt man lieber selbst mit \lstinline|Number(...)| um, dann ist es eindeutig.
+\end{merkbox}
+
+\subsection{Texte zusammenbauen}
+
+Mit \texttt{+} hängt man Texte aneinander (\emph{String-Verkettung}). Ist einer der beiden Teile kein Text, wird
+er vorher in Text umgewandelt:
+\begin{code}[numbers=none]
+"Attempts made: " + 2        // "Attempts made: 2"
+"Guesses: " + [3, 5]         // "Guesses: 3,5"   (Array -> Elemente mit Komma)
+"target: " + buttonElement   // "target: [object HTMLButtonElement]"
+\end{code}
+Die letzte Zeile ist wichtig für Aufgabe~5: Ein HTML-Element, das in Text umgewandelt wird, wird nur zu
+\lstinline|[object HTMLButtonElement]|, also "`ein Objekt vom Typ Button-Element"'.
+
+Alternative Schreibweise (\emph{Template-String}) mit Backticks und \lstinline|${...}|:
+\begin{code}[numbers=none]
+let n = 2;
+`Attempts made: ${n}`        // "Attempts made: 2"
+\end{code}
+Beide Varianten liefern dasselbe; der Code dieses Blatts verwendet \texttt{+}.
+
+\subsection{Vergleiche und Bedingungen}
+
+\begin{itemize}[nosep]
+\item \lstinline|===| prüft "`gleich, und zwar auch vom gleichen Typ"'. \lstinline|5 === 5| ist \lstinline|true|,
+      \lstinline|5 === "5"| ist \lstinline|false|. (\lstinline|==| würde vorher umwandeln -- das vermeidet man,
+      weil es überraschende Ergebnisse liefern kann.)
+\item \lstinline|!==| heißt "`nicht gleich"'.
+\item \lstinline|&&| heißt "`und"' (beides muss stimmen), \lstinline!||! heißt "`oder"' (eines reicht),
+      \lstinline|!| heißt "`nicht"'.
+\item \lstinline|if (bedingung) { ... } else if (...) { ... } else { ... }|: Es wird \emph{genau ein} Zweig
+      ausgeführt, nämlich der erste, dessen Bedingung stimmt.
+\end{itemize}
+
+\textbf{Kurzschluss-Auswertung:} Bei \lstinline|a && b| schaut JS zuerst \texttt{a} an. Ist \texttt{a} schon falsch,
+kann das Ganze nicht mehr wahr werden -- \texttt{b} wird gar nicht mehr geprüft. Bei \lstinline!a || b! ist es umgekehrt:
+Ist \texttt{a} wahr, wird \texttt{b} übersprungen.
+
+\subsection{Schleifen: \texttt{while} und \texttt{for}}
+
+Eine \textbf{Schleife} wiederholt Code, solange eine Bedingung stimmt.
+
+\begin{analogie}
+\texttt{while} ist wie "`Solange du Hunger hast, iss noch einen Bissen."' Vor jedem Bissen wird gefragt.
+\texttt{for} ist wie "`Mach genau 3 Liegestütze"': Man zählt mit (1, 2, 3) und hört nach der letzten auf.
+\end{analogie}
+
+\begin{code}
+let keepPlaying = true;
+while (keepPlaying) {                 // vor jeder Runde: noch true?
+    // ... eine Spielrunde ...
+    keepPlaying = confirm("Again?");  // hier entscheidet sich, ob es weitergeht
+}
+\end{code}
+
+Die \texttt{for}-Schleife hat drei Teile in der Klammer, getrennt durch Strichpunkte:
+\lstinline|for (start; bedingung; schritt)|.
+
+\begin{code}
+for (let attempt = 1; attempt <= 3; attempt++) {
+    console.log(attempt);
+}
+\end{code}
+
+Schritt für Schritt (\lstinline|attempt++| heißt "`erhöhe um 1"'):
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Durchlauf & \texttt{attempt} vorher & Bedingung \texttt{attempt <= 3} & Ausgabe\\
+\midrule
+1 & 1 & wahr & 1\\
+2 & 2 & wahr & 2\\
+3 & 3 & wahr & 3\\
+-- & 4 & \textbf{falsch} $\to$ Schleife endet & --\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Für Listen gibt es noch \lstinline|for (const x of liste) { ... }|: "`Für jedes Element \texttt{x} in der Liste
+mach \dots"'. Das braucht man in Aufgabe~4 für die Radio-Buttons.
+
+\subsection{Funktionen und \texttt{return}}
+
+Eine \textbf{Funktion} ist ein Stück Code mit Namen, das man beliebig oft aufrufen kann.
+
+\begin{analogie}
+Eine Funktion ist wie eine \textbf{Kaffeemaschine}: Du gibst etwas hinein (Bohnen, Wasser = \emph{Parameter}),
+drückst den Knopf (\emph{Aufruf}), und es kommt etwas heraus (Kaffee = \emph{Rückgabewert} mit \texttt{return}).
+\end{analogie}
+
+\begin{code}
+function verdopple(zahl) {    // zahl ist der Parameter
+    return zahl * 2;          // Ergebnis zurückgeben
+}
+let x = verdopple(21);        // Aufruf mit Argument 21 -> x ist 42
+\end{code}
+
+\begin{merkbox}
+\begin{itemize}[nosep]
+\item \lstinline|return| \textbf{beendet die Funktion sofort} -- Code danach in der Funktion wird nicht mehr ausgeführt.
+      In Aufgabe~2 beendet \lstinline|return true;| deshalb auch die Schleife innerhalb der Funktion.
+\item Funktionen, die mit \lstinline|function name() {...}| angelegt werden, kann man schon \emph{vor} der Zeile,
+      in der sie stehen, aufrufen. JS liest beim Start zuerst alle solchen Funktionsdefinitionen ein
+      (das nennt man \emph{Hoisting}, "`Hochziehen"'). Deshalb darf in Aufgabe~2 \texttt{playNumberGame} oben
+      aufgerufen werden, obwohl die Funktion erst weiter unten steht.
+\end{itemize}
+\end{merkbox}
+
+\subsection{Arrays und \texttt{push}}
+
+Ein \textbf{Array} ist eine geordnete Liste von Werten.
+
+\begin{analogie}
+Ein Array ist wie eine \textbf{nummerierte Einkaufsliste} -- nur dass die Nummerierung bei \textbf{0} beginnt.
+\lstinline|push| schreibt einen neuen Punkt unten an die Liste.
+\end{analogie}
+
+\begin{code}
+let guesses = [];      // leere Liste
+guesses.push(3);       // [3]
+guesses.push(5);       // [3, 5]
+guesses[0];            // 3   (erstes Element hat Index 0!)
+guesses.length;        // 2   (Anzahl der Elemente)
+\end{code}
+
+\subsection{Dialogfenster: \texttt{alert}, \texttt{prompt}, \texttt{confirm}}
+
+Der Browser hat drei eingebaute Mini-Fenster. Solange so ein Fenster offen ist, \textbf{wartet} das Programm.
+
+\begin{center}
+\begin{tabular}{@{}lp{3.6cm}p{5.6cm}@{}}
+\toprule
+Funktion & zeigt & gibt zurück\\
+\midrule
+\lstinline|alert("Hi")|   & Nachricht + OK-Knopf          & nichts (\texttt{undefined})\\
+\lstinline|prompt("Zahl?")| & Nachricht + Eingabefeld     & eingegebener \textbf{Text}; bei "`Abbrechen"' \lstinline|null|\\
+\lstinline|confirm("Nochmal?")| & Nachricht + OK/Abbrechen & \lstinline|true| (OK) oder \lstinline|false| (Abbrechen)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Fehlerbehandlung: \texttt{try}, \texttt{catch}, \texttt{throw}}
+
+Manchmal geht etwas schief, z.\,B.\ der Benutzer tippt "`abc"' statt einer Zahl. Dafür gibt es drei Bausteine:
+\begin{itemize}[nosep]
+\item \lstinline|throw new Error("Text")| -- "`wirf"' einen Fehler: Der normale Ablauf bricht \emph{sofort} ab.
+\item \lstinline|try { ... }| -- "`versuche"' diesen Code.
+\item \lstinline|catch (error) { ... }| -- wird ein Fehler geworfen, landet das Programm hier.
+      In \lstinline|error.message| steht der Text des Fehlers.
+\end{itemize}
+
+\begin{analogie}
+Ein Trapezkünstler (\texttt{try}) turnt über einem \textbf{Sicherheitsnetz} (\texttt{catch}). Wenn er fällt
+(\texttt{throw}), stürzt nicht die ganze Vorstellung ab, sondern das Netz fängt ihn auf, und es geht kontrolliert weiter.
+\end{analogie}
+
+\begin{code}
+try {
+    let x = Number("abc");                // NaN
+    if (isNaN(x)) {
+        throw new Error("Das ist keine Zahl");
+    }
+    console.log("wird übersprungen");     // kommt nicht mehr dran
+} catch (error) {
+    console.log(error.message);           // "Das ist keine Zahl"
+}
+\end{code}
+
+\subsection{Zufallszahlen: \texttt{Math.random} und \texttt{Math.floor}}\label{sec:zufall}
+
+\begin{itemize}[nosep]
+\item \lstinline|Math.random()| liefert eine zufällige Kommazahl \textbf{von 0 (inklusive) bis 1 (exklusive)},
+      also z.\,B.\ \texttt{0.0}, \texttt{0.73}, \texttt{0.9999}, aber nie genau \texttt{1}. Mathematisch: $[0, 1)$.
+\item \lstinline|Math.floor(x)| rundet \textbf{immer ab} auf die nächste ganze Zahl: \texttt{Math.floor(7.9)} ist \texttt{7}.
+      ("`floor"' = Fußboden: man fällt nach unten.)
+\end{itemize}
+
+\textbf{Vollständiges Beispiel} für \lstinline|Math.floor(Math.random() * 10) + 1| mit dem Zufallswert $0{,}73$:
+\begin{align*}
+\texttt{Math.random()} &= 0{,}73 && \text{angenommener Zufallswert}\\
+0{,}73 \cdot 10 &= 7{,}3 && \text{Bereich von } [0,1) \text{ auf } [0,10) \text{ strecken}\\
+\texttt{Math.floor}(7{,}3) &= 7 && \text{abrunden: nur noch ganze Zahlen } 0 \dots 9\\
+7 + 1 &= 8 && \text{verschieben: aus } 0\dots 9 \text{ wird } 1 \dots 10
+\end{align*}
+
+Die Randfälle zeigen, dass wirklich genau $1$ bis $10$ herauskommt:
+\begin{align*}
+\text{kleinster Wert: } & 0 \cdot 10 = 0, && \lfloor 0 \rfloor + 1 = 1\\
+\text{größter Wert: }   & 0{,}9999 \cdot 10 = 9{,}999, && \lfloor 9{,}999 \rfloor + 1 = 9 + 1 = 10
+\end{align*}
+Die 11 kann nie vorkommen, weil \lstinline|Math.random()| nie genau 1 liefert.
+
+\begin{merkbox}
+Zufällige ganze Zahl von $1$ bis $n$: \lstinline|Math.floor(Math.random() * n) + 1|.
+\emph{Mal $n$} legt fest, wie viele verschiedene Werte es gibt; \emph{floor} macht ganze Zahlen daraus;
+\emph{$+1$} verschiebt den Start von 0 auf 1.
+\end{merkbox}
+
+\subsection{Rechnen mit Rest: Modulo (\texttt{\%})}\label{sec:modulo}
+
+Der \textbf{Modulo}-Operator \texttt{\%} liefert den \textbf{Rest einer Division}. Beispiel: $7 \,\%\, 3 = 1$, denn
+$7 = 2 \cdot 3 + 1$ -- die 3 passt zweimal in die 7, übrig bleibt 1.
+
+\begin{analogie}
+Eine \textbf{Uhr} rechnet mit Modulo 12: Es ist 11 Uhr, in 3 Stunden ist es nicht 14 Uhr, sondern 2 Uhr --
+nach der 12 geht es wieder von vorne los. $(11 + 3) \,\%\, 12 = 14 \,\%\, 12 = 2$.
+Genau so ein "`Im-Kreis-Laufen"' (\emph{Wrap-around}) brauchen wir in Aufgabe~6 für die Bildergalerie:
+Nach dem letzten Bild kommt wieder das erste.
+\end{analogie}
+
+\textbf{Vollständiges Beispiel} mit 3 Bildern (Indizes 0, 1, 2):
+\begin{align*}
+0 \,\%\, 3 &= 0 && 3 \text{ passt 0-mal in } 0, \text{ Rest } 0\\
+1 \,\%\, 3 &= 1 && \text{Rest } 1\\
+2 \,\%\, 3 &= 2 && \text{Rest } 2\\
+3 \,\%\, 3 &= 0 && 3 = 1\cdot 3 + 0 \;\Rightarrow\; \text{wieder bei } 0 \text{ (Wrap-around!)}\\
+4 \,\%\, 3 &= 1 && 4 = 1\cdot 3 + 1
+\end{align*}
+
+\begin{merkbox}[title={Merke -- Falle bei negativen Zahlen}]
+In JavaScript ist \lstinline|-1 % 3| gleich \lstinline|-1| (nicht 2!). Das Ergebnis behält das Vorzeichen der linken Zahl.
+Ein Index $-1$ existiert in einem Array aber nicht. \textbf{Trick:} vorher die Länge $n$ addieren:
+$(-1 + 3) \,\%\, 3 = 2 \,\%\, 3 = 2$. Allgemein: \lstinline|(index + n) % n| liegt immer zwischen $0$ und $n-1$,
+solange \texttt{index} nicht kleiner als $-n$ ist (bei Schritten von $\pm 1$ ist das immer erfüllt).
+\end{merkbox}
+
+% ---------------------------------------------------------------------
+\subsection{Das DOM: die Webseite als Baum}\label{sec:dom}
+
+Wenn der Browser eine HTML-Datei lädt, liest er den Text und baut daraus im Speicher eine
+\textbf{Baumstruktur aus Objekten}. Der Teil des Browsers, der den HTML-Text liest und daraus den Baum baut,
+heißt \textbf{Parser} ("`Zerleger"'). Der fertige Baum heißt \textbf{DOM} (\emph{Document Object Model}). JavaScript arbeitet
+nie mit dem HTML-Text selbst, sondern immer mit diesem Baum. Ändert JS den Baum, ändert sich sofort, was man sieht.
+
+\begin{analogie}
+Das DOM ist wie ein \textbf{Familienstammbaum}: Ganz oben steht das Dokument (die Urgroßmutter), darunter
+\texttt{<html>}, darunter \texttt{<head>} und \texttt{<body>} (Geschwister), und so weiter. Jedes Element hat
+\emph{genau einen} Elternteil (\texttt{parentNode}) und beliebig viele Kinder (\texttt{childNodes}), mit einem
+ersten (\texttt{firstChild}) und einem letzten Kind (\texttt{lastChild}). Jeder Eintrag im Baum heißt \textbf{Knoten}
+(englisch \emph{node}).
+\end{analogie}
+
+\textbf{Vollständiges Beispiel.} Aus dem HTML \lstinline[language=HTML]|<p>Hallo <b>Welt</b></p>| macht der Browser diesen Baum:
+
+\begin{center}
+\begin{tikzpicture}[
+  level distance=1.3cm, sibling distance=4cm,
+  el/.style={draw=blue!60, fill=blue!8, rounded corners, font=\ttfamily\small, inner sep=3pt},
+  tx/.style={draw=orange!70, fill=orange!8, rounded corners, font=\ttfamily\small, inner sep=3pt},
+  edge from parent/.style={draw, gray}]
+\node[el] {p (Element)}
+  child {node[tx] {\#text \qq{Hallo\ws}}}
+  child {node[el] {b (Element)}
+     child {node[tx] {\#text \qq{Welt}}}};
+\end{tikzpicture}
+\end{center}
+
+Beobachtungen: (1) Der Text "`Hallo "' ist ein eigener Knoten, ein \textbf{Textknoten}. (2) Das Leerzeichen nach
+"`Hallo"' gehört zum Textknoten. (3) \texttt{<b>} ist ein Kind von \texttt{<p>}, und "`Welt"' ist ein Kind von
+\texttt{<b>}, weil es \emph{innerhalb} von \texttt{<b>} steht.
+
+\subsubsection*{Knotentypen und \texttt{nodeType}}
+
+Jeder Knoten hat eine Eigenschaft \texttt{nodeType}, eine Nummer, die sagt, welche Art Knoten es ist:
+
+\begin{center}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\texttt{nodeType} & Name & Beispiel & \texttt{nodeName}\\
+\midrule
+1 & \texttt{ELEMENT\_NODE}   & \texttt{<a>}, \texttt{<p>}, \texttt{<img>} & \texttt{\textquotedbl{}A\textquotedbl{}}, \texttt{\textquotedbl{}P\textquotedbl{}} (Großbuchstaben)\\
+2 & \texttt{ATTRIBUTE\_NODE} & \texttt{href=\textquotedbl{}...\textquotedbl{}}                       & \texttt{\textquotedbl{}href\textquotedbl{}}\\
+3 & \texttt{TEXT\_NODE}      & Text zwischen Tags                         & \texttt{\textquotedbl{}\#text\textquotedbl{}}\\
+8 & \texttt{COMMENT\_NODE}   & \texttt{<!-- ... -->}                      & \texttt{\textquotedbl{}\#comment\textquotedbl{}}\\
+9 & \texttt{DOCUMENT\_NODE}  & \texttt{document}                          & \texttt{\textquotedbl{}\#document\textquotedbl{}}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Weitere Eigenschaften jedes Knotens:
+\begin{itemize}[nosep]
+\item \texttt{nodeName}: der Name. Bei HTML-Elementen \textbf{immer in Großbuchstaben} (\texttt{\textquotedbl{}BODY\textquotedbl{}}, \texttt{\textquotedbl{}A\textquotedbl{}}),
+      egal wie es im HTML geschrieben wurde.
+\item \texttt{nodeValue}: der Wert. Bei Text- und Attributknoten ist das der Text bzw.\ der Attributwert.
+      Bei \textbf{Elementen ist er immer \texttt{null}} -- ein Element "`hat"' keinen eigenen Wert, sondern nur Kinder.
+\end{itemize}
+
+\subsubsection*{Whitespace-Textknoten -- die häufigste Überraschung}
+
+\textbf{Whitespace} heißt "`weißer Raum"' und meint unsichtbare Zeichen: Leerzeichen, Tabulatoren, Zeilenumbrüche.
+Der Browser wirft diese Zeichen beim Bauen des Baums \textbf{nicht weg}. Jeder Zeilenumbruch und jede Einrückung
+zwischen zwei Tags wird zu einem eigenen Textknoten. Beispiel:
+\begin{htmlcode}
+<ul>
+  <li>A</li>
+</ul>
+\end{htmlcode}
+Zwischen \texttt{<ul>} und \texttt{<li>} stehen ein Zeilenumbruch und zwei Leerzeichen. Die Kinder von
+\texttt{<ul>} sind deshalb: \texttt{\#text} "`\nl\ws\ws"', dann \texttt{<li>}, dann \texttt{\#text} "`\nl"'.
+\texttt{ul.firstChild} ist also \textbf{nicht} das \texttt{<li>}, sondern der unsichtbare Textknoten!
+In dieser Erklärung steht \nl\ für einen Zeilenumbruch und \ws\ für ein Leerzeichen.
+
+Wer nur Elemente will, nimmt \texttt{firstElementChild} statt \texttt{firstChild} (bzw.\ \texttt{children}
+statt \texttt{childNodes}).
+
+\subsubsection*{Attribute sind keine Kinder}
+
+Ein \textbf{Attribut} ist eine Zusatzangabe im Start-Tag, z.\,B.\ \texttt{href} und \texttt{target} in
+\lstinline[language=HTML]|<a href="https://de.wikipedia.org" target="_new">|. Attribute \emph{hängen} am Element,
+sind aber \textbf{keine Kindknoten} -- sie tauchen in \texttt{childNodes} und \texttt{firstChild} nie auf.
+Man erreicht sie über eigene Wege:
+\begin{itemize}[nosep]
+\item \lstinline|el.attributes| -- Liste aller Attributknoten, per Name (\lstinline|el.attributes["href"]|) oder per
+      Nummer (\lstinline|el.attributes[0]|, Reihenfolge wie im HTML) ansprechbar; \lstinline|.length| = Anzahl.
+\item \lstinline|el.getAttributeNode("href")| -- liefert den Attributknoten mit diesem Namen.
+\item \lstinline|el.getAttribute("href")| -- liefert direkt den Text des Attributs.
+\end{itemize}
+
+\begin{analogie}
+Ein Element ist wie eine Person im Stammbaum. Die Kinder sind ihre Kinder. Die Attribute sind wie ihre
+\textbf{Ausweisdaten} (Name, Geburtsdatum): Sie gehören zur Person, sind aber keine Kinder.
+\end{analogie}
+
+\subsubsection*{Attribut oder Property? Am Beispiel \texttt{href}}
+
+Es gibt zwei Sichtweisen auf dieselbe Information:
+\begin{itemize}[nosep]
+\item Das \textbf{Attribut} ist genau das, was \textbf{im HTML-Text steht}, Zeichen für Zeichen.
+\item Die \textbf{Property} (Eigenschaft) ist das, was der \textbf{Browser daraus gemacht hat}. Man liest sie mit
+      Punkt-Schreibweise: \lstinline|el.href|.
+\end{itemize}
+
+Bei \texttt{href} sieht man den Unterschied: Steht im HTML \texttt{href=\textquotedbl{}https://de.wikipedia.org\textquotedbl{}}, dann liefert
+das Attribut genau diesen Text. Die Property \lstinline|link.href| liefert aber
+\begin{center}\texttt{\textquotedbl{}https://de.wikipedia.org/\textquotedbl{}}\end{center}
+-- also mit Schrägstrich am Ende. Der Browser hat die Adresse \emph{aufgelöst und vereinheitlicht} (normalisiert):
+Jede vollständige Webadresse hat einen Pfad, und der leere Pfad wird als "`/"' geschrieben.
+Bei einem relativen Link wie \texttt{href=\textquotedbl{}seite.html\textquotedbl{}} wäre der Unterschied noch größer: Das Attribut wäre
+\texttt{\textquotedbl{}seite.html\textquotedbl{}}, die Property die volle Adresse inklusive Ordner. (Eine
+\emph{absolute} Adresse ist vollständig, mit \texttt{https://} und Servername; eine \emph{relative} Adresse ist nur
+ein Weg ausgehend von der aktuellen Seite, z.\,B.\ ein Dateiname im selben Ordner.)
+
+\begin{analogie}
+Das Attribut ist der \textbf{Bestellzettel} ("`1 Pizza Margherita"'), die Property ist die \textbf{gelieferte Pizza}
+(fertig gebacken, in Stücke geschnitten). Inhaltlich dasselbe, aber vom Browser bearbeitet.
+\end{analogie}
+
+% ---------------------------------------------------------------------
+\subsection{Inhalte lesen: \texttt{innerHTML}, \texttt{outerHTML}, \texttt{innerText}, \texttt{outerText}, \texttt{textContent}}\label{sec:inhalt}
+
+Fünf Properties liefern den Inhalt eines Elements als Text -- jede auf eine andere Art. Einfaches Beispiel:
+\lstinline[language=HTML]|<span id="s">Hallo <b>Welt</b></span>|
+
+\begin{center}
+\begin{tabular}{@{}lp{6.6cm}p{4.6cm}@{}}
+\toprule
+Property & Ergebnis für \texttt{s} & was wird geliefert?\\
+\midrule
+\texttt{innerHTML}   & \lstinline|Hallo <b>Welt</b>| & HTML-Code \emph{innerhalb} des Elements\\
+\texttt{outerHTML}   & \lstinline|<span id="s">Hallo <b>Welt</b></span>| & HTML-Code \emph{inklusive} Element selbst\\
+\texttt{textContent} & \lstinline|Hallo Welt| & alle Textknoten roh hintereinander\\
+\texttt{innerText}   & \lstinline|Hallo Welt| & Text so, wie er \emph{angezeigt} wird\\
+\texttt{outerText}   & \lstinline|Hallo Welt| & beim Lesen wie \texttt{innerText}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Bei diesem einfachen Beispiel sehen die letzten drei gleich aus. Die Unterschiede zeigen sich erst bei
+Whitespace und Blockelementen (siehe Aufgabe~3). Zur Erinnerung aus HTML/CSS: Ein \textbf{Blockelement}
+(z.\,B.\ \texttt{<p>}, \texttt{<div>}) beginnt immer in einer neuen Zeile und danach geht es wieder in einer neuen
+Zeile weiter. Ein \textbf{Inline-Element} (z.\,B.\ \texttt{<a>}, \texttt{<b>}, \texttt{<img>}, \texttt{<span>})
+fließt einfach im Text mit, wie ein Wort in einem Satz. Außerdem gilt beim Anzeigen: Mehrere Leerzeichen und
+Zeilenumbrüche hintereinander werden zu \emph{einem} Leerzeichen zusammengefasst.
+\begin{itemize}[nosep]
+\item \texttt{textContent} nimmt den Text \textbf{roh}, Zeichen für Zeichen wie im Quelltext, mit allen
+      Zeilenumbrüchen und Einrückungen. Es schaut nicht darauf, wie die Seite aussieht.
+\item \texttt{innerText} liefert den Text so, wie ein Mensch ihn \textbf{auf dem Bildschirm sieht}: Mehrere
+      Leerzeichen und Zeilenumbrüche werden (wie beim Anzeigen) zu einem Leerzeichen zusammengefasst, und nach
+      Blockelementen wie \texttt{<p>} kommen Zeilenumbrüche, weil der Absatz auf dem Bildschirm eine eigene Zeile hat.
+\item \texttt{outerText} ist beim \emph{Lesen} identisch mit \texttt{innerText}. Der Unterschied ist nur beim
+      \emph{Setzen}: \lstinline|el.innerText = "x"| ersetzt den Inhalt, \lstinline|el.outerText = "x"| ersetzt das
+      ganze Element durch den Text.
+\item Bilder haben keinen Text. Ihr \texttt{alt}-Text ist ein Attribut, kein Textknoten -- er kommt in
+      \texttt{textContent} und \texttt{innerText} deshalb nicht vor.
+\end{itemize}
+
+\begin{analogie}
+Stell dir ein \textbf{Geschenkpaket} vor. \texttt{outerHTML} ist das Paket \emph{mit} Verpackung und Etikett.
+\texttt{innerHTML} ist der Inhalt mit allen inneren Schachteln und deren Beschriftungen. \texttt{textContent} ist
+ein Zettel, auf dem jemand stur alle Texte abgeschrieben hat, inklusive Leerzeilen. \texttt{innerText} ist das, was
+du beim Auspacken tatsächlich \emph{siehst}.
+\end{analogie}
+
+% ---------------------------------------------------------------------
+\subsection{Elemente finden, erzeugen, einfügen, löschen}\label{sec:finden}
+
+\subsubsection*{Finden}
+
+\begin{center}
+\begin{tabular}{@{}lp{6.2cm}@{}}
+\toprule
+Methode & liefert\\
+\midrule
+\lstinline|document.getElementById("width")| & das eine Element mit \texttt{id=\textquotedbl{}width\textquotedbl{}}\\
+\lstinline|document.getElementsByTagName("a")| & Liste \emph{aller} \texttt{<a>}-Elemente\\
+\lstinline|document.querySelector("h1 + p")| & das \emph{erste} Element, das zum CSS-Selektor passt\\
+\lstinline|document.querySelectorAll(".gallery img")| & Liste \emph{aller} passenden Elemente\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Bei Listen zählt man \textbf{ab 0}: \lstinline|getElementsByTagName("a")[1]| ist der \textbf{zweite} Link.
+\lstinline|.item(2)| ist genau dasselbe wie \lstinline|[2]|, nur als Methode geschrieben.
+
+\texttt{querySelector} versteht dieselben Selektoren wie CSS:
+\begin{itemize}[nosep]
+\item \texttt{\#button} -- Element mit \texttt{id=\textquotedbl{}button\textquotedbl{}}; \texttt{.desc} -- Element mit \texttt{class=\textquotedbl{}desc\textquotedbl{}}.
+\item \texttt{\#displayDIV .bigIMG} -- ein \texttt{.bigIMG} irgendwo \emph{innerhalb} von \texttt{\#displayDIV}.
+\item \texttt{h1 + p} -- ein \texttt{<p>}, das \emph{direkt nach} einem \texttt{<h1>} kommt (gleicher Elternteil).
+\item \lstinline|input[name="thickness"]| -- \texttt{<input>} mit dem Attribut \texttt{name=\textquotedbl{}thickness\textquotedbl{}}.
+\item \texttt{:checked} -- nur angehakte Radio-Buttons/Checkboxen.
+\end{itemize}
+
+\subsubsection*{Erzeugen, einfügen, löschen}
+
+\begin{analogie}
+\lstinline|document.createElement("button")| ist wie einen \textbf{Lego-Stein bauen}: Er existiert jetzt, liegt aber
+noch neben der Bauplatte -- man sieht ihn auf der Seite nicht. Erst \lstinline|append| bzw.\ \lstinline|appendChild|
+\textbf{steckt ihn an} (hängt ihn als letztes Kind an ein Element). \lstinline|remove()| nimmt einen Stein samt
+allem, was darauf steckt, wieder ab.
+\end{analogie}
+
+\begin{code}
+let li = document.createElement("li");   // 1. neues Element bauen (noch unsichtbar)
+li.textContent = "Neuer Punkt";          // 2. Text hineinschreiben
+document.querySelector("ul").appendChild(li);  // 3. als letztes Kind einhängen -> sichtbar
+document.querySelector("h1 + p").remove();     // ein Element löschen
+link.removeAttribute("target");          // nur ein Attribut entfernen, Element bleibt
+\end{code}
+
+\begin{itemize}[nosep]
+\item \lstinline|appendChild(x)| hängt \emph{genau einen} Knoten an.
+\item \lstinline|append(x, y, ...)| kann \emph{mehrere} auf einmal anhängen (auch Texte). Beides hängt ans \textbf{Ende}.
+\item Eigenschaften setzt man per Punkt: \lstinline|input.id = "price"|, \lstinline|input.readOnly = true|,
+      \lstinline|button.style.position = "absolute"|.
+\item Beim Label heißt die Property \lstinline|htmlFor| statt \texttt{for}, weil \texttt{for} in JavaScript schon
+      ein reserviertes Wort ist (die \texttt{for}-Schleife).
+\item \lstinline|el.parentElement| ist der Elternteil, wenn er ein Element ist (fast immer dasselbe wie \texttt{parentNode}).
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\subsection{Events: auf den Benutzer reagieren}\label{sec:events}
+
+Ein \textbf{Event} (Ereignis) ist etwas, das passiert: ein Klick (\texttt{click}), eine Eingabe in ein Feld
+(\texttt{input}), eine geänderte Auswahl (\texttt{change}). Mit \lstinline|addEventListener| sagt man einem Element:
+"`Wenn dieses Ereignis bei dir passiert, führe diese Funktion aus."' Die Funktion heißt dann
+\textbf{Event Listener} (englisch \emph{listener} = Zuhörer) oder \emph{Event-Handler}.
+
+\begin{analogie}
+Ein Event Listener ist wie eine \textbf{Türklingel}: Du montierst sie einmal (\texttt{addEventListener}), und jedes Mal,
+wenn jemand drückt (Event), läutet es (die Funktion läuft). Du musst nicht ständig selbst nachschauen, ob jemand
+vor der Tür steht.
+\end{analogie}
+
+\begin{code}
+widthInput.addEventListener("input", update);  // update OHNE Klammern!
+\end{code}
+\textbf{Warum ohne Klammern?} \lstinline|update| ist die Funktion selbst ("`hier ist die Klingel-Melodie"').
+\lstinline|update()| würde die Funktion \emph{sofort jetzt} ausführen und nur ihr Ergebnis übergeben -- das ist falsch.
+
+\textbf{\texttt{input} oder \texttt{change}?} \texttt{input} feuert bei \emph{jeder} Änderung, also bei jedem
+Tastendruck. \texttt{change} feuert, wenn die Änderung "`abgeschlossen"' ist -- bei einem Radio-Button genau dann,
+wenn er ausgewählt wird.
+
+\subsubsection*{Das Event-Objekt: \texttt{target}, \texttt{currentTarget}, \texttt{this}}
+
+Die Listener-Funktion bekommt automatisch ein \textbf{Event-Objekt} mit Informationen übergeben (meist
+\texttt{event} oder \texttt{e} genannt):
+\begin{itemize}[nosep]
+\item \lstinline|event.target| -- das Element, auf dem das Ereignis \textbf{ausgelöst} wurde, also das tatsächlich
+      angeklickte, \emph{innerste} Element. Bleibt auf dem ganzen Weg gleich.
+\item \lstinline|event.currentTarget| -- das Element, an dem der \textbf{gerade laufende Listener hängt}.
+\item \lstinline|this| -- in einer normalen \lstinline|function| als Listener dasselbe wie \texttt{currentTarget}.
+      (Bei einer Pfeilfunktion \lstinline|(e) => {...}| wäre \texttt{this} \emph{nicht} das Element, sondern
+      käme aus dem umgebenden Code.)
+\end{itemize}
+
+\subsubsection*{Bubbling: Events steigen nach oben}
+
+Klickt man auf ein Element, bekommen \textbf{auch alle seine Vorfahren} den Klick mit -- der Reihe nach von innen
+nach außen: zuerst das Element selbst, dann sein Elternteil, dann dessen Elternteil, \dots, bis zu \texttt{document}.
+Das nennt man \textbf{Bubbling} (aufsteigen wie eine Luftblase im Wasser). Jeder Listener auf diesem Weg wird ausgeführt.
+(Genau genommen läuft das Event vorher auch einmal von oben nach unten -- die \emph{Capturing}-Phase --, aber
+\texttt{addEventListener} hört standardmäßig nur auf die Bubbling-Phase. Für dieses Blatt reicht Bubbling.)
+
+\begin{analogie}
+Bubbling ist wie eine \textbf{Meldung in einer Firma}: Ein Mitarbeiter (Button) meldet ein Problem. Er kümmert
+sich selbst darum, dann geht die Meldung an seine Abteilungsleiterin (div), dann an den Bereichsleiter (body) und
+bis zur Chefin (document). Jede Person auf dem Weg kann reagieren. Auf der Meldung steht immer, \emph{wer} sie
+ursprünglich geschrieben hat (\texttt{target}) -- aber wer sie \emph{gerade} liest (\texttt{currentTarget}), ändert
+sich bei jeder Station.
+\end{analogie}
+
+\textbf{Vollständiges Beispiel:} \lstinline[language=HTML]|<ul id="liste"><li>Apfel</li></ul>|, ein Listener hängt
+nur am \texttt{<ul>}. Man klickt auf "`Apfel"':
+\begin{enumerate}[nosep]
+\item Der Klick passiert auf dem \texttt{<li>}. Dort hängt kein Listener, es passiert nichts.
+\item Das Event steigt zum \texttt{<ul>} auf. Dort hängt der Listener und läuft.
+\item In diesem Listener gilt:\\
+      \texttt{event.target} ist das \texttt{<li>}, denn dort wurde geklickt;\\
+      \texttt{event.currentTarget} ist das \texttt{<ul>}, denn dort hängt der Listener.
+\end{enumerate}
+
+\subsubsection*{\texttt{stopPropagation}: Aufsteigen stoppen}
+
+\lstinline|event.stopPropagation()| sagt: "`Ab hier nicht mehr weiterreichen."' Das Event erreicht dann
+\textbf{keine weiteren Elemente} weiter oben. Weitere Listener am \emph{selben} Element laufen aber trotzdem noch
+(die würde nur \lstinline|stopImmediatePropagation()| stoppen).
+
+\begin{merkbox}
+\begin{itemize}[nosep]
+\item \texttt{target} = \emph{wo} geklickt wurde (bleibt gleich). \texttt{currentTarget} = \emph{wer} gerade
+      reagiert (wandert mit). \texttt{this} = wie \texttt{currentTarget} (bei normaler \texttt{function}).
+\item Bubbling: Event läuft vom geklickten Element nach oben bis \texttt{document}; alle Listener unterwegs laufen.
+\item \texttt{stopPropagation()} stoppt den Weg nach oben, nicht die anderen Listener am selben Element.
+\item Nicht verwechseln: \texttt{preventDefault()} verhindert das \emph{Standardverhalten} des Browsers (z.\,B.\
+      dass ein Link geöffnet wird) -- das ist etwas anderes als das Aufsteigen zu stoppen.
+\end{itemize}
+\end{merkbox}
+
+% ---------------------------------------------------------------------
+\subsection{Formulare und Validierung}\label{sec:formulare}
+
+HTML-Formularfelder können selbst Regeln haben, die der Browser prüft:
+\begin{itemize}[nosep]
+\item \texttt{required} -- Feld muss ausgefüllt sein.
+\item \texttt{min=\textquotedbl{}0\textquotedbl{}}, \texttt{max=\textquotedbl{}200\textquotedbl{}} -- kleinster und größter erlaubter Wert (bei \texttt{type=\textquotedbl{}number\textquotedbl{}}).
+\item \texttt{step=\textquotedbl{}1\textquotedbl{}} -- nur Werte in Schritten von 1, ausgehend von \texttt{min}, also nur ganze Zahlen.
+\end{itemize}
+
+\lstinline|feld.checkValidity()| fragt: "`Erfüllt dieses Feld gerade alle seine Regeln?"' und liefert
+\lstinline|true| oder \lstinline|false|. Der Browser markiert ungültige Felder außerdem mit der CSS-Pseudoklasse
+\texttt{:invalid} (in Aufgabe~4 werden sie dadurch rot).
+
+\textbf{Vollständiges Beispiel} für \lstinline[language=HTML]|<input type="number" min="0" max="200" step="1" required>|:
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Eingabe & \texttt{checkValidity()} & Grund\\
+\midrule
+(leer)  & \lstinline|false| & \texttt{required} verletzt\\
+\texttt{150} & \lstinline|true|  & alle Regeln erfüllt\\
+\texttt{300} & \lstinline|false| & größer als \texttt{max=200}\\
+\texttt{2.5} & \lstinline|false| & kein ganzzahliger Schritt (\texttt{step=1})\\
+\texttt{-1}  & \lstinline|false| & kleiner als \texttt{min=0}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Radio-Gruppen:} Radio-Buttons mit demselben \texttt{name} bilden eine Gruppe; man kann nur einen davon
+auswählen. Steht \texttt{required} an einem Radio der Gruppe, gilt das für die \emph{ganze Gruppe}. Dann ist
+\textbf{jedes} Radio dieser Gruppe genau dann gültig, wenn \textbf{irgendein} Radio der Gruppe ausgewählt ist.
+
+\begin{merkbox}
+Der Wert eines Eingabefelds (\lstinline|feld.value|) ist \textbf{immer ein Text}, auch bei \texttt{type=\textquotedbl{}number\textquotedbl{}}.
+Zum Rechnen umwandeln! Ein Farbfeld (\texttt{type=\textquotedbl{}color\textquotedbl{}}) hat immer einen Wert der Form \texttt{\textquotedbl{}\#rrggbb\textquotedbl{}}
+in Kleinbuchstaben, z.\,B.\ \texttt{\textquotedbl{}\#ff0000\textquotedbl{}} (Standardwert: \texttt{\textquotedbl{}\#000000\textquotedbl{}}, Schwarz).
+\end{merkbox}
+
+\subsubsection*{Hex-Farben in 1 Minute}
+
+Eine Farbe \texttt{\#rrggbb} besteht aus drei Paaren: Rot-, Grün- und Blauanteil. Jedes Paar ist eine Zahl im
+\textbf{Sechzehnersystem} (hexadezimal, Ziffern \texttt{0}--\texttt{9} und \texttt{a}--\texttt{f}) von
+\texttt{00} (= 0, nichts) bis \texttt{ff} (= 255, volle Stärke). Beispiel: \texttt{80} hexadezimal ist
+$8 \cdot 16 + 0 = 128$, also halbe Stärke.
+
+Ein \textbf{Grauton} entsteht, wenn alle drei Anteile \textbf{gleich} sind ($R = G = B$): \texttt{\#000000} ist Schwarz,
+\texttt{\#808080} Mittelgrau, \texttt{\#ffffff} Weiß. Sobald ein Anteil abweicht, ist die Farbe "`bunt"', z.\,B.\
+\texttt{\#ff0000} (nur Rot).
+
+% ---------------------------------------------------------------------
+\subsection{Typische Fallen auf einen Blick}
+
+\begin{merkbox}[title={Typische Fallen}]
+\begin{enumerate}[nosep]
+\item Zählung ab \textbf{0}: \texttt{[1]} ist das \emph{zweite} Element.
+\item \texttt{firstChild} kann ein unsichtbarer \textbf{Whitespace-Textknoten} sein.
+\item Attribute sind \textbf{keine} Kindknoten.
+\item \texttt{nodeName} von Elementen ist in \textbf{GROSSBUCHSTABEN}; \texttt{nodeValue} von Elementen ist \texttt{null}.
+\item Attribut (wie im HTML) $\neq$ Property (vom Browser bearbeitet), z.\,B.\ \texttt{href} mit Schrägstrich.
+\item \texttt{prompt} und \texttt{input.value} liefern \textbf{Text}; \lstinline|"4" + 1| ist \lstinline|"41"|.
+\item \lstinline|Number("")| und \lstinline|Number(null)| sind \lstinline|0|, nicht NaN.
+\item \lstinline|NaN === NaN| ist \lstinline|false| -- \lstinline|isNaN| verwenden.
+\item Listener-Funktion ohne \texttt{()} übergeben.
+\item Klicks \textbf{blubbern nach oben} -- ein Klick auf ein inneres Element löst auch Listener außen aus.
+\item \lstinline|-1 % 3| ist in JS \lstinline|-1| -- vorher die Länge addieren.
+\item Skript im \texttt{<head>} ohne \texttt{defer} findet die Elemente im Body noch nicht.
+\end{enumerate}
+\end{merkbox}
+
+% =====================================================================
+\section{Aufgabe 1: Moodle-Quiz "`JavaScript Concepts"' (0,1 P)}\label{sec:a1}
+% =====================================================================
+
+\textbf{In einfachen Worten:} Du machst in Moodle ein kurzes Online-Quiz über JavaScript-Grundbegriffe und gibst
+einen Screenshot deines Punktestands ab.
+
+\textbf{Vorgehen:}
+\begin{enumerate}[nosep]
+\item Quiz in Moodle öffnen (Link steht in \texttt{aufgabe1/LIESMICH.txt}).
+\item Vorher die Grundlagen aus Abschnitt~\ref{sec:grundlagen} durchlesen -- vor allem Variablen, Datentypen, Funktionen.
+\item Quiz machen, Screenshot der Punkte speichern (z.\,B.\ \texttt{quiz-ergebnis.png}) und mit abgeben.
+\end{enumerate}
+
+\begin{tutor}
+\textbf{Wie viele Punkte hattest du, und welche Frage war schwierig?} -- Hier ehrlich antworten; das Quiz ist zum
+Selbsttesten da.
+\end{tutor}
+
+% =====================================================================
+\section{Aufgabe 2: Zahlenratespiel (0,1 P)}\label{sec:a2}
+% =====================================================================
+
+\subsection{Was bedeutet die Aufgabe in einfachen Worten?}
+
+Der Computer denkt sich eine Zahl von 1 bis 10 aus. Du hast \textbf{3 Versuche}, sie zu erraten. Nach jedem Tipp
+sagt er dir "`zu hoch"' oder "`zu niedrig"' und zeigt deine bisherigen Tipps. Errätst du sie, gratuliert er dir;
+schaffst du es nicht, verrät er die Zahl. Danach fragt er, ob du nochmal spielen willst. Alles läuft über die
+kleinen Browser-Fenster \texttt{prompt}, \texttt{alert} und \texttt{confirm}; die HTML-Seite selbst ist leer.
+
+\subsection{Welche Methode?}
+
+Die Angabe gibt den Aufbau schon vor: \textbf{drei Teile}, die ineinandergreifen.
+\begin{enumerate}[nosep]
+\item \textbf{Spielschleife} (oben im Skript): \texttt{while}-Schleife "`solange der Spieler will"'. Pro Runde:
+      Zufallszahl ziehen, \texttt{playNumberGame} aufrufen, mit \texttt{confirm} fragen.
+\item \textbf{\texttt{playNumberGame(secretNumber)}}: eine Runde mit bis zu 3 Versuchen (\texttt{for}-Schleife).
+\item \textbf{\texttt{getUserInput()}}: fragt eine Zahl ab und prüft sie mit \texttt{try}/\texttt{catch}.
+\end{enumerate}
+
+\begin{analogie}
+Das ist wie ein \textbf{Spieleabend}: Die Spielleiterin (Spielschleife) fragt nach jeder Runde "`Noch eine?"'.
+Eine Runde (\texttt{playNumberGame}) hat 3 Züge. Bei jedem Zug nimmt ein Schiedsrichter (\texttt{getUserInput})
+deinen Tipp entgegen und prüft, ob er überhaupt erlaubt ist.
+\end{analogie}
+
+\subsection{Code Schritt für Schritt}
+
+\textbf{Die HTML-Datei} \texttt{aufgabe2/index.html}:
+\begin{htmlcode}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number-Guessing Game</title>
+    <script src="game.js" defer></script>
+</head>
+<body></body>
+</html>
+\end{htmlcode}
+Der Body ist leer, so wie es die Angabe verlangt -- das ganze Spiel passiert in den Dialogfenstern.
+Zeile~6 bindet \texttt{game.js} ein.
+
+\subsubsection*{Teil 1: Konstanten und Spielschleife (Zeilen 1--10)}
+\begin{code}
+const MAX_ATTEMPTS = 3;
+// changes after every round, therefore let instead of const
+let keepPlaying = true;
+
+while (keepPlaying) {
+    let randomNumber = Math.floor(Math.random() * 10) + 1;
+    playNumberGame(randomNumber);
+    keepPlaying = confirm("Do you want to play again?");
+}
+alert("Thank you for playing!");
+\end{code}
+
+\begin{itemize}
+\item \textbf{Zeile 1:} Die erlaubte Versuchsanzahl 3 ändert sich nie, deshalb \texttt{const}. Großbuchstaben sind
+      eine übliche Schreibweise für solche festen Werte. \emph{Warum überhaupt eine Konstante statt überall "`3"'?}
+      Will man später 5 Versuche, ändert man nur diese eine Zeile.
+\item \textbf{Zeile 3:} Die Angabe verlangt eine "`Konstante"' für die Entscheidung "`weiterspielen?"'. Das
+      widerspricht sich aber: Diese Entscheidung \emph{ändert} sich nach jeder Runde (Zeile 8), und eine
+      \texttt{const} kann man nicht neu zuweisen (das gäbe einen TypeError). Deshalb \texttt{let}. Der Startwert
+      \lstinline|true| sorgt dafür, dass mindestens eine Runde gespielt wird.
+\item \textbf{Zeile 5:} Die Schleife läuft, solange \texttt{keepPlaying} wahr ist. Die Bedingung wird \emph{vor}
+      jeder Runde geprüft.
+\item \textbf{Zeile 6:} Zufallszahl 1--10, genau wie in Abschnitt~\ref{sec:zufall} vorgerechnet. \texttt{let} im
+      Block: Jede Runde bekommt ihre eigene, frische Variable.
+\item \textbf{Zeile 7:} Eine Runde spielen. Die Funktion steht erst weiter unten -- das geht wegen \emph{Hoisting}
+      (Funktionsdeklarationen sind von Anfang an bekannt).
+\item \textbf{Zeile 8:} \texttt{confirm} liefert \lstinline|true| (OK) oder \lstinline|false| (Abbrechen). Das Ergebnis
+      wird direkt in \texttt{keepPlaying} gespeichert. Bei \lstinline|false| ist die Schleifenbedingung beim nächsten
+      Prüfen falsch, und die Schleife endet.
+\item \textbf{Zeile 10:} Erst nach der Schleife, also wenn der Spieler aufhört: Dankesnachricht.
+\end{itemize}
+
+\subsubsection*{Teil 2: Eine Runde -- \texttt{playNumberGame} (Zeilen 12--37)}
+\begin{code}[firstnumber=12]
+function playNumberGame(secretNumber) {
+    let guesses = [];
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        let guess = getUserInput();
+        guesses.push(guess);
+
+        if (typeof guess !== "number") {
+            // guess contains the error message
+            alert(guess);
+        } else if (guess === secretNumber) {
+            alert("Correct! You needed " + attempt + " attempt(s).");
+            return true;
+        } else {
+            if (guess > secretNumber) {
+                alert("Too high! Attempts made: " + attempt);
+            } else {
+                alert("Too low! Attempts made: " + attempt);
+            }
+            alert("Your previous guesses: " + guesses);
+        }
+    }
+
+    alert("No attempts left. The correct number was " + secretNumber + ".");
+    return false;
+}
+\end{code}
+
+\begin{itemize}
+\item \textbf{Zeile 13:} Leeres Array für alle Tipps dieser Runde. Es steht \emph{in} der Funktion, damit jede neue
+      Runde mit einer leeren Liste beginnt.
+\item \textbf{Zeile 15:} Schleife über die erlaubten Versuche: \texttt{attempt} läuft 1, 2, 3. Ab 1 statt 0 zu zählen
+      hat einen Grund: So kann man \texttt{attempt} direkt als "`Versuch Nummer \dots"' ausgeben.
+\item \textbf{Zeilen 16--17:} Tipp holen und in die Liste schreiben (\texttt{push}), wie verlangt.
+\item \textbf{Zeile 19:} \texttt{getUserInput} liefert bei ungültiger Eingabe den Fehler\emph{text} (Typ string)
+      statt einer Zahl. \lstinline|typeof guess !== "number"| erkennt genau diesen Fall. Dann zeigt Zeile 21 den
+      Fehlertext an. Der Versuch ist trotzdem verbraucht, denn die Schleife zählt einfach weiter.
+\item \textbf{Zeilen 22--24:} Richtig geraten: Glückwunsch inklusive Anzahl der Versuche, dann \lstinline|return true|.
+      \textbf{Warum \texttt{return}?} Es beendet die Funktion -- und damit auch die \texttt{for}-Schleife -- sofort.
+      Ohne \texttt{return} würde man trotz richtiger Antwort weiter gefragt.
+\item \textbf{Zeilen 25--32:} Falsch geraten: "`zu hoch"' oder "`zu niedrig"' mit Versuchszahl, danach die bisherigen
+      Tipps. \lstinline|"..." + guesses| wandelt das Array automatisch in Text mit Kommas um (z.\,B.\ \texttt{3,5}).
+\item \textbf{Zeilen 35--36:} Wird nur erreicht, wenn alle 3 Versuche verbraucht sind (sonst hätte
+      \lstinline|return true| die Funktion vorher beendet). Dann die richtige Zahl verraten und \lstinline|return false|.
+\end{itemize}
+
+\subsubsection*{Teil 3: Eingabe prüfen -- \texttt{getUserInput} (Zeilen 39--49)}
+\begin{code}[firstnumber=39]
+function getUserInput() {
+    try {
+        let guess = Number(prompt("Enter a number between 1 and 10:"));
+        if (isNaN(guess) || guess < 1 || guess > 10) {
+            throw new Error("Invalid input. Please enter a number between 1 and 10.");
+        }
+        return guess;
+    } catch (error) {
+        return error.message;
+    }
+}
+\end{code}
+
+\begin{itemize}
+\item \textbf{Zeile 41:} \texttt{prompt} liefert Text (oder \texttt{null} bei "`Abbrechen"'). \texttt{Number(...)}
+      macht eine Zahl daraus, damit man vergleichen kann.
+\item \textbf{Zeile 42:} Drei Gründe für "`ungültig"', verbunden mit "`oder"': keine Zahl (\texttt{isNaN}),
+      kleiner als 1, größer als 10. Eines reicht.
+\item \textbf{Zeile 43:} Bei ungültiger Eingabe einen Fehler werfen -- \texttt{return guess} in Zeile 45 wird
+      dann übersprungen, und es geht direkt in den \texttt{catch}-Block.
+\item \textbf{Zeile 47:} Der \texttt{catch}-Block gibt den Fehlertext zurück. So bekommt \texttt{playNumberGame}
+      in jedem Fall etwas zurück: entweder eine gültige Zahl oder den Fehlertext.
+\end{itemize}
+
+\textbf{Welche Eingaben sind gültig?}
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Eingabe & \texttt{prompt} liefert & \texttt{Number(...)} & Ergebnis\\
+\midrule
+\texttt{5}          & \lstinline|"5"|   & \lstinline|5|   & gültig, Zahl 5\\
+\texttt{abc}        & \lstinline|"abc"| & \lstinline|NaN| & ungültig (\texttt{isNaN})\\
+(leer, OK)          & \lstinline|""|    & \lstinline|0|   & ungültig ($0 < 1$)\\
+"`Abbrechen"'       & \lstinline|null|  & \lstinline|0|   & ungültig ($0 < 1$)\\
+\texttt{11}         & \lstinline|"11"|  & \lstinline|11|  & ungültig ($11 > 10$)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ergebnis: zwei getestete Spielverläufe}
+
+\begin{ergebnis}
+\textbf{Lauf 1} -- Geheimzahl 5, Eingaben \texttt{3}, dann \texttt{5}, danach "`nicht nochmal"':
+\begin{enumerate}[nosep]
+\item Versuch 1: \texttt{3} ist gültig, $3 < 5$ $\to$ \texttt{Too low! Attempts made: 1}
+\item \texttt{Your previous guesses: 3}
+\item Versuch 2: \texttt{5} $=$ Geheimzahl $\to$ \texttt{Correct! You needed 2 attempt(s).} (\texttt{return true})
+\item \texttt{confirm} $\to$ Abbrechen $\to$ \texttt{Thank you for playing!}
+\end{enumerate}
+
+\textbf{Lauf 2} -- Geheimzahl 5, Eingaben \texttt{9}, \texttt{abc}, Abbrechen:
+\begin{enumerate}[nosep]
+\item Versuch 1: $9 > 5$ $\to$ \texttt{Too high! Attempts made: 1}, dann \texttt{Your previous guesses: 9}
+\item Versuch 2: \texttt{abc} $\to$ NaN $\to$ Fehler $\to$ \texttt{Invalid input. Please enter a number between 1 and 10.}
+\item Versuch 3: Abbrechen $\to$ \texttt{null} $\to$ 0 $\to$ derselbe Fehlertext
+\item Keine Versuche mehr $\to$ \texttt{No attempts left. The correct number was 5.} (\texttt{return false})
+\item \texttt{confirm} $\to$ Abbrechen $\to$ \texttt{Thank you for playing!}
+\end{enumerate}
+\end{ergebnis}
+
+\begin{tutor}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Warum ist \texttt{keepPlaying} \texttt{let} und nicht \texttt{const}, obwohl die Angabe "`constant"' sagt?}\\
+  Weil sich der Wert nach jeder Runde durch \texttt{confirm} ändert. Eine \texttt{const} darf man nicht neu
+  zuweisen, das gäbe einen TypeError. \texttt{MAX\_ATTEMPTS} dagegen ändert sich nie und ist \texttt{const}.
+\item \textbf{Wie entsteht genau eine Zahl von 1 bis 10?}\\
+  \texttt{Math.random()} liefert $[0,1)$, mal 10 ergibt $[0,10)$, \texttt{Math.floor} rundet ab auf $0\dots9$,
+  $+1$ verschiebt auf $1\dots10$. Die 10 entsteht z.\,B.\ aus $0{,}95$: $9{,}5 \to 9 \to 10$.
+\item \textbf{Was passiert, wenn man "`Abbrechen"' drückt?}\\
+  \texttt{prompt} liefert \texttt{null}, \texttt{Number(null)} ist 0, und $0 < 1$ ist ungültig. Also wird der
+  Fehler geworfen, der Fehlertext angezeigt, und der Versuch zählt als verbraucht.
+\item \textbf{Wozu \texttt{try}/\texttt{catch}, wenn man auch einfach \texttt{if} nehmen könnte?}\\
+  Die Angabe verlangt es. Der Vorteil: Der Fehlerfall wird an \emph{einer} Stelle (\texttt{catch}) behandelt, und
+  \texttt{throw} springt sofort dorthin, ohne dass man ein \texttt{return guess} versehentlich erreicht.
+\item \textbf{Warum \texttt{typeof guess !== \textquotedbl{}number\textquotedbl{}} und nicht \texttt{isNaN(guess)}?}\\
+  \texttt{getUserInput} gibt im Fehlerfall einen \emph{Text} zurück, nie NaN. Ein Text hat den Typ
+  \texttt{\textquotedbl{}string\textquotedbl{}}, eine gültige Zahl den Typ \texttt{\textquotedbl{}number\textquotedbl{}}. So unterscheidet man die beiden Fälle eindeutig.
+  (Nebenbei: Weil die Angabe jeden Rückgabewert ins Array schreiben lässt, landen auch Fehlertexte in
+  \texttt{guesses} und würden bei einem späteren "`previous guesses"' mit angezeigt.)
+\end{enumerate}
+\end{tutor}
+
+% =====================================================================
+\section{Aufgabe 3: DOM-Operationen (0,2 P)}\label{sec:a3}
+% =====================================================================
+
+\subsection{Was bedeutet die Aufgabe in einfachen Worten?}
+
+Es gibt eine kleine Seite \texttt{ex3.html} mit drei Links, die je ein Flaggenbild enthalten. Du sollst
+\begin{enumerate}[nosep]
+\item[(1)] den \textbf{DOM-Baum} dieser Seite zeichnen (wie auf Folie 3-29),
+\item[(2)] ein gegebenes Skript einbinden, die Seite öffnen und \textbf{jede der 16 Konsolenausgaben} genau erklären,
+\item[(3)] erklären, was zwei weitere gegebene Zeilen bewirken.
+\end{enumerate}
+Hier wird nichts programmiert -- es geht ums \emph{Verstehen}, wie der Browser die Seite intern speichert.
+
+\subsection{Die Seite und das Skript}
+
+\texttt{aufgabe3/ex3.html} (Bild-Adressen gekürzt; Zeile 6 wurde zum Einbinden ergänzt):
+\begin{htmlcode}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM Operations</title>
+    <script src="dom.js" defer></script>
+</head>
+<body>
+<a href=https://en.wikipedia.org target="_new"><img
+        src="https://.../uk_..._british_flag-512.png" alt="British Flag"></a>
+BeforeParent
+<a href="https://de.wikipedia.org" target="_new"><p>Text</p>
+    Before <img src="https://.../austria-national-world-512.png" alt="Austrian Flag">
+    After
+</a>
+AfterParent
+<a href="https://ja.wikipedia.org" target="_new">
+    <img src="https://.../Flags_Flag_Country_National_Symbol_Japan-512.png" alt="Japanese Flag">
+</a>
+</body>
+</html>
+\end{htmlcode}
+
+\textbf{Warum \texttt{defer}?} Ohne \texttt{defer} liefe \texttt{dom.js} schon im \texttt{<head>}, bevor die Links
+überhaupt gelesen sind. \lstinline|getElementsByTagName("a")[1]| wäre dann \lstinline|undefined|, und die erste
+\texttt{console.log}-Zeile würde mit einem Fehler (TypeError) abbrechen.
+
+\subsection{Teil 3.1: Der DOM-Baum}
+
+\textbf{Vorgehen beim Zeichnen} (Strategie für jede HTML-Datei):
+\begin{merkbox}[title={Strategie: DOM-Baum zeichnen}]
+\begin{enumerate}[nosep]
+\item Ganz oben \texttt{\#document}, darunter \texttt{<!DOCTYPE>} und \texttt{html}.
+\item Jedes Tag wird ein Elementknoten; alles, was \emph{zwischen} seinem Start- und End-Tag steht, sind seine Kinder.
+\item Jeder Text zwischen zwei Tags wird ein Textknoten -- \textbf{auch reiner Whitespace} (Zeilenumbruch, Einrückung).
+\item Attribute schreibt man \emph{neben} das Element, nicht als Kind.
+\item Kinder in der Reihenfolge von links nach rechts bzw.\ oben nach unten, wie sie im Quelltext stehen.
+\end{enumerate}
+\end{merkbox}
+
+Der folgende Baum wurde im Browser für die \emph{originale} Datei (ohne die eingefügte \texttt{script}-Zeile)
+nachgemessen. Blau = Elementknoten, orange = Textknoten, grün in eckigen Klammern = Attribute (keine Kinder!).
+\nl\ = Zeilenumbruch, \ws\ = Leerzeichen.
+
+\begin{center}
+\begin{tikzpicture}[
+  x=0.62cm, y=0.5cm,
+  every node/.style={anchor=west, inner sep=2pt, font=\ttfamily\footnotesize},
+  el/.style={draw=blue!60, fill=blue!8, rounded corners=1pt},
+  tx/.style={draw=orange!70, fill=orange!8, rounded corners=1pt},
+  dt/.style={draw=gray!60, fill=gray!8, rounded corners=1pt},
+  attr/.style={text=green!45!black, font=\ttfamily\scriptsize},
+  hl/.style={draw=red!70, very thick, fill=blue!8, rounded corners=1pt},
+  ann/.style={text=red!70!black, font=\sffamily\scriptsize}]
+\newcommand{\edge}[2]{\draw[gray] ([xshift=5pt]#1.south west) |- (#2.west);}
+% rows
+\node[dt] (doc)  at (0,0)   {\#document};
+\node[dt] (dtp)  at (1,-1)  {<!DOCTYPE html>};
+\node[el] (html) at (1,-2)  {html};  \node[attr] at (html.east) {[lang=\qq{en}]};
+\node[el] (head) at (2,-3)  {head};
+\node[tx] (h1)   at (3,-4)  {\#text \qq{\nl\ws\ws\ws\ws}};
+\node[el] (meta) at (3,-5)  {meta}; \node[attr] at (meta.east) {[charset=\qq{UTF-8}]};
+\node[tx] (h2)   at (3,-6)  {\#text \qq{\nl\ws\ws\ws\ws}};
+\node[el] (tit)  at (3,-7)  {title};
+\node[tx] (tt)   at (4,-8)  {\#text \qq{DOM Operations}};
+\node[tx] (hb)   at (2,-9)  {\#text \qq{\nl}};
+\node[el] (body) at (2,-10) {body};
+\node[tx] (b1)   at (3,-11) {\#text \qq{\nl}};
+\node[el] (a1)   at (3,-12) {a}; \node[attr] at (a1.east) {[href=\qq{https://en.wikipedia.org}, target=\qq{\_new}]};
+\node[el] (i1)   at (4,-13) {img}; \node[attr] at (i1.east) {[src=\qq{...}, alt=\qq{British Flag}]};
+\node[tx] (b2)   at (3,-14) {\#text \qq{\nl BeforeParent\nl}};
+\node[hl] (a2)   at (3,-15) {a}; \node[attr] (a2at) at (a2.east) {[href=\qq{https://de.wikipedia.org}, target=\qq{\_new}]};
+\node[ann] at (a2at.east) {$\leftarrow$ link (Index 1)};
+\node[el] (p)    at (4,-16) {p};
+\node[tx] (pt)   at (5,-17) {\#text \qq{Text}};
+\node[tx] (c2)   at (4,-18) {\#text \qq{\nl\ws\ws\ws\ws Before\ws}};
+\node[el] (i2)   at (4,-19) {img}; \node[attr] at (i2.east) {[src=\qq{...}, alt=\qq{Austrian Flag}]};
+\node[tx] (c3)   at (4,-20) {\#text \qq{\nl\ws\ws\ws\ws After\nl}};
+\node[tx] (b3)   at (3,-21) {\#text \qq{\nl AfterParent\nl}};
+\node[el] (a3)   at (3,-22) {a}; \node[attr] (a3at) at (a3.east) {[href=\qq{https://ja.wikipedia.org}, target=\qq{\_new}]};
+\node[ann] at (a3at.east) {$\leftarrow$ item(2)};
+\node[tx] (d1)   at (4,-23) {\#text \qq{\nl\ws\ws\ws\ws}};
+\node[el] (i3)   at (4,-24) {img}; \node[attr] at (i3.east) {[src=\qq{...}, alt=\qq{Japanese Flag}]};
+\node[tx] (d2)   at (4,-25) {\#text \qq{\nl}};
+\node[tx] (b4)   at (3,-26) {\#text \qq{\nl\nl}};
+% edges
+\edge{doc}{dtp} \edge{doc}{html}
+\edge{html}{head} \edge{html}{hb} \edge{html}{body}
+\edge{head}{h1} \edge{head}{meta} \edge{head}{h2} \edge{head}{tit}
+\edge{tit}{tt}
+\edge{body}{b1} \edge{body}{a1} \edge{body}{b2} \edge{body}{a2} \edge{body}{b3} \edge{body}{a3} \edge{body}{b4}
+\edge{a1}{i1}
+\edge{a2}{p} \edge{a2}{c2} \edge{a2}{i2} \edge{a2}{c3}
+\edge{p}{pt}
+\edge{a3}{d1} \edge{a3}{i3} \edge{a3}{d2}
+\end{tikzpicture}
+\end{center}
+
+\textbf{Was man am Baum erklären können sollte:}
+\begin{itemize}
+\item \textbf{Der zweite Link hat vier Kinder}: \texttt{<p>}, den Textknoten "`\nl\ws\ws\ws\ws Before\ws"', das
+      \texttt{<img>} und den Textknoten "`\nl\ws\ws\ws\ws After\nl"'. Vor dem \texttt{<p>} gibt es \emph{keinen}
+      Whitespace-Knoten, weil \texttt{<p>} im Quelltext direkt nach \texttt{<a ...>} steht.
+\item \textbf{Der erste Link hat nur ein Kind} (\texttt{img}), weil der Zeilenumbruch im Quelltext \emph{innerhalb}
+      des \texttt{<img ...>}-Tags liegt (zwischen \texttt{<img} und \texttt{src}). Dort ist er nur Trennzeichen
+      zwischen Attributen und wird kein Textknoten.
+\item \textbf{Der dritte Link} hat dagegen vor und nach dem Bild Whitespace-Textknoten, weil \texttt{<img>} dort
+      in einer eigenen, eingerückten Zeile steht.
+\item \textbf{Text zwischen den Links} ("`BeforeParent"', "`AfterParent"') sind Textknoten direkt im
+      \texttt{body}, samt Zeilenumbrüchen davor und danach.
+\item \textbf{Besonderheiten des Parsers:} Der Zeilenumbruch zwischen \texttt{</head>} und \texttt{<body>} landet als
+      Textknoten im \texttt{html}-Element. Die Zeilenumbrüche nach \texttt{</body>} landen laut HTML-Regeln
+      trotzdem im \texttt{body} (letzter Knoten "`\nl\nl"').
+\item \textbf{Attribute} (\texttt{href}, \texttt{target}, \texttt{src}, \texttt{alt}, \texttt{lang}, \texttt{charset})
+      hängen am Element, sind aber \emph{keine} Kindknoten.
+\end{itemize}
+
+\subsection{Teil 3.2: Die 16 Konsolenausgaben}
+
+Das Skript \texttt{aufgabe3/dom.js} (Teil 3.2):
+\begin{code}
+// Exercise 3.2
+var link = document.getElementsByTagName("a")[1];
+console.log(link.attributes["href"].nodeValue);
+console.log(link.getAttributeNode("href").nodeValue);
+console.log(link.href);
+console.log(link.firstChild);
+console.log(link.attributes[0].nodeType);
+console.log(link.firstChild.nodeType);
+console.log(link.parentNode.nodeName);
+console.log(link.lastChild.parentNode.nodeName);
+console.log(link.attributes.length);
+console.log(link.innerHTML);
+console.log(link.outerHTML);
+console.log(link.innerText);
+console.log(link.outerText);
+console.log(link.textContent);
+console.log(link);
+console.log(link.nodeValue);
+\end{code}
+
+\textbf{Zeile 2 zuerst:} \lstinline|getElementsByTagName("a")| liefert alle drei Links. \lstinline|[1]| ist wegen der
+Zählung ab 0 der \textbf{zweite} Link, also der deutsche (\texttt{de.wikipedia.org}) mit \texttt{<p>Text</p>}
+darin. Alle folgenden Zeilen beziehen sich auf genau diesen Link (im Baum rot umrandet).
+
+In den Ausgaben unten steht \texttt{\textbackslash n} für einen Zeilenumbruch. Die Konsole zeigt an dieser Stelle
+eine echte neue Zeile an; zur besseren Lesbarkeit sind die Texte hier in Anführungszeichen und mit
+\texttt{\textbackslash n} geschrieben.
+
+\subsubsection*{Ausgaben 1--3: Attribut gegen Property}
+
+\textbf{1.} \lstinline|link.attributes["href"].nodeValue|
+\begin{ausgabe}
+https://de.wikipedia.org
+\end{ausgabe}
+\lstinline|attributes| ist die Liste der Attributknoten; \lstinline|["href"]| holt den Knoten mit dem Namen
+\texttt{href}. Der \texttt{nodeValue} eines Attributknotens ist sein Wert -- \textbf{genau wie im HTML geschrieben},
+also ohne Schrägstrich am Ende.
+
+\textbf{2.} \lstinline|link.getAttributeNode("href").nodeValue|
+\begin{ausgabe}
+https://de.wikipedia.org
+\end{ausgabe}
+Derselbe Attributknoten, nur mit einer anderen Methode geholt. Daher dasselbe Ergebnis.
+
+\textbf{3.} \lstinline|link.href|
+\begin{ausgabe}
+https://de.wikipedia.org/
+\end{ausgabe}
+Das ist die \textbf{DOM-Property}, nicht das Attribut. Der Browser liefert die aufgelöste, vereinheitlichte (normalisierte)
+absolute Adresse; dabei ergänzt er den Pfad "`/"'. Deshalb steht am Ende ein Schrägstrich, der im HTML nicht steht.
+
+\subsubsection*{Ausgaben 4--9: Navigation im Baum und Knotentypen}
+
+\textbf{4.} \lstinline|link.firstChild|
+\begin{ausgabe}
+<p>Text</p>
+\end{ausgabe}
+Das erste Kind des Links ist das \texttt{<p>}-Element. Die Konsole zeigt es als aufklappbares Element an (kein Text,
+sondern ein Objekt). Kein Whitespace-Knoten davor, weil \texttt{<p>} im Quelltext direkt auf \texttt{<a ...>} folgt.
+
+\textbf{5.} \lstinline|link.attributes[0].nodeType|
+\begin{ausgabe}
+2
+\end{ausgabe}
+\lstinline|attributes[0]| ist das erste Attribut in der Reihenfolge des HTML, also \texttt{href}. Attributknoten haben
+den Typ \textbf{2} (\texttt{ATTRIBUTE\_NODE}).
+
+\textbf{6.} \lstinline|link.firstChild.nodeType|
+\begin{ausgabe}
+1
+\end{ausgabe}
+Das erste Kind ist das \texttt{<p>} (siehe Ausgabe 4), ein Element. Elemente haben den Typ \textbf{1}
+(\texttt{ELEMENT\_NODE}).
+
+\textbf{7.} \lstinline|link.parentNode.nodeName|
+\begin{ausgabe}
+BODY
+\end{ausgabe}
+Der Elternknoten des Links ist \texttt{<body>} (siehe Baum). \texttt{nodeName} von HTML-Elementen ist immer in
+\textbf{Großbuchstaben}, obwohl im Quelltext \texttt{body} klein geschrieben ist.
+
+\textbf{8.} \lstinline|link.lastChild.parentNode.nodeName|
+\begin{ausgabe}
+A
+\end{ausgabe}
+Schritt für Schritt: \lstinline|link.lastChild| ist das letzte Kind des Links, der Textknoten
+"`\nl\ws\ws\ws\ws After\nl"'. Dessen \lstinline|parentNode| ist wieder der Link selbst. Also landet man beim Link,
+und sein \texttt{nodeName} ist \texttt{\textquotedbl{}A\textquotedbl{}}. ("`Vom Vater zum letzten Kind und zurück zum Vater."')
+
+\textbf{9.} \lstinline|link.attributes.length|
+\begin{ausgabe}
+2
+\end{ausgabe}
+Der Link hat genau zwei Attribute: \texttt{href} und \texttt{target}.
+
+\subsubsection*{Ausgaben 10--14: Inhalte als Text}
+
+\textbf{10.} \lstinline|link.innerHTML| (Bild-Adresse gekürzt)
+\begin{ausgabe}
+"<p>Text</p>\n    Before <img src="https://cdn3.iconfinder.com/.../austria-national-world-512.png" alt="Austrian Flag">\n    After\n"
+\end{ausgabe}
+Der \textbf{HTML-Code innerhalb} des \texttt{<a>} als Text, ohne das \texttt{<a>}-Tag selbst. Der Whitespace aus dem
+Quelltext (Zeilenumbrüche, 4 Leerzeichen Einrückung) bleibt erhalten.
+
+\textbf{11.} \lstinline|link.outerHTML| (Bild-Adresse gekürzt)
+\begin{ausgabe}
+"<a href="https://de.wikipedia.org" target="_new"><p>Text</p>\n    Before <img src="https://cdn3.iconfinder.com/.../austria-national-world-512.png" alt="Austrian Flag">\n    After\n</a>"
+\end{ausgabe}
+Wie \texttt{innerHTML}, aber \textbf{inklusive} Start- und End-Tag des Links selbst.
+
+\textbf{12.} \lstinline|link.innerText|
+\begin{ausgabe}
+"Text\n\nBefore  After "
+\end{ausgabe}
+Das ist der Text, \textbf{wie man ihn auf dem Bildschirm sieht}. Schritt für Schritt:
+\begin{enumerate}[nosep]
+\item \texttt{<p>Text</p>} liefert "`Text"'. Weil \texttt{<p>} ein \textbf{Blockelement} (Absatz) ist, setzt
+      \texttt{innerText} danach \textbf{zwei} Zeilenumbrüche -- so wie zwischen zwei Absätzen eine Leerzeile ist.
+\item Der Textknoten "`\nl\ws\ws\ws\ws Before\ws"': Beim Anzeigen werden Zeilenumbruch und Einrückung am Zeilenanfang
+      verschluckt (Whitespace wird zusammengefasst). Übrig bleibt "`Before\ws"' mit \emph{einem} Leerzeichen am Ende.
+\item Das \texttt{<img>} hat keinen Text, es trägt nichts bei.
+\item Der Textknoten "`\nl\ws\ws\ws\ws After\nl"' wird zu "`\ws After\ws"': Die Folge aus Zeilenumbruch und vier
+      Leerzeichen schrumpft zu einem Leerzeichen, der Zeilenumbruch am Ende ebenfalls.
+\item Ergebnis: Zwischen "`Before"' und "`After"' stehen \textbf{zwei} Leerzeichen (je eines links und rechts vom
+      Bild). Am Ende bleibt ein Leerzeichen, weil der Link ein Inline-Element ist und in derselben Zeile direkt
+      "`AfterParent"' folgt -- der Abstand wird also tatsächlich angezeigt.
+\end{enumerate}
+
+\textbf{13.} \lstinline|link.outerText|
+\begin{ausgabe}
+"Text\n\nBefore  After "
+\end{ausgabe}
+Beim \textbf{Lesen} identisch mit \texttt{innerText}. Der Unterschied gibt es nur beim \emph{Setzen}:
+\lstinline|link.outerText = "x"| würde den ganzen Link durch den Text ersetzen, \lstinline|link.innerText = "x"| nur seinen Inhalt.
+
+\textbf{14.} \lstinline|link.textContent|
+\begin{ausgabe}
+"Text\n    Before \n    After\n"
+\end{ausgabe}
+Alle Textknoten \textbf{roh} hintereinander, ohne auf das Aussehen zu achten: "`Text"' (aus dem \texttt{<p>}) $+$
+"`\nl\ws\ws\ws\ws Before\ws"' $+$ (Bild: nichts) $+$ "`\nl\ws\ws\ws\ws After\nl"'. Kein doppelter Zeilenumbruch
+nach "`Text"', weil \texttt{textContent} nicht weiß, dass \texttt{<p>} ein Absatz ist. Der \texttt{alt}-Text
+"`Austrian Flag"' fehlt, weil er ein Attribut ist und kein Textknoten.
+
+\subsubsection*{Ausgaben 15--16: das Element selbst}
+
+\textbf{15.} \lstinline|link|
+\begin{ausgabe}
+<a href="https://de.wikipedia.org" target="_new">...</a>
+\end{ausgabe}
+Das Element-Objekt selbst. Die Konsole zeigt es aufklappbar an; klappt man es auf, sieht man die Kinder.
+
+\textbf{16.} \lstinline|link.nodeValue|
+\begin{ausgabe}
+null
+\end{ausgabe}
+\textbf{Elementknoten haben keinen \texttt{nodeValue}} -- der ist nur bei Text-, Attribut- und Kommentarknoten belegt.
+Den Text eines Elements bekommt man über \texttt{textContent} oder \texttt{innerText}.
+
+\begin{ergebnis}[title={Ergebnis 3.2 -- alle 16 Ausgaben auf einen Blick}]
+\small
+\begin{tabular}{@{}rL{6.2cm}L{7.2cm}@{}}
+\toprule
+Nr. & Ausdruck & Ausgabe\\
+\midrule
+1  & \lstinline|link.attributes["href"].nodeValue| & \texttt{https://de.wikipedia.org}\\
+2  & \lstinline|link.getAttributeNode("href")...| & \texttt{https://de.wikipedia.org}\\
+3  & \lstinline|link.href| & \texttt{https://de.wikipedia.org/} (mit \texttt{/})\\
+4  & \lstinline|link.firstChild| & Element \texttt{<p>Text</p>}\\
+5  & \lstinline|link.attributes[0].nodeType| & \texttt{2} (Attribut)\\
+6  & \lstinline|link.firstChild.nodeType| & \texttt{1} (Element)\\
+7  & \lstinline|link.parentNode.nodeName| & \texttt{BODY}\\
+8  & \lstinline|link.lastChild.parentNode.nodeName| & \texttt{A}\\
+9  & \lstinline|link.attributes.length| & \texttt{2}\\
+10 & \lstinline|link.innerHTML| & HTML im Link (\texttt{<p>}\dots\texttt{After\textbackslash n})\\
+11 & \lstinline|link.outerHTML| & HTML inkl.\ \texttt{<a ...>}\dots\texttt{</a>}\\
+12 & \lstinline|link.innerText| & \texttt{\textquotedbl{}Text\textbackslash n\textbackslash nBefore\ws\ws After\ws\textquotedbl{}}\\
+13 & \lstinline|link.outerText| & wie 12\\
+14 & \lstinline|link.textContent| & \texttt{\textquotedbl{}Text\textbackslash n\ws\ws\ws\ws Before\ws\textbackslash n\ws\ws\ws\ws After\textbackslash n\textquotedbl{}}\\
+15 & \lstinline|link| & das \texttt{<a>}-Element (aufklappbar)\\
+16 & \lstinline|link.nodeValue| & \texttt{null}\\
+\bottomrule
+\end{tabular}
+\end{ergebnis}
+
+\subsection{Teil 3.3: \texttt{removeAttribute(\textquotedbl{}target\textquotedbl{})}}
+
+\begin{code}[firstnumber=20]
+// Exercise 3.3
+var link = document.getElementsByTagName("a").item(2);
+link.removeAttribute("target");
+\end{code}
+
+\textbf{Schritt für Schritt:}
+\begin{enumerate}
+\item \lstinline|.item(2)| ist dasselbe wie \lstinline|[2]|: wegen Zählung ab 0 der \textbf{dritte} Link, also der
+      japanische (\texttt{ja.wikipedia.org}).
+\item \lstinline|removeAttribute("target")| löscht bei \emph{diesem} Link das Attribut \texttt{target=\textquotedbl{}\_new\textquotedbl{}}.
+      Adresse (\texttt{href}) und Bild bleiben unverändert, ebenso die beiden anderen Links (die behalten
+      \texttt{target=\textquotedbl{}\_new\textquotedbl{}}). Im Browser nachgeprüft: Die \texttt{target}-Werte der drei Links sind danach
+      \texttt{[\textquotedbl{}\_new\textquotedbl{}, \textquotedbl{}\_new\textquotedbl{}, null]}.
+\item \textbf{Was ändert sich für den Benutzer?} Ohne \texttt{target} öffnet ein Link im \textbf{aktuellen Tab}
+      (Standardverhalten; es gibt auch kein \texttt{<base target>} auf der Seite, das etwas anderes festlegen würde).
+      Klickt man also auf die japanische Flagge, wird die eigene Seite durch Wikipedia ersetzt.
+\end{enumerate}
+
+\textbf{Was bedeutet \texttt{target=\textquotedbl{}\_new\textquotedbl{}} überhaupt -- und warum ist das nicht dasselbe wie \texttt{\_blank}?}
+\begin{itemize}
+\item \texttt{target=\textquotedbl{}\_blank\textquotedbl{}} ist ein \textbf{reserviertes Spezialwort}: Jeder Klick öffnet einen \emph{neuen},
+      namenlosen Tab.
+\item \texttt{\_new} ist \textbf{kein} Spezialwort, sondern einfach ein \textbf{Name} für ein Fenster/einen Tab.
+      Beim ersten Klick gibt es noch keinen Tab mit diesem Namen, also öffnet der Browser einen neuen und nennt ihn
+      "`\_new"'. Jeder weitere Klick auf einen Link mit \texttt{target=\textquotedbl{}\_new\textquotedbl{}} lädt dann in \textbf{genau diesen}
+      Tab, statt einen weiteren zu öffnen.
+\end{itemize}
+
+\begin{analogie}
+\texttt{\_blank} ist wie "`Leg jedes Mal ein \textbf{neues} Blatt Papier hin."' \texttt{\_new} ist wie "`Schreib
+auf das Blatt mit der Aufschrift \emph{\_new}; gibt es noch keines, leg eins hin und beschrifte es."'
+Nach \texttt{removeAttribute} schreibt der japanische Link einfach auf das Blatt, das man gerade vor sich hat.
+\end{analogie}
+
+\textbf{Warum darf \texttt{var link} zweimal stehen?} Bei \texttt{var} ist es erlaubt, dieselbe Variable nochmals
+zu deklarieren -- sie wird einfach überschrieben. Mit \texttt{let} wäre das ein SyntaxError, und das ganze Skript
+würde gar nicht laufen.
+
+\begin{tutor}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Warum ist \texttt{link.firstChild} hier das \texttt{<p>} und kein Textknoten?}\\
+  Weil im Quelltext \texttt{<p>} direkt nach \texttt{<a ...>} steht, ohne Leerzeichen oder Zeilenumbruch
+  dazwischen. Es entsteht kein Whitespace-Knoten.
+\item \textbf{Warum unterscheiden sich Ausgabe 1 und 3?}\\
+  1 liest das \emph{Attribut} (Text wie im HTML), 3 die \emph{Property} (vom Browser normalisierte absolute
+  URL mit Pfad "`/"').
+\item \textbf{Was ist der Unterschied zwischen \texttt{innerText} und \texttt{textContent}?}\\
+  \texttt{textContent} liefert alle Textknoten roh mit dem originalen Whitespace; \texttt{innerText} liefert den
+  sichtbaren Text, Whitespace wie beim Anzeigen zusammengefasst, mit Zeilenumbrüchen nach Blockelementen.
+\item \textbf{Warum ist \texttt{link.nodeValue} null?}\\
+  Elemente haben keinen eigenen Wert, nur Kinder. \texttt{nodeValue} gibt es bei Text-, Attribut- und
+  Kommentarknoten.
+\item \textbf{Was ändert sich durch 3.3?}\\
+  Nur beim dritten Link verschwindet \texttt{target}; er öffnet nun im aktuellen Tab statt im Tab namens
+  "`\_new"'. \texttt{\_new} ist kein Spezialwort wie \texttt{\_blank}, sondern ein Fenstername.
+\end{enumerate}
+\end{tutor}
+
+% =====================================================================
+\section{Aufgabe 4: Glaspreis (0,2 P)}\label{sec:a4}
+% =====================================================================
+
+\subsection{Was bedeutet die Aufgabe in einfachen Worten?}
+
+Es gibt ein Bestellformular für Glasscheiben (\texttt{glassOrder.html}). Man wählt Farbe, Dicke, Breite und Höhe.
+Die Seite soll \textbf{sofort den Preis anzeigen}, sobald man etwas ändert. Die Bedingung: Die HTML-Datei darf
+\textbf{nicht verändert} werden -- alles muss das JavaScript in \texttt{calculate.js} erledigen:
+\begin{enumerate}[nosep]
+\item den Absatz löschen, der die Überschrift wiederholt (\texttt{<p>Your Glass Order</p>}),
+\item ein schreibgeschütztes Preisfeld mit Beschriftung "`price"' ins Formular einbauen,
+\item den Preis berechnen: $\text{Preis} = \dfrac{\text{Breite} \cdot \text{Höhe} \cdot \text{Dicke}}{32}$ bei farbigem
+      Glas, $\dfrac{\dots}{50}$ bei einem Grauton; alles in cm,
+\item nur einen Preis anzeigen, wenn alle nötigen Eingaben da und gültig sind, sonst einen Bindestrich "`-"',
+\item das bei \emph{jeder} Änderung automatisch neu machen.
+\end{enumerate}
+
+\begin{analogie}
+Das ist wie die \textbf{Waage beim Obststand}, die sofort den Preis anzeigt: Sobald du etwas auf die Waage legst oder
+wegnimmst (Eingabe ändern), rechnet sie neu (\texttt{update}). Liegt nichts Sinnvolles drauf, zeigt sie "`-"'.
+\end{analogie}
+
+\subsection{Welche Methode?}
+\begin{itemize}[nosep]
+\item Löschen und Einfügen: DOM-Methoden \texttt{querySelector}, \texttt{remove}, \texttt{createElement},
+      \texttt{append} (Abschnitt~\ref{sec:finden}).
+\item Gültigkeit: \texttt{checkValidity()} (Abschnitt~\ref{sec:formulare}).
+\item Automatisch neu rechnen: Event Listener für \texttt{input} und \texttt{change} (Abschnitt~\ref{sec:events}).
+\item Grauton erkennen: Hex-Farbe in drei Teile zerlegen und vergleichen.
+\end{itemize}
+
+\subsection{Vorab: eine Beispielrechnung von Hand}
+
+Bevor wir den Code ansehen, rechnen wir ein Beispiel mit \emph{anderen} Zahlen als in den Tests komplett durch:
+Breite 50\,cm, Höhe 20\,cm, Dicke 8\,mm, Farbe \texttt{\#00ff00} (Grün).
+
+\textbf{Schritt 1 -- Grauton oder bunt?} \texttt{\#00ff00} zerlegt: Rot \texttt{00}, Grün \texttt{ff}, Blau \texttt{00}.
+\texttt{00} $\neq$ \texttt{ff}, also nicht alle gleich $\Rightarrow$ \textbf{bunt}, Teiler 32.
+
+\textbf{Schritt 2 -- Einheiten:} Breite und Höhe sind laut Formular schon in cm. Die Dicke ist in mm
+(die Radio-Buttons heißen 4\,mm, 6\,mm, 8\,mm, 12\,mm). Weil $1\,\text{cm} = 10\,\text{mm}$, gilt
+$8\,\text{mm} = 8 / 10 = 0{,}8\,\text{cm}$.
+
+\textbf{Schritt 3 -- rechnen:}
+\begin{align*}
+\text{Preis} &= \frac{b \cdot h \cdot d}{32} && \text{bunt, also durch 32}\\
+&= \frac{50 \cdot 20 \cdot 0{,}8}{32} && \text{Werte einsetzen, alles in cm}\\
+&= \frac{800}{32} && 50 \cdot 20 = 1000,\quad 1000 \cdot 0{,}8 = 800\\
+&= 25 && 32 \cdot 25 = 800\\
+&\to \texttt{25.00} && \text{Anzeige mit genau 2 Nachkommastellen}
+\end{align*}
+
+\textbf{Grauton-Beispiel:} \texttt{\#808080} $\to$ Rot \texttt{80}, Grün \texttt{80}, Blau \texttt{80}. Alle drei gleich
+$\Rightarrow$ Grauton, Teiler 50. Genauso \texttt{\#000000} (Schwarz) und \texttt{\#ffffff} (Weiß): Auch das sind
+Graustufen, weil $R = G = B$.
+
+\subsection{Code Schritt für Schritt}
+
+\subsubsection*{Block 1: Elemente merken (Zeilen 1--4)}
+\begin{code}
+const widthInput = document.getElementById("width");
+const heightInput = document.getElementById("height");
+const colorInput = document.getElementById("color");
+const thicknessInputs = document.querySelectorAll('input[name="thickness"]');
+\end{code}
+Die Eingabefelder werden \emph{einmal} gesucht und in Variablen gespeichert, weil man sie später oft braucht.
+Breite, Höhe und Farbe haben eine \texttt{id}, also \texttt{getElementById}. Die vier Radio-Buttons haben
+keine gemeinsame \texttt{id}, aber denselben \texttt{name=\textquotedbl{}thickness\textquotedbl{}} -- \texttt{querySelectorAll} mit
+Attribut-Selektor holt alle vier als Liste.
+
+\subsubsection*{Block 2: doppelten Absatz löschen (Zeile 7)}
+\begin{code}[firstnumber=6]
+// delete the paragraph that repeats the heading
+document.querySelector("h1 + p").remove();
+\end{code}
+Im HTML steht \lstinline[language=HTML]|<h1>Your Glass Order</h1>| und direkt darunter
+\lstinline[language=HTML]|<p>Your Glass Order</p>|. Der Absatz hat keine \texttt{id}. Der Selektor \texttt{h1 + p}
+bedeutet "`das \texttt{<p>}, das \emph{direkt nach} einem \texttt{<h1>} kommt"' -- genau dieser Absatz.
+\texttt{remove()} entfernt ihn aus dem DOM, und er verschwindet von der Seite. Die HTML-\emph{Datei} bleibt dabei
+unverändert, nur der Baum im Browser ändert sich.
+
+\subsubsection*{Block 3: Preisfeld einbauen (Zeilen 9--20)}
+\begin{code}[firstnumber=9]
+// add read-only price field with label at the end of the glass specification
+const priceInput = document.createElement("input");
+priceInput.type = "text";
+priceInput.id = "price";
+priceInput.name = "price";
+priceInput.readOnly = true;
+
+const priceLabel = document.createElement("label");
+priceLabel.htmlFor = "price";
+priceLabel.textContent = "price";
+
+widthInput.parentElement.append(priceInput, priceLabel);
+\end{code}
+\begin{itemize}
+\item \textbf{Zeilen 10--14:} Ein neues \texttt{<input>} bauen (noch unsichtbar). Typ Text, \texttt{id} und
+      \texttt{name} "`price"'. \lstinline|readOnly = true| macht es \textbf{schreibgeschützt}: Der Benutzer kann den
+      Preis nicht selbst eintippen, nur das Skript kann ihn setzen -- sonst könnte man sich einen beliebigen
+      Preis hineinschreiben.
+\item \textbf{Zeilen 16--18:} Ein \texttt{<label>} mit Text "`price"'. \lstinline|htmlFor = "price"| verbindet es mit
+      dem Feld (klickt man auf die Beschriftung, springt der Cursor ins Feld). Die Property heißt \texttt{htmlFor},
+      weil \texttt{for} in JS ein reserviertes Wort ist.
+\item \textbf{Zeile 20:} \lstinline|widthInput.parentElement| ist das \texttt{<fieldset>} "`Glass Specification"', in dem
+      das Breitenfeld steckt. \texttt{append} hängt Feld und Label als letzte Kinder an. Das ist genau die Stelle
+      nach der Legende "`Price"' und dem Kommentar \texttt{<!--Input the new element here via JavaScript-->}, denn
+      beide sind die letzten Knoten im Fieldset. (Auch ein Kommentar ist ein Knoten im DOM, Typ 8 -- \texttt{append}
+      fügt danach ein.) Warum über \texttt{widthInput}? Das Fieldset hat keine \texttt{id}; über das bekannte
+      Breitenfeld findet man es eindeutig.
+\end{itemize}
+
+\subsubsection*{Block 4: Preis berechnen -- \texttt{calculate} (Zeilen 22--34)}
+\begin{code}[firstnumber=22]
+// width, height and thickness in cm
+function calculate(width, height, thickness) {
+    // color value has the form #rrggbb
+    const color = colorInput.value.toLowerCase();
+    const r = color.substring(1, 3);
+    const g = color.substring(3, 5);
+    const b = color.substring(5, 7);
+
+    if (r === g && g === b) {
+        return width * height * thickness / 50; // shade of grey
+    }
+    return width * height * thickness / 32; // colored
+}
+\end{code}
+\begin{itemize}
+\item \textbf{Zeile 25:} Farbwert holen, z.\,B.\ \texttt{\textquotedbl{}\#808080\textquotedbl{}}. \texttt{toLowerCase()} wandelt in Kleinbuchstaben um. Das ist eine Absicherung, damit
+      \texttt{\textquotedbl{}FF\textquotedbl{}} und \texttt{\textquotedbl{}ff\textquotedbl{}} sicher als gleich gelten (das Farbfeld liefert ohnehin Kleinbuchstaben).
+\item \textbf{Zeilen 26--28:} \lstinline|substring(start, ende)| schneidet ein Stück Text heraus, \emph{von} Position
+      \texttt{start} \emph{bis vor} Position \texttt{ende}. Positionen zählen ab 0:
+      \begin{center}
+      \begin{tabular}{@{}lccccccc@{}}
+      \toprule
+      Position & 0 & 1 & 2 & 3 & 4 & 5 & 6\\
+      \midrule
+      Zeichen  & \texttt{\#} & \texttt{8} & \texttt{0} & \texttt{8} & \texttt{0} & \texttt{8} & \texttt{0}\\
+      Teil     & -- & \multicolumn{2}{c}{\texttt{r} = (1,3)} & \multicolumn{2}{c}{\texttt{g} = (3,5)} & \multicolumn{2}{c}{\texttt{b} = (5,7)}\\
+      \bottomrule
+      \end{tabular}
+      \end{center}
+      Das \texttt{\#} an Position 0 wird übersprungen; jede Farbe besteht aus genau zwei Zeichen.
+\item \textbf{Zeile 30:} Sind alle drei Teile gleich ($R = G = B$), ist es ein Grauton. Man vergleicht die Texte
+      direkt -- eine Umrechnung in Dezimalzahlen ist unnötig, weil gleiche Hex-Texte gleiche Zahlen bedeuten.
+      Zwei Vergleiche reichen: Wenn \texttt{r} gleich \texttt{g} ist und \texttt{g} gleich \texttt{b}, ist auch \texttt{r} gleich \texttt{b}.
+\item \textbf{Zeilen 31 und 33:} Formel mit Teiler 50 (Grau) bzw.\ 32 (bunt). Das erste \texttt{return} beendet die
+      Funktion; deshalb braucht man kein \texttt{else}.
+\end{itemize}
+
+\subsubsection*{Block 5: Prüfen und anzeigen -- \texttt{update} (Zeilen 36--50)}
+\begin{code}[firstnumber=36]
+function update() {
+    // a required radio group is only valid if one radio is checked
+    const valid = widthInput.checkValidity() &&
+        heightInput.checkValidity() &&
+        thicknessInputs[0].checkValidity();
+
+    if (!valid) {
+        priceInput.value = "-";
+        return;
+    }
+
+    const thickness = document.querySelector('input[name="thickness"]:checked').value / 10; // mm -> cm
+    const price = calculate(Number(widthInput.value), Number(heightInput.value), thickness);
+    priceInput.value = price.toFixed(2);
+}
+\end{code}
+\begin{itemize}
+\item \textbf{Zeilen 38--40:} Gültig nur, wenn Breite, Höhe \emph{und} Dicke gültig sind. \texttt{checkValidity()}
+      prüft die Regeln aus dem HTML: \texttt{required}, \texttt{min=\textquotedbl{}0\textquotedbl{}}, \texttt{max=\textquotedbl{}200\textquotedbl{}}, \texttt{step=\textquotedbl{}1\textquotedbl{}}.
+      Leer, 300 oder 2.5 sind also ungültig.
+\item \textbf{Warum \texttt{thicknessInputs[0]}?} \texttt{required} steht am ersten Radio (4\,mm) und gilt damit für die
+      ganze Gruppe. Ein Radio einer required-Gruppe ist genau dann gültig, wenn \emph{irgendein} Radio der Gruppe
+      ausgewählt ist. Es reicht also, eines davon zu fragen; \texttt{[0]} ist einfach das erste.
+\item \textbf{Warum nur diese drei Felder?} Für den Preis zählen nur die preisrelevanten Pflichtfelder. Name,
+      Adresse usw.\ beeinflussen den Preis nicht. Die Farbe hat immer einen Wert (Standard \texttt{\#000000}),
+      sie kann nicht fehlen.
+\item \textbf{Zeilen 42--45:} Ungültig $\Rightarrow$ Bindestrich anzeigen und mit \texttt{return} sofort aufhören, damit
+      nicht mit fehlenden Werten gerechnet wird.
+\item \textbf{Zeile 47:} Den ausgewählten Radio-Button finden (\texttt{:checked}), seinen Wert holen (Text, z.\,B.\
+      \texttt{\textquotedbl{}4\textquotedbl{}}) und durch 10 teilen: mm $\to$ cm. Die Division wandelt den Text automatisch in eine Zahl um:
+      \lstinline|"4" / 10| ergibt \lstinline|0.4|.
+\item \textbf{Zeile 48:} Breite und Höhe sind Texte; \texttt{Number(...)} wandelt sie ausdrücklich um, dann rechnet
+      \texttt{calculate}.
+\item \textbf{Zeile 49:} \lstinline|toFixed(2)| macht daraus einen Text mit genau zwei Nachkommastellen
+      (40 $\to$ \texttt{\textquotedbl{}40.00\textquotedbl{}}, 62.5 $\to$ \texttt{\textquotedbl{}62.50\textquotedbl{}}), wie man es von Preisen kennt.
+\end{itemize}
+
+\subsubsection*{Block 6: Event Listener (Zeilen 52--58)}
+\begin{code}[firstnumber=52]
+widthInput.addEventListener("input", update);
+heightInput.addEventListener("input", update);
+colorInput.addEventListener("input", update);
+for (const radio of thicknessInputs) {
+    radio.addEventListener("change", update);
+}
+update();
+\end{code}
+\begin{itemize}
+\item \textbf{Zeilen 52--54:} \texttt{input} feuert bei jeder Änderung, auch bei jedem einzelnen Tastendruck in
+      Breite/Höhe und beim Ziehen im Farbwähler. So ist der Preis immer aktuell.
+\item \textbf{Zeilen 55--57:} Jeder der vier Radio-Buttons bekommt einen \texttt{change}-Listener; der feuert, wenn
+      dieser Radio ausgewählt wird. Die Schleife spart, viermal dieselbe Zeile zu schreiben.
+\item \textbf{Zeile 58:} \texttt{update()} einmal sofort aufrufen. Am Anfang ist noch nichts eingegeben, also zeigt
+      das Preisfeld gleich "`-"' statt leer zu sein.
+\end{itemize}
+
+\subsection{Ergebnis: die getesteten Preise}
+
+Alle Tests mit Breite 100\,cm und Höhe 50\,cm.
+
+\textbf{Test 1:} Dicke 4\,mm, Farbe \texttt{\#000000} (Schwarz $\Rightarrow$ $R=G=B=$ \texttt{00} $\Rightarrow$ Grauton)
+\begin{align*}
+\text{Preis} &= \frac{b \cdot h \cdot d}{50} && \text{Grauton, also durch 50}\\
+&= \frac{100 \cdot 50 \cdot 0{,}4}{50} && 4\,\text{mm} = 4/10 = 0{,}4\,\text{cm}\\
+&= \frac{2000}{50} && 100\cdot 50 = 5000,\quad 5000 \cdot 0{,}4 = 2000\\
+&= 40 && \to \text{Anzeige } \texttt{40.00}
+\end{align*}
+
+\textbf{Test 2:} Dicke 4\,mm, Farbe \texttt{\#ff0000} (Rot: \texttt{ff} $\neq$ \texttt{00} $\Rightarrow$ bunt)
+\begin{align*}
+\text{Preis} &= \frac{100 \cdot 50 \cdot 0{,}4}{32} && \text{bunt, also durch 32}\\
+&= \frac{2000}{32} && \text{Zähler wie oben}\\
+&= 62{,}5 && 32 \cdot 62{,}5 = 2000\\
+&\to \texttt{62.50} && \text{zwei Nachkommastellen}
+\end{align*}
+
+\textbf{Test 3:} Dicke 12\,mm, Farbe \texttt{\#808080} (\texttt{80} $=$ \texttt{80} $=$ \texttt{80} $\Rightarrow$ Grauton)
+\begin{align*}
+\text{Preis} &= \frac{100 \cdot 50 \cdot 1{,}2}{50} && 12\,\text{mm} = 1{,}2\,\text{cm},\ \text{Grauton}\\
+&= \frac{6000}{50} && 5000 \cdot 1{,}2 = 6000\\
+&= 120 && \to \text{Anzeige } \texttt{120.00}
+\end{align*}
+
+\begin{ergebnis}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Eingabe & Preisfeld & Begründung\\
+\midrule
+$100 \times 50$, 4\,mm, \texttt{\#000000} & \texttt{40.00}  & Grauton, $/50$\\
+$100 \times 50$, 4\,mm, \texttt{\#ff0000} & \texttt{62.50}  & bunt, $/32$\\
+$100 \times 50$, 12\,mm, \texttt{\#808080} & \texttt{120.00} & Grauton, $/50$\\
+Breite 300                                & \texttt{-}      & $300 > \texttt{max}=200$\\
+Breite leer                               & \texttt{-}      & \texttt{required} verletzt\\
+nur Breite gesetzt                        & \texttt{-}      & Höhe und Dicke fehlen\\
+\bottomrule
+\end{tabular}
+
+Die HTML-Datei ist unverändert (bytegleich geprüft, also Zeichen für Zeichen identisch mit dem Original).
+Achtung: Das Formular hat eine \texttt{mailto}-Aktion, d.\,h.\ beim Absenden würde der Browser ein E-Mail-Programm
+öffnen -- beim Testen deshalb nicht auf "`Absenden"' klicken.
+\end{ergebnis}
+
+\begin{tutor}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Wie erkennst du einen Grauton?}\\
+  Das Farbfeld liefert \texttt{\#rrggbb}. Mit \texttt{substring} hole ich die drei Zweiergruppen. Sind alle gleich
+  ($R=G=B$), ist es Grau, z.\,B.\ \texttt{\#808080}. Schwarz und Weiß zählen auch dazu.
+\item \textbf{Warum teilst du die Dicke durch 10?}\\
+  Die Formel braucht alles in cm. Breite und Höhe sind schon in cm, die Dicke ist in mm; $1\,\text{cm} = 10\,\text{mm}$.
+\item \textbf{Warum prüfst du nur \texttt{thicknessInputs[0]}?}\\
+  \texttt{required} gilt für die ganze Radio-Gruppe. Jedes Radio der Gruppe ist gültig, sobald irgendeines
+  ausgewählt ist, also reicht eines.
+\item \textbf{Wie hast du das Preisfeld eingefügt, ohne das HTML zu ändern?}\\
+  Mit \texttt{createElement} gebaut, \texttt{readOnly} gesetzt und mit \texttt{append} ans Ende des Fieldsets
+  "`Glass Specification"' gehängt (gefunden über \texttt{widthInput.parentElement}).
+\item \textbf{Warum \texttt{input} und nicht \texttt{change} bei Breite/Höhe?}\\
+  \texttt{input} feuert bei jeder Änderung sofort (jeder Tastendruck); \texttt{change} erst, wenn man das Feld
+  verlässt. Die Angabe will Neuberechnung "`bei jeder Wertänderung"'.
+\end{enumerate}
+\end{tutor}
+
+% =====================================================================
+\section{Aufgabe 5: Event Listener und Target (0,2 P)}\label{sec:a5}
+% =====================================================================
+
+\subsection{Was bedeutet die Aufgabe in einfachen Worten?}
+
+Auf der Seite ist ein blauer Kasten (\texttt{<div id=\textquotedbl{}outerArea\textquotedbl{}>}) und darin ein Button "`Click me!"'. Sowohl am
+Button als auch am Kasten hängt ein Klick-Listener, der Infos in die Konsole schreibt. Du sollst
+\begin{enumerate}[nosep]
+\item vorhersagen, was beim Klick auf den Button ausgegeben wird,
+\item es ausprobieren und vergleichen,
+\item erklären, was \texttt{target}, \texttt{currentTarget} und \texttt{this} sind,
+\item den Code so \emph{ergänzen}, dass beim Button-Klick \textbf{nur} die Infos vom Button erscheinen
+      (ohne \texttt{ex5.html} zu ändern und ohne den bestehenden Code zu ändern).
+\end{enumerate}
+
+\subsection{Der gegebene Code}
+
+\texttt{ex5.html} (gekürzt auf den Body):
+\begin{htmlcode}[numbers=none]
+<div id="outerArea">
+    <button id="button">Click me!</button>
+</div>
+\end{htmlcode}
+
+\texttt{ex5.js}, Zeilen 1--13 (Original):
+\begin{code}
+document.querySelector('#button').addEventListener('click',function (event){
+    console.log("inner:");
+    console.log("target: "+event.target);
+    console.log("currentTarget: "+event.currentTarget);
+    console.log("this: "+this);
+});
+
+document.querySelector('#outerArea').addEventListener('click',function (event){
+        console.log("outer:");
+        console.log("target: " + event.target);
+        console.log("currentTarget: " + event.currentTarget);
+        console.log("this: " + this);
+});
+\end{code}
+
+\subsection{5.1 Vorhersage -- Schritt für Schritt}
+
+\begin{merkbox}[title={Strategie: Event-Ausgaben vorhersagen}]
+\begin{enumerate}[nosep]
+\item Welches Element wird \emph{tatsächlich} angeklickt? $\to$ das ist \texttt{target}, für alle Listener gleich.
+\item Weg nach oben aufschreiben (Bubbling): Element, Elternteil, \dots, \texttt{document}.
+\item Auf diesem Weg die Elemente mit Listener suchen -- in dieser Reihenfolge laufen sie.
+\item Bei jedem Listener: \texttt{currentTarget} $=$ \texttt{this} $=$ das Element, an dem er hängt.
+\item Achtung, wie ausgegeben wird: Bei \texttt{\textquotedbl{}text\textquotedbl{} + element} erscheint \texttt{[object ...Element]}.
+\end{enumerate}
+\end{merkbox}
+
+Angewendet:
+\begin{enumerate}
+\item Angeklickt wird der \texttt{<button>} $\Rightarrow$ \texttt{target} ist in beiden Listenern der Button.
+\item Weg nach oben: \texttt{button} $\to$ \texttt{div\#outerArea} $\to$ \texttt{body} $\to$ \texttt{html} $\to$ \texttt{document}.
+\item Listener gibt es am Button ("`inner"') und am div ("`outer"'). Also läuft zuerst "`inner"', dann "`outer"'.
+\item Im inner-Listener ist \texttt{currentTarget} der Button, im outer-Listener das div.
+\item Die Werte werden mit \texttt{+} an einen Text gehängt. Dabei wird das Element in Text umgewandelt, und
+      daraus wird nur seine Typbezeichnung: \texttt{[object HTMLButtonElement]} bzw.\ \texttt{[object HTMLDivElement]}.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=3.4cm, minimum height=0.75cm, font=\ttfamily\small},
+  lis/.style={font=\sffamily\footnotesize, text=red!70!black, anchor=west},
+  node distance=0.45cm]
+\node[box, fill=gray!10]  (doc)  {document};
+\node[box, fill=gray!10, below=of doc]  (html) {html};
+\node[box, fill=gray!10, below=of html] (body) {body};
+\node[box, fill=blue!15, below=of body] (div)  {div\#outerArea};
+\node[box, fill=orange!25, below=of div] (btn) {button\#button};
+\foreach \a/\b in {btn/div, div/body, body/html, html/doc}
+  \draw[-{Stealth[length=2.5mm]}, thick, blue!60!black] (\a.north) -- (\b.south);
+\node[lis] at ([xshift=0.4cm]btn.east) {1. Listener "`inner"' läuft (+ in 5.4: stopPropagation)};
+\node[lis] at ([xshift=0.4cm]div.east) {2. Listener "`outer"' läuft};
+\node[lis, text=gray] at ([xshift=0.4cm]body.east) {kein Listener};
+\node[font=\sffamily\small, rotate=90, text=blue!60!black] at ([xshift=-0.9cm]div.west) {Bubbling: nach oben};
+\node[font=\sffamily\scriptsize, below=0.15cm of btn] {Klick passiert hier $\Rightarrow$ \texttt{target}};
+\end{tikzpicture}
+\end{center}
+
+\subsection{5.2 Tatsächliche Ausgabe}
+
+Die Vorhersage stimmt genau mit der Ausgabe im Browser überein:
+\begin{ausgabe}
+inner:
+target: [object HTMLButtonElement]
+currentTarget: [object HTMLButtonElement]
+this: [object HTMLButtonElement]
+outer:
+target: [object HTMLButtonElement]
+currentTarget: [object HTMLDivElement]
+this: [object HTMLDivElement]
+\end{ausgabe}
+
+\textbf{Gegenprobe:} Klickt man direkt auf die blaue Fläche (nicht auf den Button), läuft nur der outer-Listener,
+und \texttt{target}, \texttt{currentTarget} und \texttt{this} sind alle drei das div
+(\texttt{[object HTMLDivElement]}), denn das div selbst wurde angeklickt.
+
+\subsection{5.3 \texttt{target}, \texttt{currentTarget} und \texttt{this}}
+
+\begin{center}
+\begin{tabular}{@{}lL{7.2cm}L{3.2cm}@{}}
+\toprule
+ & Bedeutung & bei Button-Klick im outer-Listener\\
+\midrule
+\texttt{event.target} & Element, auf dem das Ereignis \textbf{ausgelöst} wurde (das tatsächlich angeklickte,
+                        innerste Element). Bleibt während des ganzen Bubblings gleich. & Button\\
+\texttt{event.currentTarget} & Element, an dem der \textbf{gerade laufende Listener hängt}. Ändert sich beim
+                        Hochblubbern. & div\\
+\texttt{this} & In einer normalen \texttt{function} als Listener dasselbe wie \texttt{currentTarget}. (Bei einer
+                Pfeilfunktion wäre es \emph{nicht} das Element.) & div\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{5.4 Nur die Button-Infos ausgeben}
+
+\textbf{Idee:} Das Problem ist das Bubbling: Der Klick steigt vom Button zum div auf und löst dort "`outer"' aus.
+Wenn man das Aufsteigen \emph{am Button} stoppt, kommt der Klick nie beim div an.
+
+Ergänzung in \texttt{ex5.js} ab Zeile 14 (der Originalcode bleibt unverändert):
+\begin{code}[firstnumber=15]
+// Exercise 5.4: stop the click on the button from bubbling up to outerArea
+document.querySelector('#button').addEventListener('click', function (event) {
+    event.stopPropagation();
+});
+\end{code}
+
+\begin{itemize}
+\item Ein \emph{zusätzlicher} Listener am Button. Man darf an einem Element beliebig viele Listener anhängen;
+      sie laufen in der Reihenfolge, in der sie angehängt wurden.
+\item \lstinline|event.stopPropagation()| verhindert, dass das Event zum div (und weiter nach oben) gelangt.
+\item \textbf{Warum läuft "`inner"' trotzdem?} \texttt{stopPropagation} stoppt nur den Weg zu \emph{anderen}
+      Elementen, nicht weitere Listener am selben Element. Beide Listener am Button laufen also noch.
+\item \textbf{Warum ein neuer Listener statt Änderung des alten?} Die Angabe sagt "`nur Code hinzufügen"'. Der neue
+      Listener erfüllt das, ohne eine einzige alte Zeile anzufassen.
+\end{itemize}
+
+\begin{ergebnis}
+Button-Klick $\Rightarrow$ nur noch die vier Zeilen \texttt{inner:}, \texttt{target: [object HTMLButtonElement]},
+\texttt{currentTarget: [object HTMLButtonElement]}, \texttt{this: [object HTMLButtonElement]}.\\
+Klick auf die blaue Fläche $\Rightarrow$ weiterhin \texttt{outer:} (dort wird ja nichts gestoppt).
+\end{ergebnis}
+
+\textbf{Alternative} (nicht gewählt): Im outer-Listener am Anfang \lstinline|if (event.target !== event.currentTarget) return;|
+-- "`nur reagieren, wenn das div selbst angeklickt wurde"'. Dafür müsste man aber den bestehenden Code ändern,
+was die Angabe nicht erlaubt.
+
+\begin{tutor}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Warum wird beim Button-Klick auch "`outer"' ausgegeben?}\\
+  Wegen Bubbling: Das click-Event steigt vom Button über das div, body, html bis document auf, und jeder Listener
+  auf dem Weg läuft -- auch der am div.
+\item \textbf{Was ist der Unterschied zwischen \texttt{target} und \texttt{currentTarget}?}\\
+  \texttt{target} ist das angeklickte Element (bleibt gleich), \texttt{currentTarget} das Element, an dem der gerade
+  laufende Listener hängt (wandert mit).
+\item \textbf{Was ist \texttt{this}?}\\
+  In einer normalen \texttt{function} als Listener dasselbe wie \texttt{currentTarget}. In einer Pfeilfunktion nicht.
+\item \textbf{Warum steht da \texttt{[object HTMLButtonElement]} und nicht der Button selbst?}\\
+  Wegen der String-Verkettung mit \texttt{+}: Das Element wird in Text umgewandelt, und das ergibt nur seinen Typnamen.
+  Mit \texttt{console.log(event.target)} ohne \texttt{+} sähe man das Element aufklappbar.
+\item \textbf{Läuft der inner-Listener nach deiner Änderung noch?}\\
+  Ja. \texttt{stopPropagation} verhindert nur, dass das Event zu anderen Elementen weiterwandert; alle Listener am
+  Button selbst laufen.
+\end{enumerate}
+\end{tutor}
+
+% =====================================================================
+\section{Aufgabe 6: Bildergalerie (0,2 P)}\label{sec:a6}
+% =====================================================================
+
+\subsection{Was bedeutet die Aufgabe in einfachen Worten?}
+
+Es gibt eine Galerie aus der Vorlesung: Kleine Vorschaubilder (\emph{Thumbnails}); klickt man eines an, erscheint
+es groß über die ganze Seite (Vollbildmodus); ein Klick irgendwo schließt das große Bild wieder. Du sollst
+\begin{enumerate}[nosep]
+\item verstehen, wie HTML und \texttt{gallery.js} aufgebaut sind,
+\item im Vollbildmodus zwei Buttons "`previous"' und "`next"' ergänzen: "`next"' zeigt das nächste Bild, nach dem
+      letzten wieder das erste; "`previous"' das vorige, vor dem ersten das letzte,
+\item das so machen, dass es mit \emph{beliebig vielen} Bildern im gleichen Format funktioniert,
+\item dabei nur Code \emph{hinzufügen}, nichts am bestehenden Code ändern.
+\end{enumerate}
+
+\begin{analogie}
+Das ist wie ein \textbf{Karussell} oder ein Diaprojektor mit rundem Magazin: Nach dem letzten Dia kommt wieder das
+erste, und wenn man beim ersten zurückdreht, landet man beim letzten. Rechnerisch ist das die Modulo-Uhr aus
+Abschnitt~\ref{sec:modulo}.
+\end{analogie}
+
+\subsection{Verstehen: HTML-Struktur}
+\begin{htmlcode}[firstnumber=9]
+    <div class="gallery">
+       <img src="hk_small.JPG" data-large="hk.JPG" alt="View of Hong Kong from the peak">
+     <img src="street_small.JPG" data-large="street.JPG" alt="Hong Kong central district life">
+     <img src="taichung_small.JPG" data-large="taichung.JPG" alt="A teahouse in Taiwan">
+  </div>
+     <div id="displayDIV">
+         <img class="bigIMG" src="" alt="">
+         <p class="desc">My Caption</p>
+         <!-- Add the buttons dynamically with js here -->
+     </div>
+\end{htmlcode}
+\begin{itemize}
+\item \texttt{div.gallery}: die Thumbnails. Jedes \texttt{<img>} hat drei wichtige Attribute: \texttt{src} (kleine
+      Datei, die man sieht), \texttt{data-large} (Dateiname des großen Bilds) und \texttt{alt} (Beschreibung).
+      Attribute, die mit \texttt{data-} beginnen, sind \textbf{eigene Datenattribute}: Man darf sie frei erfinden,
+      um Zusatzinfos ans Element zu hängen. In JS liest man sie über \lstinline|element.dataset|:
+      \texttt{data-large} wird zu \lstinline|element.dataset.large|.
+\item \texttt{div\#displayDIV}: die Vollbild-Ebene mit einem großen Bild (\texttt{.bigIMG}) und einer
+      Bildunterschrift (\texttt{.desc}). Laut CSS ist sie zuerst \textbf{unsichtbar} (\texttt{display:none}), deckt
+      die ganze Seite ab (\texttt{100vw} $\times$ \texttt{100vh} = 100\,\% der Fensterbreite mal 100\,\% der Fensterhöhe;
+      \texttt{position:absolute} mit \texttt{top:0; left:0} legt sie oben links über alles andere) und ist silbern.
+\end{itemize}
+
+\subsection{Verstehen: der Originalcode (Zeilen 1--16)}
+\begin{code}
+function showImg(e) {
+   document.querySelector("#displayDIV .bigIMG").src=e.target.dataset.large;
+   document.querySelector("#displayDIV .desc").innerHTML=e.target.alt;
+   document.getElementById("displayDIV").style.display="block";
+}
+
+function hideImg(e) {
+   e.currentTarget.style.display="none";
+}
+
+let images = document.querySelectorAll('.gallery img');
+for (let i=0; i< images.length; i++) {
+   images[i].addEventListener("click", showImg);
+}
+document.getElementById("displayDIV").addEventListener("click", hideImg);
+\end{code}
+\begin{itemize}
+\item \textbf{\texttt{showImg} (Zeilen 1--5):} \texttt{e.target} ist das angeklickte Thumbnail. Das große Bild bekommt
+      dessen \texttt{data-large} als Quelle, die Unterschrift dessen \texttt{alt}-Text, und die Vollbild-Ebene wird mit
+      \texttt{display=\textquotedbl{}block\textquotedbl{}} sichtbar gemacht.
+\item \textbf{\texttt{hideImg} (Zeilen 7--9):} \texttt{e.currentTarget} ist das Element, an dem der Listener hängt, also
+      \texttt{displayDIV}. Es wird wieder versteckt. Weil Klicks nach oben blubbern, schließt \emph{jeder} Klick
+      irgendwo auf der Ebene (auch auf das große Bild) das Vollbild.
+\item \textbf{Zeilen 11--15:} Alle Thumbnails holen und jedem \texttt{showImg} als Klick-Listener geben; der
+      Vollbild-Ebene \texttt{hideImg}.
+\end{itemize}
+
+\subsection{Lösungsidee}
+
+Was fehlt, ist eine Antwort auf die Frage "`\textbf{Welches} Bild wird gerade gezeigt?"'. Das Original weiß das
+nicht -- es liest die Daten nur einmal vom angeklickten Thumbnail. Also:
+\begin{enumerate}[nosep]
+\item eine Variable \texttt{currentIndex} = Nummer des aktuellen Bilds in der Liste \texttt{images},
+\item beim Klick auf ein Thumbnail diese Nummer merken,
+\item eine Funktion \texttt{showImgAt(index)}, die das Bild mit dieser Nummer anzeigt -- mit Wrap-around,
+\item zwei Buttons, die \texttt{showImgAt(currentIndex - 1)} bzw.\ \texttt{showImgAt(currentIndex + 1)} aufrufen.
+\end{enumerate}
+
+\subsection{Code Schritt für Schritt (Ergänzung ab Zeile 17)}
+
+\subsubsection*{Index merken (Zeilen 18--25)}
+\begin{code}[firstnumber=17]
+// Extension: previous / next buttons
+let currentIndex = 0;
+
+// remember which thumbnail was opened
+for (let i = 0; i < images.length; i++) {
+   images[i].addEventListener("click", function () {
+      currentIndex = i;
+   });
+}
+\end{code}
+\begin{itemize}
+\item \textbf{Zeile 18:} Startwert 0; er wird beim ersten Thumbnail-Klick ohnehin überschrieben.
+\item \textbf{Zeilen 21--25:} Jedes Thumbnail bekommt einen \emph{zusätzlichen} Klick-Listener (das Original wird
+      nicht verändert, \texttt{showImg} läuft weiterhin zuerst). Dieser merkt sich die Nummer \texttt{i} des Bilds.
+\item \textbf{Warum funktioniert \texttt{i} in der Funktion?} Die Funktion läuft erst viel später, beim Klick. Weil
+      \texttt{i} mit \texttt{let} angelegt ist, bekommt \textbf{jeder Schleifendurchlauf sein eigenes \texttt{i}}, und
+      die Funktion "`erinnert sich"' an genau dieses (das nennt man \emph{Closure}). Mit \texttt{var} gäbe es nur
+      ein einziges \texttt{i}, das nach der Schleife 3 ist -- jeder Klick würde dann \texttt{currentIndex = 3} setzen.
+\end{itemize}
+
+\begin{analogie}
+Closure mit \texttt{let}: Jedes Thumbnail bekommt bei der Schleife einen \textbf{eigenen Zettel} mit seiner Nummer
+in die Tasche gesteckt. Mit \texttt{var} gäbe es nur \emph{eine} Tafel an der Wand, auf der am Ende "`3"' steht,
+und alle würden beim Klick auf diese Tafel schauen.
+\end{analogie}
+
+\subsubsection*{Bild Nummer \texttt{index} anzeigen (Zeilen 27--31)}
+\begin{code}[firstnumber=27]
+function showImgAt(index) {
+   currentIndex = (index + images.length) % images.length; // wraps around at both ends
+   document.querySelector("#displayDIV .bigIMG").src = images[currentIndex].dataset.large;
+   document.querySelector("#displayDIV .desc").innerHTML = images[currentIndex].alt;
+}
+\end{code}
+\begin{itemize}
+\item \textbf{Zeile 28:} Wrap-around (Rechnung siehe unten). Danach liegt \texttt{currentIndex} sicher zwischen 0 und
+      \texttt{images.length - 1}.
+\item \textbf{Zeilen 29--30:} Genau wie \texttt{showImg} im Original -- nur nimmt man die Daten nicht von
+      \texttt{e.target}, sondern vom Thumbnail \texttt{images[currentIndex]}. Das Vollbild ist schon offen, daher
+      muss \texttt{display} nicht nochmals gesetzt werden.
+\end{itemize}
+
+\textbf{Wrap-around-Rechnung Schritt für Schritt} mit 3 Bildern (Index 0 = \texttt{hk}, 1 = \texttt{street},
+2 = \texttt{taichung}), also \texttt{images.length} $= 3$:
+
+\emph{Fall 1: Beim ersten Bild (Index 0) auf "`previous"'} $\Rightarrow$ \texttt{showImgAt(0 - 1)}:
+\begin{align*}
+\text{index} &= 0 + (-1) = -1 && \text{previous: Schritt } -1\\
+(\text{index} + 3) \,\%\, 3 &= (-1 + 3) \,\%\, 3 && \text{Länge addieren, damit nichts Negatives entsteht}\\
+&= 2 \,\%\, 3 && 3 \text{ passt 0-mal in } 2\\
+&= 2 && \text{Rest } 2 \Rightarrow \text{letztes Bild (taichung)}
+\end{align*}
+
+\emph{Fall 2: Beim letzten Bild (Index 2) auf "`next"'} $\Rightarrow$ \texttt{showImgAt(2 + 1)}:
+\begin{align*}
+\text{index} &= 2 + 1 = 3 && \text{next: Schritt } +1\text{; Index 3 gibt es nicht}\\
+(\text{index} + 3) \,\%\, 3 &= (3 + 3) \,\%\, 3 && \text{Länge addieren (schadet hier nicht)}\\
+&= 6 \,\%\, 3 && 6 = 2 \cdot 3 + 0\\
+&= 0 && \text{Rest } 0 \Rightarrow \text{erstes Bild (hk)}
+\end{align*}
+
+\emph{Fall 3: Normalfall, Index 0 auf "`next"'}:
+\begin{align*}
+(0 + 1 + 3) \,\%\, 3 &= 4 \,\%\, 3 && \text{Länge addieren}\\
+&= 1 && 4 = 1 \cdot 3 + 1 \Rightarrow \text{zweites Bild (street)}
+\end{align*}
+
+\textbf{Warum das "`$+\,\texttt{images.length}$"'?} Ohne diesen Summanden wäre im Fall 1
+\lstinline|-1 % 3| in JavaScript gleich $-1$, und \lstinline|images[-1]| existiert nicht. Das Addieren der Länge
+verschiebt um eine volle "`Runde"', was das Ergebnis im Kreis nicht verändert, macht die Zahl aber nicht-negativ.
+
+\subsubsection*{Die Buttons (Zeilen 33--47)}
+\begin{code}[firstnumber=33]
+function addButton(text, step, side) {
+   let button = document.createElement("button");
+   button.textContent = text;
+   button.style.position = "absolute";
+   button.style.top = "50%";
+   button.style[side] = "20px";
+   button.addEventListener("click", function (e) {
+      e.stopPropagation(); // otherwise hideImg on displayDIV closes the picture
+      showImgAt(currentIndex + step);
+   });
+   document.getElementById("displayDIV").appendChild(button);
+}
+
+addButton("previous", -1, "left");
+addButton("next", 1, "right");
+\end{code}
+\begin{itemize}
+\item \textbf{Warum eine Funktion für beide Buttons?} Beide sind fast gleich; sie unterscheiden sich nur in Text,
+      Schrittweite ($-1$ / $+1$) und Seite (links / rechts). Eine Funktion mit drei Parametern vermeidet doppelten Code.
+\item \textbf{Zeilen 34--35:} Button bauen und beschriften.
+\item \textbf{Zeilen 36--38:} \texttt{position:absolute} positioniert ihn relativ zum nächsten positionierten Vorfahren
+      -- das ist \texttt{displayDIV}, das selbst \texttt{position:absolute} hat. \texttt{top: 50\%} setzt ihn auf halbe
+      Höhe. \lstinline|button.style[side]| ist die \textbf{Klammer-Schreibweise}: Mit \texttt{side = \textquotedbl{}left\textquotedbl{}} bedeutet
+      das dasselbe wie \lstinline|button.style.left|; so kann ein Parameter bestimmen, \emph{welche} Eigenschaft
+      gesetzt wird.
+\item \textbf{Zeile 40 -- warum \texttt{stopPropagation} nötig ist:} Der Button liegt \emph{innerhalb} von
+      \texttt{displayDIV}. Ohne Stopp würde der Klick vom Button zum \texttt{displayDIV} hochblubbern, dort liefe
+      \texttt{hideImg}, und das Vollbild würde sofort geschlossen -- man sähe das neue Bild nie. Mit
+      \texttt{stopPropagation} kommt der Klick bei \texttt{displayDIV} nicht an. Klicks außerhalb der Buttons
+      schließen weiterhin wie im Original.
+\item \textbf{Zeile 41:} Neues Bild anzeigen: aktueller Index plus Schritt; den Wrap-around erledigt \texttt{showImgAt}.
+\item \textbf{Zeile 43:} Button als letztes Kind in \texttt{displayDIV} einhängen (dort, wo im HTML der Kommentar steht).
+      Weil er \emph{in} der Vollbild-Ebene steckt, ist er automatisch nur sichtbar, wenn diese sichtbar ist.
+\item \textbf{Zeilen 46--47:} Beide Buttons einmal beim Laden erzeugen.
+\end{itemize}
+
+\textbf{Warum funktioniert das mit beliebigem HTML im gleichen Format?} Nirgends steht eine feste Zahl wie "`3"'
+oder ein fester Dateiname. Die Liste \texttt{images} wird aus dem Original übernommen
+(\lstinline|querySelectorAll('.gallery img')|), und Index-Rechnung sowie Bilddaten hängen nur von
+\texttt{images.length}, \texttt{data-large} und \texttt{alt} ab. Mit 5 oder 50 Bildern läuft es genauso.
+
+\begin{ergebnis}
+Getestet im Browser:
+\begin{itemize}[nosep]
+\item erstes Bild öffnen $\to$ next $\to$ \texttt{street.JPG} mit "`Hong Kong central district life"',
+\item 2$\times$ previous $\to$ \texttt{taichung.JPG} (Wrap zum letzten),
+\item next $\to$ \texttt{hk.JPG} (Wrap zum ersten),
+\item Klick außerhalb der Buttons schließt das Vollbild,
+\item drittes Bild öffnen $+$ next $\to$ \texttt{hk.JPG}; keine JavaScript-Fehler.
+\end{itemize}
+\end{ergebnis}
+
+\begin{tutor}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Wie funktioniert der Sprung vom letzten zum ersten Bild?}\\
+  \lstinline|(index + images.length) % images.length|. Bei 3 Bildern: next von 2 ergibt $(3+3)\,\%\,3 = 0$,
+  previous von 0 ergibt $(-1+3)\,\%\,3 = 2$.
+\item \textbf{Warum brauchst du \texttt{stopPropagation} beim Button?}\\
+  Der Button liegt in \texttt{displayDIV}, an dem \texttt{hideImg} hängt. Ohne Stopp würde der Klick hochblubbern
+  und das Vollbild sofort schließen.
+\item \textbf{Was machen \texttt{data-large} und \texttt{dataset}?}\\
+  \texttt{data-large} ist ein eigenes Datenattribut mit dem Dateinamen des großen Bilds; in JS liest man es mit
+  \lstinline|img.dataset.large|.
+\item \textbf{Woher weiß dein Code, welches Bild gerade offen ist?}\\
+  Ein zusätzlicher Klick-Listener je Thumbnail speichert dessen Index in \texttt{currentIndex}; dank \texttt{let i}
+  hat jeder Listener seine eigene Nummer.
+\item \textbf{Warum funktioniert es auch mit mehr Bildern?}\\
+  Es gibt keine festen Zahlen; alles hängt von \texttt{images.length} und den Attributen der Bilder ab.
+\end{enumerate}
+\end{tutor}
+
+% =====================================================================
+\section{Zusammenfassung}\label{sec:zusammenfassung}
+% =====================================================================
+
+\begin{center}
+\small
+\begin{tabular}{@{}lL{6.0cm}L{7.4cm}@{}}
+\toprule
+Aufgabe & Kern-Idee & Ergebnis\\
+\midrule
+1 Quiz & Moodle-Quiz "`JavaScript Concepts"' & selbst machen, Screenshot der Punkte abgeben\\
+\addlinespace
+2 Ratespiel & \texttt{while}-Spielschleife, \texttt{for} über 3 Versuche, \texttt{try}/\texttt{catch} bei der Eingabe,
+  \texttt{Math.floor(Math.random()*10)+1} & z.\,B.\ Geheimzahl 5, Tipps 3, 5 $\to$ "`Too low"', "`Correct! You needed 2 attempt(s)."'\\
+\addlinespace
+3 DOM & Baum mit Whitespace-Textknoten; Attribut vs.\ Property; 5 Inhalts-Properties & 16 Ausgaben erklärt
+  (u.\,a.\ \texttt{href} mit \texttt{/}, \texttt{BODY}, \texttt{2}/\texttt{1}, \texttt{null}); 3.3: dritter Link
+  öffnet im aktuellen Tab\\
+\addlinespace
+4 Glaspreis & \texttt{remove}, \texttt{createElement}/\texttt{append}, \texttt{checkValidity}, Grau bei $R=G=B$,
+  Dicke mm$\to$cm & $100\times50$: 4\,mm schwarz \texttt{40.00}, 4\,mm rot \texttt{62.50}, 12\,mm grau
+  \texttt{120.00}; ungültig \texttt{-}\\
+\addlinespace
+5 Events & Bubbling; \texttt{target} bleibt, \texttt{currentTarget}/\texttt{this} wandert & ohne Ergänzung inner $+$
+  outer; mit zusätzlichem \texttt{stopPropagation}-Listener nur inner\\
+\addlinespace
+6 Galerie & \texttt{currentIndex}, \texttt{(i+n)\%n}, Buttons per JS mit \texttt{stopPropagation} &
+  previous/next mit Wrap-around, für beliebig viele Bilder\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{merkbox}[title={Goldene Regeln}]
+\begin{enumerate}[nosep]
+\item \textbf{Skripte mit \texttt{defer}} einbinden, damit das DOM schon fertig ist.
+\item \textbf{\texttt{const}} für Werte, die sich nie ändern; \textbf{\texttt{let}} für alles, was sich ändert;
+      \texttt{var} nur kennen, nicht benutzen.
+\item \textbf{Eingaben sind Text} -- mit \texttt{Number()} umwandeln und auf \texttt{NaN} und Bereich prüfen.
+\item \textbf{Zählung ab 0}: \texttt{[1]} ist das zweite Element, \texttt{item(2)} das dritte.
+\item \textbf{Whitespace wird zu Textknoten}; Attribute sind keine Kinder; Elemente haben \texttt{nodeValue} \texttt{null}.
+\item \textbf{Attribut = wie im HTML, Property = wie der Browser es versteht.}
+\item \textbf{\texttt{textContent} = roh, \texttt{innerText} = sichtbar}; \texttt{innerHTML} ohne, \texttt{outerHTML} mit dem Element selbst.
+\item \textbf{Events blubbern nach oben}: \texttt{target} = angeklickt, \texttt{currentTarget} = wo der Listener hängt.
+\item \textbf{\texttt{stopPropagation}}, wenn ein innerer Klick außen nichts auslösen soll.
+\item \textbf{Im Kreis zählen mit \texttt{(i + n) \% n}}.
+\item \textbf{Nur hinzufügen, nicht ändern}, wenn die Angabe es verlangt: neue Listener statt alten Code umschreiben.
+\end{enumerate}
+\end{merkbox}
+
+\end{document}

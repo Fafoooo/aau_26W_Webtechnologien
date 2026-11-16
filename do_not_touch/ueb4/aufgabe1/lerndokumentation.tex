@@ -1,0 +1,138 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 4}}
+\end{center}
+\section*{Aufgabe 1: Working with Closures}
+\textbf{Aufgabe:} Den Code von \texttt{shopA.js} (Warenkorb zu
+\texttt{productsA.html}) erklären, zwei Fragen zu Closures und Scopes
+beantworten, \texttt{addListener} als anonyme Funktion und als Arrow
+Function schreiben, den Button \glqq Empty Shopping Cart\grqq{} umsetzen und
+die Produkte nach Preis aufsteigend sortieren. Das HTML darf nicht
+geändert werden.
+
+\medskip
+\textbf{Erklärung von \texttt{shopA.js}} (Zeilennummern wie in der
+Angabe):
+\begin{itemize}
+  \item Zeile 1: \texttt{'use strict'} schaltet den strengen Modus ein,
+    z.\,B. ist eine Zuweisung an eine nicht deklarierte Variable ein Fehler.
+  \item Zeile 3: \texttt{products} ist ein Array, in dem für jedes Produkt
+    ein Objekt liegt.
+  \item Zeile 5--18, \texttt{updateCart()}: leert die Liste
+    \texttt{\#orderedItems}, geht alle Produkte durch und erzeugt für jedes
+    mit \texttt{numInCart > 0} ein \texttt{li} mit Titel, Preis und Anzahl.
+    Dabei wird \texttt{numInCart * price} zur Summe addiert, die am Ende mit
+    \texttt{toFixed(2)} in \texttt{\#totalPrice} geschrieben wird.
+  \item Zeile 20: Die Schleife geht über alle \texttt{div.product}.
+  \item Zeile 21: \texttt{let cp = \{\}} legt pro Durchlauf ein neues, leeres
+    Objekt an.
+  \item Zeile 23--28: Die Daten werden aus dem HTML gelesen. Das Attribut
+    \texttt{data-prodId} wird zu \texttt{dataset.prodid}, weil HTML
+    Attributnamen klein schreibt. Für den Titel ist \texttt{firstChild}
+    der Textknoten mit dem Zeilenumbruch, \texttt{nextSibling} das
+    \texttt{h2}, darin \texttt{firstChild.}\allowbreak\texttt{nodeValue}
+    der Text. Den Preis \texttt{"2890,00"} liest \texttt{parseFloat} nur
+    bis zum Komma, Ergebnis 2890.
+    \texttt{domElement} speichert das \texttt{div} selbst.
+  \item Zeile 29: Das Objekt kommt mit \texttt{push} in \texttt{products}.
+  \item Zeile 31--35, \texttt{addListener(e)}: gibt das Event aus, erhöht
+    \texttt{cp.numInCart} um 1 und ruft \texttt{updateCart()} auf.
+  \item Zeile 38--39: Der Listener wird an das \texttt{div.buy} des Produkts
+    gehängt. Der Klick auf den Button darin wandert (Bubbling) zum
+    \texttt{div} hoch.
+\end{itemize}
+
+\textbf{a) a. Warum kennt \texttt{addListener} das richtige
+\texttt{cp}?} \texttt{addListener} ist eine Closure: Eine Funktion merkt
+sich die Variablen der Umgebung, in der sie \emph{definiert} wurde, nicht
+der, in der sie später aufgerufen wird. \texttt{cp} ist mit \texttt{let}
+im Schleifenrumpf deklariert und damit block-scoped. Jeder Durchlauf hat
+seinen eigenen Block mit einem eigenen \texttt{cp}, und die
+\texttt{addListener}-Funktion dieses Durchlaufs hält eine Referenz genau
+auf dieses \texttt{cp}. Wenn der Klick viel später kommt, ist die Schleife
+längst fertig, die Variable lebt aber weiter, weil die Funktion sie noch
+braucht.
+
+\medskip
+\textbf{a) b. \texttt{var cp = \{\};} statt \texttt{let cp = \{\};}}
+In JavaScript gibt es den globalen Scope, den Funktions-Scope und den
+Block-Scope (alles in \texttt{\{ \}}). \texttt{let} und \texttt{const}
+gelten nur im Block, \texttt{var} gilt in der ganzen umgebenden Funktion,
+hier also im ganzen Script. Mit \texttt{var} gibt es deshalb nur
+\emph{eine} Variable \texttt{cp} für alle Durchläufe; jeder Durchlauf
+überschreibt sie mit einem neuen Objekt. Die Objekte in \texttt{products}
+sind zwar noch verschieden, weil sie vorher mit \texttt{push} gespeichert
+wurden, aber alle vier Listener schauen auf dieselbe Variable. Nach der
+Schleife zeigt sie auf das letzte Produkt. Ergebnis: Jeder
+\glqq add to cart\grqq-Button erhöht die Anzahl von \glqq Tamron
+17-24mm\grqq, egal welches Produkt man anklickt (getestet: Klick auf Sony
+Alpha IV und Nicon ergibt \glqq Tamron 17-24mm 800(2)\grqq).
+
+\medskip
+\textbf{Ergebnis} (\texttt{productsA.html} unverändert): \texttt{shopA.js}
+ist die Originaldatei. Was wegfällt, ist nur auskommentiert und mit
+\texttt{[1b ENTFERNT]} markiert; alles Neue steht nach fünf Leerzeilen am
+Dateiende zwischen \texttt{[NEU]} und \texttt{[ENDE NEU]}.
+\begin{itemize}
+  \item \textbf{b)} Auskommentiert: \texttt{function addListener} und die
+    beiden Zeilen mit \texttt{clickButton} in der Schleife. Neu am Ende: eine Schleife
+    \texttt{for (let cp of products)}, die für jedes Produkt den Button aus
+    \texttt{cp.domElement} holt und die Funktion direkt in
+    \texttt{addEventListener} schreibt. Durch \texttt{let} hat wieder jede
+    Runde ihr eigenes \texttt{cp}, die Closure funktioniert wie im Original.
+  \item \textbf{b) a.} Standard-Anonyme Funktion (als Kommentar, zum Testen
+    einkommentieren und b) b. auskommentieren):
+    \begin{center}\texttt{clickButton.addEventListener('click', function (e) \{ ... \})}\end{center}
+  \item \textbf{b) b.} Arrow Function (aktiv):
+    \begin{center}\texttt{clickButton.addEventListener('click', (e) => \{ ... \})}\end{center}
+    Der Inhalt ist in beiden Fällen gleich wie bei \texttt{addListener}.
+  \item \textbf{c)} Listener am Button \texttt{\#emptyCard} (so heißt die id
+    im HTML): setzt bei allen Produkten \texttt{numInCart = 0} und ruft
+    \texttt{updateCart()} auf. Die Liste ist danach leer, Total 0.00.
+  \item \textbf{d)} \texttt{products.sort((a, b) => a.price - b.price)}
+    sortiert das Array aufsteigend. Danach wird jedes
+    \texttt{p.domElement} der Reihe nach mit \texttt{before} vor das
+    \glqq Your Order\grqq-\texttt{div} gesetzt. \texttt{before} verschiebt
+    ein schon vorhandenes Element, es wird nichts kopiert. Neue Reihenfolge:
+    Tamron (800), Nicon (900), Sony 24-105 (1300), Sony Alpha IV (2890).
+\end{itemize}
+
+\textbf{Hinweis:} Der Button \glqq add to cart\grqq{} ist ein
+\texttt{input}, der Listener hängt aber wie in der Angabe am umgebenden
+\texttt{div.buy}; ein Klick daneben im \texttt{div} zählt also auch. Die
+Preise werden wegen des Kommas ohne Cents gelesen, das betrifft hier
+nichts, weil alle Preise auf \texttt{,00} enden.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{productsA.html} direkt geöffnet:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.6cm}|>{\raggedright\arraybackslash}p{8.1cm}|}
+\hline
+\textbf{Aktion} & \textbf{Ergebnis} \\ \hline
+Seite laden & Produkte nach Preis: Tamron, Nicon, Sony 24-105, Sony
+  Alpha IV; \glqq Your Order\grqq{} darunter \\ \hline
+2x Sony Alpha IV, 1x Nicon & \glqq Nicon DX 16-600 900(1)\grqq,
+  \glqq Sony Alpha IV 2890(2)\grqq, Total 6680.00 \\ \hline
+Empty Shopping Cart & Liste leer, Total 0.00 \\ \hline
+danach 1x Tamron & \glqq Tamron 17-24mm 800(1)\grqq \\ \hline
+Variante b) a. aktiv & gleiches Verhalten wie b) b. \\ \hline
+Originalcode mit \texttt{var cp} & jeder Button erhöht Tamron \\ \hline
+\end{tabular}
+\end{center}
+Keine Fehler in der Konsole, \texttt{productsA.html} byteweise gleich wie
+in der Angabe.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

@@ -1,0 +1,84 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 2}}
+\end{center}
+\section*{Aufgabe 5: Event Listeners and Target}
+\textbf{Aufgabe:} Die Konsolenausgabe beim Klick auf den Button vorhersagen
+und prüfen, \texttt{target}, \texttt{currentTarget} und \texttt{this}
+erklären. Danach \texttt{ex5.js} so ergänzen, dass nur die Informationen
+des Buttons ausgegeben werden; \texttt{ex5.html} bleibt unverändert.
+
+\medskip
+\textbf{Ausgangscode:} \texttt{ex5.js} hängt je einen \texttt{click}-Listener
+an den Button \texttt{\#button} und an das umgebende \texttt{div}
+\texttt{\#outerArea}. Beide geben \glqq inner:\grqq{} bzw.
+\glqq outer:\grqq{} und danach \texttt{target}, \texttt{currentTarget} und
+\texttt{this} aus. Durch die String-Verkettung erscheint jeweils nur der
+Objekttyp, z.\,B. \texttt{[object HTMLButtonElement]}.
+
+\medskip
+\textbf{5.1 und 5.2 Vorhersage und Ausgabe:} Zuerst erscheinen
+\glqq inner:\grqq{} und drei Zeilen, danach \glqq outer:\grqq{} und drei Zeilen:
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Zeile} & \textbf{inner (Listener am Button)} & \textbf{outer (Listener am div)} \\ \hline
+\texttt{target} & \texttt{[object HTMLButtonElement]} & \texttt{[object HTMLButtonElement]} \\ \hline
+\texttt{currentTarget} & \texttt{[object HTMLButtonElement]} & \texttt{[object HTMLDivElement]} \\ \hline
+\texttt{this} & \texttt{[object HTMLButtonElement]} & \texttt{[object HTMLDivElement]} \\ \hline
+\end{tabular}
+\end{center}
+Grund ist Event-Bubbling: Das \texttt{click}-Event läuft vom Button nach oben
+durch \texttt{div}, \texttt{body}, \texttt{html} und \texttt{document}.
+Jeder Listener auf diesem Weg wird ausgeführt. Die tatsächliche Ausgabe in
+Chrome stimmt mit der Vorhersage überein. Ein Klick auf die blaue Fläche
+neben dem Button gibt nur \glqq outer:\grqq{} aus, dort sind alle drei
+Werte \texttt{[object HTMLDivElement]}.
+
+\medskip
+\textbf{5.3 target, currentTarget und this:}
+\begin{itemize}
+  \item \texttt{target}: das Element, auf dem das Event ausgelöst wurde,
+    also das tatsächlich angeklickte, innerste Element. Bleibt beim
+    Bubbling gleich.
+  \item \texttt{currentTarget}: das Element, an dem der gerade laufende
+    Listener hängt. Ändert sich beim Hochwandern des Events.
+  \item \texttt{this}: In einer normalen \texttt{function} als Listener
+    dasselbe wie \texttt{currentTarget}. Bei einer Pfeilfunktion wäre
+    \texttt{this} nicht das Element, sondern kommt aus dem umgebenden
+    Kontext.
+\end{itemize}
+
+\textbf{5.4 Lösung:} Am Ende von \texttt{ex5.js} (ab Zeile 15) ist ein
+zusätzlicher \texttt{click}-Listener auf \texttt{\#button} hinzugefügt,
+der \texttt{event.stopPropagation()} aufruft. Das Event wandert dadurch
+nicht mehr zum \texttt{div}. Beide Listener am Button laufen weiterhin,
+weil \texttt{stopPropagation} nur den Weg zu anderen Elementen stoppt.
+Der bestehende Code ist unverändert.
+
+\medskip
+\textbf{Hinweis:} Alternativ könnte der äußere Listener mit
+\begin{center}
+\texttt{if (event.target !== event.currentTarget) return;}
+\end{center}
+beginnen. Dafür müsste aber der vorhandene Code geändert werden.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{ex5.html} direkt geöffnet.
+Klick auf den Button: nur die vier Zeilen von \glqq inner:\grqq.
+Klick auf die blaue Fläche: weiterhin \glqq outer:\grqq.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

@@ -1,0 +1,100 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\sloppy
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 5}}
+\end{center}
+\section*{Aufgabe 4: Retrieving Products via XMLHttpRequest}
+\textbf{Aufgabe:} In \texttt{products.js} die Methode
+\texttt{initialize(jsonURL, domElement)} schreiben. Sie lädt
+\texttt{products.json} mit \texttt{XMLHttpRequest} vom Webserver und
+zeigt jedes Produkt im übergebenen \texttt{domElement} so an wie auf dem
+letzten Blatt.
+
+\medskip
+\textbf{Ergebnis:} \texttt{products.js} ist die Originaldatei. Was wegfällt,
+ist nur auskommentiert; alles Neue steht nach fünf Leerzeilen am
+Dateiende zwischen \texttt{[NEU]} und \texttt{[ENDE NEU]}.
+\begin{itemize}
+  \item \texttt{[4 GEÄNDERT]}: Die URL \texttt{http://localhost:8080/...}
+    passt nicht, weil Apache von XAMPP auf Port 80 läuft. Neu ist
+    \texttt{let productURL = "products.json"}: eine relative URL, also
+    \glqq gleicher Ordner wie \texttt{products.html}\grqq. Die passt für
+    jeden Ordner und jeden Port.
+  \item \texttt{[4 VERSCHOBEN]}: Der Aufruf
+    \texttt{initialize(productURL, container)} steht jetzt unten, weil
+    \texttt{productURL} erst dort angelegt wird; eine
+    \texttt{let}-Variable darf man erst nach ihrer Zeile benutzen.
+  \item \texttt{[4 ENTFERNT]}: die leere Vorlage von \texttt{initialize}.
+  \item \texttt{initialize}: \texttt{new XMLHttpRequest()} legt die
+    Anfrage an, \texttt{xhr.open("GET", jsonURL)} sagt, was geholt wird,
+    \texttt{xhr.send()} schickt sie ab. Der Code läuft danach sofort
+    weiter; die Antwort kommt später (asynchron) im Event
+    \texttt{onload}. Dort wird geprüft, ob \texttt{xhr.status} 200 (OK)
+    ist, dann macht \texttt{JSON.parse(xhr.responseText)} aus dem Text
+    ein Array mit vier Produkt-Objekten.
+  \item \texttt{renderProducts}: baut pro Produkt mit
+    \texttt{createElement} dasselbe HTML wie in \texttt{productsA.html}
+    von Blatt 4: \texttt{div.product} mit \texttt{data-prodId},
+    \texttt{h2} mit Titel, darunter \texttt{div.desc},
+    \texttt{div.price} (2890 wird zu \glqq 2890,00\grqq) und
+    \texttt{div.buy} mit dem Button. Text wird mit
+    \texttt{textContent} gesetzt, also nie als HTML ausgewertet.
+  \item Fehler: Bei einem anderen Status (z.\,B. 404) oder kaputtem JSON
+    (\texttt{try}/\texttt{catch} um \texttt{JSON.parse}) und bei
+    \texttt{onerror} (gar keine Antwort, z.\,B. Server aus) zeigt
+    \texttt{showError} eine rote Meldung statt der Produkte.
+  \item \texttt{products.html}: Nur ein \texttt{<style>}-Block ist neu
+    (\texttt{[NEU]}), kopiert aus \texttt{productsA.html}, damit die
+    Produkte gleich aussehen wie auf Blatt 4.
+\end{itemize}
+
+\textbf{Warum ein Webserver?} Wird die Seite per Doppelklick über
+\texttt{file://} geöffnet, blockiert der Browser aus Sicherheitsgründen
+die Anfrage (Konsole: \glqq Access to XMLHttpRequest at
+\texttt{file:///...} has been blocked by CORS policy\grqq); es kommt
+\texttt{onerror} und die Fehlermeldung. Über
+\texttt{http://localhost/...} liefert Apache die Datei aus.
+
+\medskip
+\textbf{Hinweis:} Der Ordner liegt in XAMPP unter
+\texttt{C:\textbackslash xampp\textbackslash htdocs\textbackslash ex4},
+aufrufen mit \url{http://localhost/ex4/products.html} (vorher im XAMPP
+Control Panel Apache starten). Der Button \glqq add to cart\grqq{} ist
+nur für das gleiche Aussehen da; ein Warenkorb ist nicht verlangt.
+\texttt{products.json} ist unverändert.
+
+\medskip
+\textbf{Test:} In Chrome:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.2cm}|>{\raggedright\arraybackslash}p{8.5cm}|}
+\hline
+\textbf{Fall} & \textbf{Ergebnis} \\ \hline
+\url{http://localhost/ex4/products.html} (XAMPP) & 4 Produkte wie auf
+  Blatt 4: Sony Alpha IV 2890,00, Sony 24-105 1300,00, Nicon 900,00,
+  Tamron 800,00 \\ \hline
+Datei nicht gefunden (404) & \glqq Products could not be loaded: HTTP 404
+  Not Found\grqq \\ \hline
+kaputtes JSON & Meldung \glqq invalid JSON (...)\grqq \\ \hline
+Server nicht erreichbar & Meldung \glqq network error\grqq \\ \hline
+über \texttt{file://} geöffnet & Meldung \glqq network error\grqq{} \\ \hline
+\end{tabular}
+\end{center}
+Kein unbehandelter Fehler: In der Konsole stehen nur die Meldung des
+Browsers (z.\,B. \glqq Failed to load resource\grqq{} bzw. bei
+\texttt{file://} die CORS-Sperre) und die eigene Meldung von
+\texttt{showError}.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

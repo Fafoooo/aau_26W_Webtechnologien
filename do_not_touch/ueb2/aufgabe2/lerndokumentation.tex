@@ -1,0 +1,89 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 2}}
+\end{center}
+\section*{Aufgabe 2: Number-Guessing Game}
+\textbf{Aufgabe:} Ein Zahlenratespiel mit \texttt{prompt}, \texttt{alert}
+und \texttt{confirm} in reinem JavaScript umsetzen. Die HTML-Datei hat
+einen leeren \texttt{body} und bindet nur die JavaScript-Datei ein.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item \texttt{index.html}: leerer \texttt{body}, \texttt{game.js} wird im
+    \texttt{head} mit \texttt{defer} eingebunden.
+  \item \texttt{MAX\_ATTEMPTS = 3} ist die Konstante für die Versuche,
+    \texttt{keepPlaying} speichert, ob weitergespielt wird.
+  \item Spielschleife: \texttt{while (keepPlaying)} erzeugt eine Zahl mit
+    \texttt{Math.floor(Math.random() * 10) + 1}, ruft
+    \texttt{playNumberGame} auf und fragt danach mit \texttt{confirm} nach
+    einer weiteren Runde. Bei \glqq Abbrechen\grqq{} erscheint
+    \glqq Thank you for playing!\grqq.
+  \item Zufallszahl: \texttt{Math.random()} liefert $[0,1)$, mal 10 ergibt
+    $[0,10)$, \texttt{Math.floor} ergibt 0 bis 9, plus 1 ergibt 1 bis 10.
+    Beispiel: $0{,}42 \cdot 10 = 4{,}2 \rightarrow 4 \rightarrow 5$.
+  \item \texttt{playNumberGame(secretNumber)}: speichert alle Tipps im Array
+    \texttt{guesses} und läuft über höchstens drei Versuche.
+    Fehlertext $\rightarrow$ \texttt{alert} mit der Meldung;
+    richtig $\rightarrow$ Meldung mit Anzahl der Versuche,
+    \texttt{return true}; sonst \glqq Too high\grqq{} bzw.
+    \glqq Too low\grqq{} mit den bisherigen Versuchen und danach die
+    bisherigen Tipps. Ohne Versuche: richtige Zahl anzeigen,
+    \texttt{return false}.
+  \item \texttt{getUserInput()}: wandelt die Eingabe mit \texttt{Number()}
+    um. Im \texttt{try}-Block wird bei \texttt{NaN}, Werten unter 1 oder
+    über 10 ein \texttt{Error} geworfen; \texttt{catch} gibt
+    \texttt{error.message} zurück. Das Spiel erkennt den Fehlertext an
+    \texttt{typeof guess !== "number"}.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{5.6cm}|}
+\hline
+\textbf{Eingabe} & \textbf{Wert nach \texttt{Number()}} & \textbf{Ergebnis} \\ \hline
+\texttt{3} & \texttt{3} & gültig \\ \hline
+\texttt{11} & \texttt{11} & ungültig, größer als 10 \\ \hline
+\texttt{abc} & \texttt{NaN} & ungültig \\ \hline
+leere Eingabe & \texttt{0} & ungültig, kleiner als 1 \\ \hline
+Abbrechen (\texttt{null}) & \texttt{0} & ungültig, kleiner als 1 \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{Hinweis:} Die Angabe spricht bei der Spielentscheidung von einer
+Konstante. \texttt{keepPlaying} ist trotzdem mit \texttt{let} deklariert,
+weil der Wert nach jeder Runde neu gesetzt wird; eine \texttt{const} kann
+nicht neu zugewiesen werden. Eine ungültige Eingabe zählt als Versuch.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{index.html} direkt geöffnet.
+Geheimzahl jeweils 5:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{10.1cm}|}
+\hline
+\textbf{Eingaben} & \textbf{Meldungen} \\ \hline
+\texttt{3}, \texttt{5} & \glqq Too low! Attempts made: 1\grqq,
+  \glqq Your previous guesses: 3\grqq,
+  \glqq Correct! You needed 2 attempt(s).\grqq \\ \hline
+\texttt{9}, \texttt{abc}, Abbrechen & \glqq Too high! Attempts made: 1\grqq,
+  \glqq Your previous guesses: 9\grqq,
+  zweimal \glqq Invalid input. Please enter a number between 1 and 10.\grqq,
+  \glqq No attempts left. The correct number was 5.\grqq \\ \hline
+\end{tabular}
+\end{center}
+Nach Abbrechen bei der Frage \glqq Do you want to play again?\grqq{}
+erscheint jeweils \glqq Thank you for playing!\grqq.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

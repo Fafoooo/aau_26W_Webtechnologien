@@ -1,0 +1,103 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\sloppy
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 5}}
+\end{center}
+\section*{Aufgabe 3: Promises II}
+\textbf{Aufgabe:} Erklären, was \texttt{5\_3.js} macht und warum die
+Ausgabe in dieser Reihenfolge erscheint. Danach
+5+3+7+14+23+25+1000+1 mit \texttt{delayedCalc(...)} schrittweise in genau
+dieser Reihenfolge berechnen, einmal mit einer Kette aus
+\texttt{.then(...)} und \texttt{.catch(...)} und einmal mit
+\texttt{async}/\texttt{await} und \texttt{try}/\texttt{catch}.
+\texttt{delayedCalc} selbst darf nicht geändert werden.
+
+\medskip
+\textbf{a) Was macht der gegebene Code?}
+\begin{itemize}
+  \item \texttt{delayedCalc(a, b)} gibt \emph{sofort} ein Promise zurück,
+    also ein Versprechen, dass das Ergebnis später kommt.
+  \item Ist \texttt{a > b}, startet ein \texttt{setTimeout} mit einer
+    zufälligen Wartezeit von 0 bis 1999\,ms. Danach wird
+    \glqq a + b = c\grqq{} ins Event Log geschrieben und das Promise mit
+    \texttt{resolve(c)} erfüllt.
+  \item Ist \texttt{a <= b}, wird das Promise \emph{sofort} (ohne Wartezeit)
+    mit \texttt{reject('error: b larger than a')} abgelehnt und
+    \glqq rejected\grqq{} geschrieben.
+  \item Unten wird \texttt{delayedCalc} viermal direkt hintereinander
+    aufgerufen, ohne auf ein Ergebnis zu warten. Alle vier laufen also
+    gleichzeitig, und keine Rechnung bekommt das Ergebnis der vorigen.
+\end{itemize}
+\textbf{Warum diese Reihenfolge?} \texttt{delayedCalc(7,14)} und
+\texttt{delayedCalc(23,25)} lehnen sofort ab, darum stehen zweimal
+\glqq rejected\grqq{} immer ganz oben. In der Konsole erscheint zweimal
+\texttt{Uncaught (in promise) error: b larger than a}, weil niemand die
+Ablehnung mit \texttt{catch} abfängt. \texttt{5 + 3 = 8} und
+\texttt{1000 + 1 = 1001} warten zufällig lange; wer die kürzere Wartezeit
+hat, steht zuerst. Deshalb ändert sich die Reihenfolge dieser beiden
+Zeilen beim Neuladen.
+
+\medskip
+\textbf{Ergebnis} (\texttt{ex3.html} unverändert): \texttt{5\_3.js} ist die
+Originaldatei. Die vier alten Aufrufe sind nur auskommentiert und mit
+\texttt{[3b ENTFERNT]} markiert; alles Neue steht nach fünf Leerzeilen am
+Dateiende zwischen \texttt{[NEU]} und \texttt{[ENDE NEU]}.
+\begin{itemize}
+  \item \textbf{b)} Kette: \texttt{delayedCalc(5, 3)}, dann
+    \texttt{.then(result => delayedCalc(result, 7))} usw. Jedes
+    \texttt{.then} gibt das neue Promise zurück, darum wartet die Kette,
+    bis die Rechnung fertig ist, und \texttt{result} ist immer das
+    Ergebnis davor. Bei \texttt{77 + 1000} ist \texttt{b} größer, das
+    Promise wird abgelehnt, alle weiteren \texttt{.then} werden
+    übersprungen und das eine \texttt{.catch(handleError)} am Ende fängt
+    den Fehler. Diese Version steht als Kommentar in der Datei, weil nur
+    eine Version gleichzeitig laufen darf (sonst mischen sich die
+    Ausgaben).
+  \item \textbf{c)} \texttt{async function calcWithAwait()}: Jede Zeile
+    \texttt{result = await delayedCalc(result, ...)} wartet, bis das
+    Promise fertig ist, und nimmt dann den Wert. Ein abgelehntes Promise
+    wirkt bei \texttt{await} wie ein geworfener Fehler und springt in den
+    \texttt{catch}-Block, der \texttt{handleError(error)} aufruft. Diese
+    Version ist aktiv.
+  \item Umschalten auf b): nur bei den 8 Code-Zeilen von b) (von
+    \texttt{delayedCalc(5, 3)} bis \texttt{.catch(handleError);}) das
+    \texttt{//} am Zeilenanfang entfernen und den Aufruf \texttt{calcWithAwait();} auskommentieren.
+\end{itemize}
+
+\textbf{Hinweis:} \texttt{1000 + 1} wird nie gerechnet, weil die Kette
+schon bei \texttt{77 + 1000} abbricht. Das entspricht der verlangten
+Ausgabe in der Angabe, die mit \glqq rejected\grqq{} endet.
+\texttt{handleError} zeigt den Fehlertext als \texttt{alert}.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{ex3.html} direkt geöffnet:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.4cm}|>{\raggedright\arraybackslash}p{9.3cm}|}
+\hline
+\textbf{Version} & \textbf{Ergebnis} \\ \hline
+Original (a) & zuerst 2x rejected, dann 5 + 3 = 8 und 1000 + 1 = 1001 in
+  wechselnder Reihenfolge, 2x Uncaught (in promise) \\ \hline
+b) \texttt{.then}-Kette & 5 + 3 = 8, 8 + 7 = 15, 15 + 14 = 29,
+  29 + 23 = 52, 52 + 25 = 77, rejected; ein alert
+  \glqq error: b larger than a\grqq \\ \hline
+c) \texttt{async}/\texttt{await} & genau dieselbe Ausgabe und derselbe
+  alert \\ \hline
+\end{tabular}
+\end{center}
+Bei b) und c) keine Fehler in der Konsole; mehrmals neu geladen, die
+Reihenfolge bleibt immer gleich.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

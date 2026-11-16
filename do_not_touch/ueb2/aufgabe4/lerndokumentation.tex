@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 2}}
+\end{center}
+\section*{Aufgabe 4: Glass Price}
+\textbf{Aufgabe:} In \texttt{calculate.js} den Preis einer Glasbestellung
+berechnen und in einem neuen Preisfeld anzeigen.
+\texttt{glassOrder.html} darf nicht geändert werden.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item Doppelte Überschrift entfernt:
+    \texttt{document.querySelector("h1 + p").remove()}.
+    \texttt{h1 + p} wählt den Absatz direkt nach dem \texttt{h1}.
+  \item Preisfeld: neues \texttt{input} (\texttt{type="text"}, ID und Name
+    \texttt{price}, \texttt{readOnly}) mit \texttt{label} \glqq price\grqq{}
+    (\texttt{htmlFor = "price"}). Beide werden mit \texttt{append} ans Ende
+    des Fieldsets \glqq Glass Specification\grqq{} gehängt, also nach der
+    Legende \glqq Price\grqq{} an der Stelle des Kommentars.
+  \item \texttt{calculate(width, height, thickness)}: Das Farbfeld liefert
+    \texttt{\#rrggbb}. Rot, Grün und Blau werden mit \texttt{substring}
+    herausgelöst. Sind alle drei gleich, ist das Glas ein Grauton
+    ($b \cdot h \cdot d / 50$), sonst farbig ($b \cdot h \cdot d / 32$).
+    Schwarz und Weiß zählen ebenfalls als Grauton.
+  \item Einheiten: Breite und Höhe sind laut Formular in cm, die Dicke
+    (4, 6, 8, 12) in mm. Die Dicke wird daher durch 10 geteilt.
+  \item \texttt{update()}: prüft Breite, Höhe und die Dicken-Gruppe mit
+    \texttt{checkValidity()}. Geprüft werden \texttt{required},
+    \texttt{min="0"}, \texttt{max="200"} und \texttt{step="1"}.
+    Ein Radio mit \texttt{required} ist gültig, sobald irgendein Radio
+    derselben Gruppe gewählt ist; deshalb genügt
+    \texttt{thicknessInputs[0]}. Gültig: Preis mit zwei Nachkommastellen,
+    sonst \glqq -\grqq.
+  \item Events: \texttt{input} auf Breite, Höhe und Farbe (feuert bei jeder
+    Änderung, auch beim Tippen), \texttt{change} auf jedem Radio.
+    \texttt{update()} läuft einmal beim Laden und zeigt \glqq -\grqq.
+\end{itemize}
+
+\textbf{Hinweis:} Für den Preis werden nur die preisrelevanten
+Pflichtfelder geprüft (Breite, Höhe, Dicke). Die Kontaktdaten ändern den
+Preis nicht. Das Farbfeld hat immer einen Wert (Standard \texttt{\#000000}).
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{glassOrder.html} direkt geöffnet:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{6.3cm}|>{\raggedright\arraybackslash}p{5.2cm}|>{\raggedright\arraybackslash}p{2.2cm}|}
+\hline
+\textbf{Eingabe} & \textbf{Rechnung} & \textbf{Preisfeld} \\ \hline
+$100 \times 50$\,cm, 4\,mm, \texttt{\#000000} & $100 \cdot 50 \cdot 0{,}4 / 50$ & \texttt{40.00} \\ \hline
+$100 \times 50$\,cm, 4\,mm, \texttt{\#ff0000} & $100 \cdot 50 \cdot 0{,}4 / 32$ & \texttt{62.50} \\ \hline
+$100 \times 50$\,cm, 12\,mm, \texttt{\#808080} & $100 \cdot 50 \cdot 1{,}2 / 50$ & \texttt{120.00} \\ \hline
+Breite 300 & über \texttt{max="200"} & \texttt{-} \\ \hline
+Breite leer & \texttt{required} verletzt & \texttt{-} \\ \hline
+nur Breite eingegeben & Höhe und Dicke fehlen & \texttt{-} \\ \hline
+\end{tabular}
+\end{center}
+Die HTML-Datei ist unverändert (bytegleich mit der Vorlage geprüft).
+Das Formular wurde nicht abgeschickt, da es über \texttt{mailto} sendet.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

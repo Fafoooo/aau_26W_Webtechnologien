@@ -1,0 +1,83 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 3}}
+\end{center}
+\section*{Aufgabe 2: Making an HTML Page Editable}
+\textbf{Aufgabe:} Zur Seite \texttt{editable.html} (drei
+\texttt{section}s mit je einer \texttt{h1}) mit \texttt{editable.js} ein
+Formular hinzufügen, mit dem man eine Section auswählen, ihre Überschrift
+und ihr HTML bearbeiten und speichern kann. Am HTML darf nur die
+Script-Referenz ergänzt werden.
+
+\medskip
+\textbf{Ergebnis:}
+\begin{itemize}
+  \item \texttt{editable.html}: Vorlage aus \texttt{editable.zip}, im
+    \texttt{head} nur diese Zeile ergänzt:
+    \begin{center}
+    \texttt{<script src="editable.js" defer></script>}
+    \end{center}
+  \item Formular: \texttt{form}, \texttt{select}, Textfeld,
+    \texttt{textarea} und Submit-Button werden mit
+    \texttt{createElement} erzeugt und mit \texttt{after} direkt hinter die letzte Section gesetzt.
+    Der Button ist zuerst \texttt{disabled}.
+  \item Select: erste Option \glqq\texttt{-{}- choose a section -{}-}\grqq{}
+    als Hinweis, danach pro Section eine Option. Der \texttt{value} ist
+    die Nummer der Section, der Text die Überschrift aus
+    \texttt{querySelector("h1")}.\allowbreak\texttt{textContent}.
+  \item \texttt{change}-Listener am Select: Textfeld = Überschrift,
+    Textarea = \texttt{section.innerHTML}, Button wird aktiv.
+  \item \texttt{submit}-Listener am Formular:
+    \texttt{event.preventDefault()} verhindert das Neuladen der Seite.
+    Zuerst wird \texttt{section.innerHTML} auf den Inhalt der Textarea
+    gesetzt. Dann wird die \texttt{h1} gesucht; fehlt sie, weil sie in der
+    Textarea gelöscht wurde, wird eine neue erzeugt und mit
+    \texttt{prepend} an den Anfang der Section gesetzt. Danach bekommt die
+    \texttt{h1} den Text aus dem Textfeld. Das Textfeld gewinnt also immer
+    gegen eine Änderung der Überschrift in der Textarea.
+  \item Danach wird der Text der gewählten Option auf die neue Überschrift
+    gesetzt und die Textarea zeigt den neuen Stand der Section.
+\end{itemize}
+
+\textbf{Hinweis:} Das Textfeld ist \texttt{required}, eine leere
+Überschrift lässt der Browser nicht zu. Der Inhalt der Textarea wird
+bewusst als HTML übernommen, weil die Angabe genau das verlangt; die
+Änderung betrifft nur die eigene Seite im Browser, nicht die Datei.
+
+\medskip
+\textbf{Test:} In Chrome, \texttt{editable.html} direkt geöffnet:
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.6cm}|>{\raggedright\arraybackslash}p{8.1cm}|}
+\hline
+\textbf{Aktion} & \textbf{Ergebnis} \\ \hline
+Seite laden & Formular nach der dritten Section, Optionen
+  Topic 1, Topic 2, Topic 3, Button deaktiviert \\ \hline
+\glqq Topic 2\grqq{} wählen & Textfeld \glqq Topic 2\grqq, Textarea mit
+  \texttt{<h1>Topic 2</h1>...}, Button aktiv \\ \hline
+In der Textarea \texttt{h1} auf \glqq FromTextarea\grqq{} und Text ändern,
+  im Textfeld \glqq FromInput\grqq, Klick &
+  Überschrift \glqq FromInput\grqq, geänderter Text übernommen,
+  Option heißt \glqq FromInput\grqq \\ \hline
+\glqq Topic 1\grqq{} wählen, \texttt{<h1>Topic 1</h1>} in der Textarea
+  löschen, Textfeld \glqq New One\grqq, Klick &
+  Section hat genau eine \texttt{h1} \glqq New One\grqq{} ganz vorne,
+  Option aktualisiert \\ \hline
+\end{tabular}
+\end{center}
+Keine Fehler in der Konsole, die Seite wird beim Speichern nicht neu
+geladen.
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) für Erstellung, Prüfung und Dokumentation.}
+\end{document}
