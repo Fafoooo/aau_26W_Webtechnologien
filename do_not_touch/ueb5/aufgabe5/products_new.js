@@ -10,12 +10,12 @@ initialize(productURL,container);
 function initialize(jsonURL, domElement) {
 	// This function should retrieve all products from jsonURL and render them
 	// in the same way as on the last assignment sheet inside of domElement
-	fetch(jsonURL)   // Anfrage abschicken, gibt sofort ein Promise zurück
+	fetch(jsonURL)   // Anfrage abschicken, gibt sofort ein Promise zurück.
 		.then(response => {   // Antwort ist da (Status da, Inhalt noch nicht gelesen)
 			if (!response.ok) {   // ok = Status 200-299. fetch meldet 404 NICHT selbst als Fehler
 				throw new Error("HTTP " + response.status);   // selbst Fehler werfen -> springt ins catch
 			}
-			return response.json();   // Inhalt als JSON lesen -> wieder ein Promise
+			return response.json();   // Inhalt als JSON lesen -> gibt an die Promise kette zurück.
 		})
 		.then(products => renderProducts(products, domElement))   // products = fertiges Array
 		.catch(error => showError(domElement, error.message));   // EIN catch für alles: 404, Server aus, kaputtes JSON
