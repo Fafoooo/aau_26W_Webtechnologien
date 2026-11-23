@@ -1,0 +1,104 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\sloppy
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 6}}
+\end{center}
+\section*{Aufgabe 3: Database-Backed Product List API}
+\textbf{Aufgabe:} Produkte aus PostgreSQL laden und die Beschreibung
+über PUT ändern. Fehlende Produkte, ungültige Eingaben und
+Datenbankfehler sollen passende HTTP-Antworten liefern.
+
+\medskip
+\textbf{Ergebnis:} Ergänzt sind \texttt{server.js}, \texttt{pool.js} und
+\texttt{config.json}. Die Vorlagen bleiben als \texttt{server\_ORIGINAL.js},
+\texttt{pool\_ORIGINAL.js} und \texttt{config\_ORIGINAL.json} erhalten.
+\begin{itemize}
+  \item \texttt{config.json}: Der überflüssige Beistrich nach dem
+    Datenbankobjekt ist entfernt, damit gültiges JSON entsteht.
+    Host: \texttt{localhost}; Benutzer und Passwort: \texttt{postgres};
+    Datenbank: \texttt{webtechProducts} (lokale Testumgebung).
+  \item \texttt{pool.js}: \texttt{new Pool} verwaltet wiederverwendbare
+    Verbindungen. Die Werte kommen aus der Konfiguration.
+    Deren Schlüssel heißt \texttt{db}, node-postgres erwartet dafür
+    \texttt{database}. \texttt{pool.on('error', ...)} meldet einen
+    Verbindungsabbruch, statt den Server abstürzen zu lassen.
+    \texttt{module.exports} stellt den Pool bereit.
+  \item GET \texttt{/products}: \texttt{SELECT id FROM products} lädt
+    die IDs; \texttt{result.rows.map} bildet die Antwortliste.
+    Ohne \texttt{ORDER BY} ist die Reihenfolge nicht garantiert.
+  \item GET \texttt{/product/:id}: Die Abfrage lädt \texttt{id},
+    \texttt{title}, \texttt{description} und \texttt{price}.
+    \texttt{\$1} ist ein Platzhalter; die ID wird getrennt als Wert
+    übergeben und kann dadurch keinen SQL-Befehl einschleusen.
+    Eine leere Trefferliste bedeutet 404.
+  \item PUT prüft zuerst den Typ, einen nicht leeren Inhalt und höchstens
+    100 Zeichen. Nur Leerzeichen sind ebenfalls ungültig.
+    \texttt{UPDATE ... RETURNING} ändert die Beschreibung und gibt die
+    ganze neue Zeile zurück. \texttt{rowCount === 0} bedeutet 404.
+    Auch hier werden Beschreibung und ID getrennt übergeben.
+  \item \texttt{bodyParser.json()} macht den JSON-Text als
+    \texttt{req.body} zugänglich. \texttt{async/await} wartet auf die
+    Abfrage; jede Route fängt Fehler mit \texttt{try/catch} ab,
+    protokolliert sie mit \texttt{console.error} und sendet 500.
+\end{itemize}
+
+\textbf{Starten:} PostgreSQL starten. Im Ordner \texttt{aufgabe3} zuerst einmal
+\texttt{npm install} ausführen. Import im Unterordner:
+\begin{quote}
+\texttt{cd db\_import}\\
+\texttt{psql -U postgres -f createDB.sql}\\
+\texttt{cd ..}
+\end{quote}
+Die bereits korrigierte \texttt{createDB.sql} verwendet
+\texttt{CREATE DATABASE "webtechProducts"} und
+\texttt{ALTER DATABASE "webtechProducts"}. Ohne Anführungszeichen macht
+PostgreSQL den Namen zu \texttt{webtechproducts}; das anschließende
+\texttt{\textbackslash connect webtechProducts} scheitert dann und die
+Tabelle wird nicht in der vorgesehenen Datenbank angelegt.
+Die unveränderte Vorlage bleibt unter
+\texttt{db\_import/createDB\_ORIGINAL.sql} erhalten.
+Falls Windows die Locale \texttt{en\_US.UTF-8} ablehnt, beim dortigen
+Import die Teile \texttt{LC\_COLLATE} und \texttt{LC\_CTYPE} entfernen.
+In pgAdmin die Datenbank und unter \texttt{public} die Tabelle
+\texttt{products} mit vier Zeilen kontrollieren.
+
+Mit \texttt{node server.js} starten und
+\url{http://localhost:3000/products} öffnen (Port 3000 muss frei sein).
+PUT in Postman/RESTer an
+\url{http://localhost:3000/product/sony24105} senden:
+Header \texttt{Content-Type: application/json}, Body
+\texttt{\{"description": "Neue Beschreibung"\}}.
+Danach GET auf dieselbe URL ausführen oder die Zeile in pgAdmin prüfen.
+Strg+C beendet den Server.
+
+\medskip
+\textbf{Test:} Mit Node.js v24 und PostgreSQL 17 (frischer Import) gestartet, Anfragen mit \texttt{curl}; alle Fälle liefern genau diese Antworten. Den Datenbankfehler
+habe ich durch Stoppen von PostgreSQL ausgelöst.
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.2cm}|>{\raggedright\arraybackslash}p{8.5cm}|}
+\hline
+\textbf{Fall} & \textbf{Ergebnis} \\ \hline
+GET \texttt{/products} & 200; \texttt{\{"productIds":["sonyAIV", "sony24105", "NiconDX16400", "tamron1724"]\}}; Reihenfolge darf abweichen \\ \hline
+GET \texttt{/product/sony24105} & 200; \texttt{\{"id":"sony24105", "title":"Sony 24-105mm lens", "description":"Best Sony travel zoom", "price":1300\}} \\ \hline
+GET \texttt{/product/nope} & 404; \texttt{\{"error":"product not found"\}} \\ \hline
+PUT \texttt{/product/sony24105}, Body wie oben & 200; \texttt{\{"id":"sony24105", "title":"Sony 24-105mm lens", "description":"Neue Beschreibung", "price":1300\}} \\ \hline
+PUT \texttt{/product/nope}, gültige Beschreibung & 404; \texttt{\{"error":"product not found"\}} \\ \hline
+PUT: Beschreibung fehlt, kein String, leer, nur Leerzeichen oder mehr als 100 Zeichen & 400; \texttt{\{"error":"description must be a non-empty string with at most 100 characters"\}} \\ \hline
+Datenbankfehler bei GET \texttt{/products}, GET \texttt{/product/:id} oder gültigem PUT & 500; \texttt{\{"error":"database error"\}}; Ursache im Serverterminal \\ \hline
+\end{tabular}
+\end{center}
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) und OpenAI Codex (GPT-6.1-Sol) für Erstellung, Prüfung und Dokumentation.}
+\end{document}

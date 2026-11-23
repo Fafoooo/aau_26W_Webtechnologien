@@ -1,0 +1,62 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\sloppy
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 6}}
+\end{center}
+\section*{Aufgabe 1: Getting Started with Node.js}
+\textbf{Aufgabe:} Einen Express-Server starten, die Antwort der Startseite
+als HTML kennzeichnen und einen Text aus der URL in die Antwort übernehmen.
+Der Text soll sichtbar sein, ohne als HTML ausgeführt zu werden.
+
+\medskip
+\textbf{Ergebnis:} Die TODOs in \texttt{server.js} sind direkt ergänzt.
+Die unangetastete Vorlage bleibt als \texttt{server\_ORIGINAL.js} erhalten.
+\begin{itemize}
+  \item \texttt{app.get('/' , ...)} behandelt die Startseite.
+    \texttt{res.setHeader('Content-Type', 'text/html')} sagt dem Client,
+    dass die Antwort HTML ist. \texttt{status(200)} bedeutet Erfolg;
+    \texttt{send} schickt den Text zurück.
+  \item \texttt{app.get('/:text', ...)} erkennt einen variablen Teil der
+    URL. Bei \texttt{/mytext} steht in \texttt{req.params.text} der Wert
+    \texttt{mytext}. Express dekodiert dabei die URL-Zeichen.
+  \item \texttt{escapeHtml(s)} ersetzt \texttt{\&}, \texttt{<},
+    \texttt{>}, doppelte und einfache Anführungszeichen durch HTML-Entities.
+    Das kaufmännische Und wird zuerst ersetzt, damit neu eingefügte
+    Entities nicht nochmals verändert werden. So bleibt fremder Text Text
+    und kann kein HTML oder JavaScript einschleusen (XSS).
+  \item Der sichere Text wird an
+    \texttt{This is a simple application receiving } angehängt.
+    Auch diese Route antwortet mit Status 200 und HTML.
+\end{itemize}
+
+\textbf{Starten:} Im Ordner \texttt{aufgabe1} zuerst einmal
+\texttt{npm install} ausführen (installiert Express). Dann \texttt{node server.js} ausführen und
+\url{http://localhost:3000/} aufrufen. Mit Strg+C beenden.
+Nur einen der Übungsserver gleichzeitig starten, da alle Port 3000 nutzen.
+
+\medskip
+\textbf{Test:} Mit Node.js v24 gestartet, Anfragen mit \texttt{curl}; alle Fälle liefern genau diese Antworten (jeweils \texttt{Content-Type: text/html}):
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.2cm}|>{\raggedright\arraybackslash}p{8.5cm}|}
+\hline
+\textbf{Fall} & \textbf{Ergebnis} \\ \hline
+GET \texttt{/} & 200; genau \texttt{This is a simple application} \\ \hline
+GET \texttt{/mytext} & 200; genau \texttt{This is a simple application receiving mytext} \\ \hline
+GET \texttt{/\%3Cb\%3Ex} & 200; \texttt{This is a simple application receiving \&lt;b\&gt;x}; enthält \texttt{\&lt;b\&gt;x}, kein \texttt{<b>} \\ \hline
+\end{tabular}
+\end{center}
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) und OpenAI Codex (GPT-6.1-Sol) für Erstellung, Prüfung und Dokumentation.}
+\end{document}
