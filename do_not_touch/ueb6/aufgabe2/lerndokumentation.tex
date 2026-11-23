@@ -1,0 +1,66 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.25}
+\sloppy
+\begin{document}
+\shorthandoff{"}
+\begin{center}
+  {\Large\textbf{Webtechnologien -- Übungsblatt 6}}
+\end{center}
+\section*{Aufgabe 2: Simple Node.js Product List API}
+\textbf{Aufgabe:} Produkte aus \texttt{products.json} laden und über
+Express als JSON anbieten: einmal alle IDs, einmal ein vollständiges
+Produkt. Eine unbekannte ID soll den Status 404 liefern.
+
+\medskip
+\textbf{Ergebnis:} In \texttt{server.js} sind die Platzhalter ergänzt.
+Die unangetastete Vorlage bleibt als \texttt{server\_ORIGINAL.js} erhalten;
+\texttt{products.json} bleibt unverändert.
+\begin{itemize}
+  \item \texttt{fs.readFileSync(\_\_dirname + '/products.json', 'utf8')}
+    liest die Datei einmal beim Start als Text. \texttt{\_\_dirname} ist
+    der Ordner der JavaScript-Datei; der Dateipfad hängt dadurch nicht
+    vom aktuellen Arbeitsordner ab.
+  \item \texttt{JSON.parse} macht daraus ein Array von Produktobjekten.
+    \texttt{console.log(products)} zeigt es zur Kontrolle im Terminal.
+    Das synchrone Lesen ist hier einfach, weil es nur beim Start erfolgt.
+  \item Die Startseite erhält wie in Aufgabe 1 den Inhaltstyp HTML.
+    \texttt{/products} nimmt mit \texttt{map} aus jedem Produkt nur die ID.
+    Die Reihenfolge der Datei bleibt erhalten. \texttt{res.json} sendet
+    das Objekt mit \texttt{productIds} und setzt den JSON-Inhaltstyp.
+  \item \texttt{/product/:id} liest \texttt{req.params.id} und sucht
+    mit \texttt{find} das passende Objekt. Bei Erfolg kommt das gesamte
+    Objekt mit \texttt{id}, \texttt{title}, \texttt{desc} und \texttt{price}.
+    Ohne Treffer beendet \texttt{return} die Route mit 404 und einer
+    JSON-Fehlermeldung; es wird keine zweite Antwort gesendet.
+\end{itemize}
+
+\textbf{Starten:} Im Ordner \texttt{aufgabe2} zuerst einmal
+\texttt{npm install} ausführen.
+Mit \texttt{node server.js} starten und
+\url{http://localhost:3000/products} öffnen. Ein einzelnes Produkt ist unter
+\url{http://localhost:3000/product/sony24105} erreichbar.
+Vorher andere Übungsserver auf Port 3000 beenden; Strg+C stoppt den Server.
+
+\medskip
+\textbf{Test:} Mit Node.js v24 gestartet, Anfragen mit \texttt{curl}; alle Fälle liefern genau diese Antworten (JSON):
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.2cm}|>{\raggedright\arraybackslash}p{8.5cm}|}
+\hline
+\textbf{Fall} & \textbf{Ergebnis} \\ \hline
+GET \texttt{/products} & 200; \texttt{\{"productIds":["sonyAIV", "sony24105", "NiconDX16400", "tamron1724"]\}} \\ \hline
+GET \texttt{/product/sony24105} & 200; \texttt{\{"id":"sony24105", "title":"Sony 24-105mm lens", "desc":"Best Sony travel zoom", "price":1300\}} \\ \hline
+GET \texttt{/product/nope} & 404; \texttt{\{"error":"product not found"\}} \\ \hline
+\end{tabular}
+\end{center}
+
+\medskip
+{\small \textbf{Hilfsmittel:} Claude Code (Claude Opus 5.5) und OpenAI Codex (GPT-6.1-Sol) für Erstellung, Prüfung und Dokumentation.}
+\end{document}
